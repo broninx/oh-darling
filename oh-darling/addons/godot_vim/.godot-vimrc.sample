@@ -1,0 +1,165 @@
+" GodotVim — Quick Start & Reference
+" Copy to your project root as .godot-vimrc (or use :mappings for a GUI).
+" The plugin works with zero config — everything below is opt-in.
+
+" ══ Godot Commands ════════════════════════════════════════════════════════
+" :save :saveall :savescene          Save file / all / current scene
+" :run :runcurrent :stop :pause      Scene playback (F5/F6 equivalents)
+" :GodotBreakpoint                   Toggle breakpoint on current line
+" :GodotContinue :GodotNext          Debugger continue / step over
+" :GodotStepIn :GodotStepOut         Debugger step into / out
+" :FileSystem :Inspector :Scene      Focus dock by name
+" :Script :Output                    Switch to Script editor / Output panel
+" :zen :unzen                        Distraction-free mode toggle
+" :mappings                          Open key mapping dialog (GUI)
+" :actionlist [filter]               Discover all available commands
+" :panelmap [keys]                   List / explain panel key bindings
+"
+" ── Navigation (defaults — rebindable, see Panel Bindings) ────────────────
+" Ctrl-h/j/k/l                       Move focus between panels (spatial)
+" Ctrl-W w / Ctrl-W W                Cycle focus (from the script editor)
+" h/j/k/l in docks                   Navigate Tree/ItemList items
+" / in docks                         Jump to search box
+" a/d/r/y/R in FileSystem            Create / delete / rename / yank path / refresh
+" J/K/G/y in Debugger                Next / prev / deepest stack frame, yank row
+" gd                                 Go to definition (LSP)
+" K                                  Hover documentation (LSP)
+
+" ══ Configuration ═════════════════════════════════════════════════════════
+" Leader must come before any <Leader> mappings.
+let mapleader = " "
+set timeoutlen=1000
+
+" ══ Panel Bindings (uncomment to change) ══════════════════════════════════
+" Keys OUTSIDE the script editor are a table you can edit: panel focus, dock
+" navigation, the FileSystem dock, the debugger, and the completion popup.
+" Run :panelmap to list every live binding and every line that was rejected.
+" Full grammar: docs/REFERENCE.md#panel-key-bindings-panelmap
+"
+"   panelmap   [<flag> ...] <surface> <keys> <target> [key=value ...]
+"   panelunmap <surface> <keys>
+"
+" Surfaces   panel  dock  dock.filesystem  dock.debugger  searchbox  prompt
+"            editor.nav  editor.completion  unknown
+"            (editor.insert and foreign are barriers and take no bindings;
+"            editor.completion is an overlay: the script editor in an
+"            insert-like mode, live per keystroke rather than by focus)
+"            A deeper surface wins: a rule on dock.filesystem beats the same
+"            key on dock, which beats the same key on panel.
+" Targets    a godotvim.* action id, or `native` to hand the key to Godot.
+" Flags      <physical> also match the US-QWERTY key POSITION — drop it and
+"                       the key dies on Colemak / Dvorak / AZERTY
+"            <void>     consume even when the action declines; on the panel
+"                       chords, dropping it leaks them to Godot at the
+"                       layout's edges
+"            <norepeat> ignore auto-repeat while the key is held
+"            <shift>    also match with Shift held (named keys only)
+"            <nowait>   fire now instead of waiting for a longer sequence
+" Params     count=N (1-100), at most 4 pairs, decimal integers only.
+"
+" Rebinding is panelunmap + panelmap: adding a key never removes the old one.
+"
+" ── Cycle panel focus on Alt+] / Alt+[ ───────────────────────────────────
+"    Ships unbound: Ctrl-W w / Ctrl-W W only cycle from the script editor.
+" panelmap <physical> <void> <norepeat> panel <M-]> godotvim.focus.cycle_next
+" panelmap <physical> <void> <norepeat> panel <M-[> godotvim.focus.cycle_prev
+"
+" ── Panel focus on Alt instead of Ctrl ────────────────────────────────────
+" panelunmap panel <C-h>
+" panelunmap panel <C-j>
+" panelunmap panel <C-k>
+" panelunmap panel <C-l>
+" panelmap <physical> <void> <norepeat> panel <M-h> godotvim.focus.left
+" panelmap <physical> <void> <norepeat> panel <M-j> godotvim.focus.down
+" panelmap <physical> <void> <norepeat> panel <M-k> godotvim.focus.up
+" panelmap <physical> <void> <norepeat> panel <M-l> godotvim.focus.right
+"
+" ── Dock navigation on Colemak's home row ─────────────────────────────────
+" panelunmap dock j
+" panelunmap dock k
+" panelmap <physical> dock n godotvim.item.next
+" panelmap <physical> dock e godotvim.item.prev
+"
+" ── Require dd to delete in the FileSystem dock ───────────────────────────
+" panelunmap dock.filesystem d
+" panelmap <physical> dock.filesystem dd godotvim.fs.delete
+"
+" ── Completion: Tab and Enter accept even an unchosen candidate ───────────
+"    (Ctrl-Y and Ctrl-E ship as defaults; this restores the pre-1.8 accept.)
+" panelmap editor.completion <Tab> godotvim.completion.confirm require_selection=0
+" panelmap editor.completion <CR> godotvim.completion.confirm require_selection=0
+"
+" ── Completion: two-stage Escape ──────────────────────────────────────────
+"    First press closes the popup and stays in Insert; second press leaves.
+" panelmap editor.completion <Esc> godotvim.completion.dismiss
+"
+" ── Half-page dock movement ───────────────────────────────────────────────
+" panelmap dock <C-d> godotvim.item.next count=10
+" panelmap dock <C-u> godotvim.item.prev count=10
+
+" ══ Presets (uncomment to enable) ═════════════════════════════════════════
+" Managed by :mappings dialog. Manual edits here are preserved on save.
+"
+" ── Insert Escapes ────────────────────────────────────────────────────────
+" preset:disabled
+" inoremap jk <Esc>
+" preset:disabled
+" inoremap jj <Esc>
+"
+" ── File / Buffer ─────────────────────────────────────────────────────────
+" preset:disabled
+" nnoremap <Space>w :save<CR>
+" preset:disabled
+" nnoremap <Space>W :saveall<CR>
+" preset:disabled
+" nnoremap <Space>n :bn<CR>
+" preset:disabled
+" nnoremap <Space>p :bp<CR>
+"
+" ── Scene & Debugging ─────────────────────────────────────────────────────
+" preset:disabled
+" nnoremap <Space>r :run<CR>
+" preset:disabled
+" nnoremap <Space>R :runcurrent<CR>
+" preset:disabled
+" nnoremap <Space>S :stop<CR>
+" preset:disabled
+" nnoremap <Space>db :GodotBreakpoint<CR>
+" preset:disabled
+" nnoremap <Space>dc :GodotContinue<CR>
+" preset:disabled
+" nnoremap <Space>dn :GodotNext<CR>
+" preset:disabled
+" nnoremap <Space>di :GodotStepIn<CR>
+" preset:disabled
+" nnoremap <Space>do :GodotStepOut<CR>
+"
+" ── Navigation & Editor ───────────────────────────────────────────────────
+" preset:disabled
+" nnoremap <Space>e :FileSystem<CR>
+" preset:disabled
+" nnoremap <Space>i :Inspector<CR>
+" preset:disabled
+" nnoremap <Space>s :Script<CR>
+" preset:disabled
+" nnoremap <Space>z :zen<CR>
+" preset:disabled
+" nnoremap <Space>Z :unzen<CR>
+"
+" ── Search ────────────────────────────────────────────────────────────────
+" preset:disabled
+" nnoremap <Esc> :noh<CR>
+
+" ══ Your Mappings ═════════════════════════════════════════════════════════
+" nnoremap Y y$
+" vnoremap < <gv
+" vnoremap > >gv
+" nnoremap n nzz
+" nnoremap N Nzz
+
+" ══ Settings & Help ═══════════════════════════════════════════════════════
+" Editor Settings → Plugins → GodotVim   enabled toggle, scrolloff, etc.
+" :mappings                               GUI for managing all key bindings
+" :actionlist                             Discover every available command
+" :panelmap                               List panel bindings + rejected lines
+" :panelmap {keys}                        Explain how one key resolves here

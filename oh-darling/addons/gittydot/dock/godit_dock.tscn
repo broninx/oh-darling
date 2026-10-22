@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/gittydot/dock/godit_dock.gd" id="1"]
+[ext_resource type="PackedScene" path="res://addons/gittydot/dock/panels/changes_panel.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://addons/gittydot/dock/panels/branches_panel.tscn" id="3"]
+
+[node name="GoditDock" type="Control" unique_id=2026172616]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="MessageLabel" type="Label" parent="." unique_id=592768466]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Godit: this project isn't inside a git repository, or the `git` command isn't on PATH."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1077603224]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+
+[node name="Changes" parent="TabContainer" unique_id=259488167 instance=ExtResource("2")]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Branches" parent="TabContainer" unique_id=1050618193 instance=ExtResource("3")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
