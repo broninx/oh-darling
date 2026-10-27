@@ -68,5 +68,5 @@ Progression is non-linear and driven entirely by the management of the aforement
 1. Matteo Bellino
 2. Franco Antonini
 3. Daniel Lazzarotto
-4. Alba
-5. Gaia
+4. Alba Suli
+5. Gaia Vizza
