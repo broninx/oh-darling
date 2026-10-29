@@ -28,7 +28,7 @@ The game features a dynamic time progression system where the in-game clock adva
 
 * **Pacing:** Each in-game day lasts approximately **20 to 40 minutes** of real-time gameplay, depending on the player's reading speed.
 * **NPC Schedules:** The world operates on a strict schedule. NPCs have specific daily routines, and available interactions are time-locked (e.g., the bar is open from 7:00 to 12:00; homeless NPCs are always at their resting spots at night).
-* **Scarcity and Consequence:** The game is designed so the player cannot "do everything all at once." Similar to *Pathologic 2*, the player's schedule is limited. Choosing to progress a subquest with one NPC inevitably alter the player's interaciton with another. These choices have serious, delayed consequences that the player observes later in their experience.
+* **Scarcity and Consequence:** The game is designed so the player cannot "do everything all at once." Similar to *Pathologic 2*, the player's schedule is limited. Choosing to progress a subquest with one NPC alters the player's interaction with another. These choices have serious, delayed consequences that the player observes later in their experience.
 * **Intent:** To create a sense of urgency, force meaningful narrative choices, and make the world feel alive and independent of the player.
 
 #### The Emotion System (Hidden Variables)
@@ -37,7 +37,7 @@ The game stores a set of hidden values representing primitive emotional "states"
 
 * **Dynamic Alteration:** These hidden emotional states are continuously altered by the player's dialogue choices and reactions to game events.
 * **Gameplay Effects:** Due to the protagonist's extreme emotional instability, these states heavily influence multiple game systems:
-  * **Visuals and Perception:** Emotional states dictate the graphical style of the game via shaders, HSL shifts, texture changes, and environmental shifts. Extreme states trigger hallucinations known as **"Echoes."**
+  * **Visuals and Perception:** Emotional states dictate the graphical style of the game via shaders, HSL shifts, texture changes, and environmental shifts. Extreme states trigger hallucinations known as **"Echoes."** *(See [Art Style](#art-style).)*
   * **Dialogue Choices:** Extreme emotional states "lock" dialogue options that contradict the player's current state. Conversely, certain unique interactions are only available while in specific emotional states.
   * **Procedural Audio:** The soundtrack is built using a layered stem system. The volume and intensity of specific instrumental stems change dynamically based on the player's hidden emotional state.
 
@@ -61,6 +61,46 @@ Progression is non-linear and driven entirely by the management of the aforement
 ## Story
 
 ## World
+
+### Art Style
+
+The hidden emotional states are shown visually through five moods, named after the weather. Fog is the lowest, Storm the highest, and Clear is the balanced middle. The places and characters stay the same, but how they are painted changes, and in the extreme moods the world itself starts to change too.
+
+| Mood | What the protagonist feels | How the world feels |
+| --- | --- | --- |
+| Fog | Very low mood, no interest in anything, guilt, exhaustion. Daily life stops | Distant, heavy, empty |
+| Overcast | Low mood, little interest and little energy. Daily life goes on, with effort | Everything is normal, but something is missing |
+| Clear | Balanced mood, the baseline | Reliable and a little melancholic |
+| Bright | High mood and growing energy, still under control | Everything shines, everything seems possible |
+| Storm | Euphoria or irritability, racing thoughts, little sleep, feeling unstoppable | Too much colour, too much movement, too much of everything |
+
+Each mood has its own painterly style, inspired by a period of art history.
+
+| Mood | Style | Reference | Palette | Brushwork and light |
+| --- | --- | --- | --- | --- |
+| Fog | Faded expressionism | Schiele, Picasso (Blue Period) | Blues and greys, almost monochrome | Broken lines, cold light |
+| Overcast | Silent interiors | Hammershøi | Warm greys, off-whites | Smooth brushwork, dim light |
+| Clear | Painterly realism | Disco Elysium | Ochre, olive green, dusty blue | Calm brushwork, natural light |
+| Bright | Luminous impressionism | Monet, Renoir | Yellows, pinks, light blues | Short dabs, golden light |
+| Storm | Swirling post-impressionism | Van Gogh | Chrome yellow, ultramarine, orange | Swirling impasto, dazzling light |
+
+All moods share the same base. Environments and characters are in 3D, a shader gives them a painted look, and the camera is isometric. Only in the extreme moods does the camera change: in Storm it sways slightly, and in Fog it pulls back, making the protagonist look small.
+
+#### Visual Distortion
+
+In Fog and Storm, Distortion *(see [Distortion](#distortion-psychosis))* also changes how the scene looks, from small anomalies to a room that sways or tilts.
+
+#### Echoes
+
+Echoes are things the player sees that aren't really there: the world reflects back what the protagonist feels. In Storm they are grandiose and everything revolves around the protagonist: golden lights, rays pointing at them, people looking at them with admiration. In Fog they are threatening or guilt-inducing: presences at the edges of the room, faces turning away, objects that seem to accuse.
+
+#### Sensitive Objects
+
+Some key objects, such as the window, the mirror and the door, change with the mood. In Overcast and Bright the object stays the same, but its meaning changes: what stands out, how it is described and which actions it offers. In Fog and Storm the object shows an Echo.
+
+#### Staging Rule
+
+An object never changes while the player is looking at it. The swap happens when it leaves the frame or after a dialogue, so the player is never sure what they saw before.
 
 ## Technical specification (if applicable)
 
