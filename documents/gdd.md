@@ -64,7 +64,36 @@ Progression is non-linear and driven entirely by the management of the aforement
 
 ## Story
 
-## World
+## World 
+
+### Overview
+
+The game takes place entirely within one small town. It is compact enough to learn by heart and dense enough to reward repeated visits, and every location holds someone to talk to or something to uncover. The town demands constant, polished happiness, and that demand is the pressure the protagonist moves against.
+
+### Atmosphere
+
+The town has a rustic charm, where green reigns in perfectly defined areas. Old brick facades are sandblasted and spotless, and public parks are lush and mathematically manicured. There is not a single chipped brick or flickering streetlamp, reflecting the Mayor's obsessive perfectionism.
+The town should feel like a postcard retouched one time too many: inviting, symmetrical, and not quite lived in.
+
+### World Map
+
+The open map is a compact town where every location is accessible and interactable, with no filler spaces.
+Every location has its own opening and closing hours: stores, homes, the pub, the park, and the Town Hall alike. A place is only accessible while it is open, or, in the case of homes, while the resident is in, so the player must plan each visit around the schedule and accept that some places will be closed when they need them.
+
+| Location | Description | 
+| --- | --- |
+| Town Hall | Seat of the Mayor's authority and the protagonist's workplace, where they serve as archivist. 
+| Town Square | The civic heart of the town, home to the farmers' market and public gatherings. |
+| The Neon Padma | A warm, wood-and-glass pub: a bright breakfast spot by day, a moody cocktail bar by night, with mandalas that glow neon after dark. |
+| The Park | Lush, mathematically manicured greenery in perfectly defined areas. |
+| Main Character's Home | The protagonist’s home: spotless outside like the rest of the town, calm inside, with neutral decor, plants to tend as a routine, and heavy curtains to close out the world. |
+| Stores| The town's shops line the streets around the square. Like everything else, they are immaculate, themed, and run by owners who treat the Mayor's standards as a point of pride.
+| NPC Homes | The residences of the town's characters, scattered through its streets.|  
+
+#### The Margins
+
+A town without imperfections must hide them somewhere. Residents who live outside the Mayor's order, such as the homeless, occupy the margins the town's perfection does not reach. They show what the community has quietly pushed out, and they are natural sources of honest dialogue for a protagonist who does not fit in either.
+
 
 ### Art Style
 
