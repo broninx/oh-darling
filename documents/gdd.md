@@ -12,7 +12,7 @@ Our vision is to create a highly immersive, uncompromising psychological experie
 
 The gameplay is heavily inspired by *Disco Elysium*, placing dialogue and psychological introspection at the core of the player experience. While the player character can navigate the world and interact with the environment, the vast majority of interactions with characters, items, and the world occur through dialogue.
 
-**Intent:** The primary goal of the gameplay design is to create a highly immersive experience that challenges traditional concepts of difficulty and narration. Instead of relying on combat or twitch-based skills, *Oh Darling* grants the player freedom through a highly interactive and reactive world. The gameplay loop emphasizes the tension between acting on what feels temporarily "personally right" (which deepens psychosis and potentially undesired gameplay elements) and acting conservatively (which stabilizes the character at a cost). 
+The gameplay loop emphasizes the tension between acting on what feels temporarily "personally right" (which deepens psychosis and potentially undesired gameplay elements) and acting conservatively (which stabilizes the character at a cost). 
 
 ### Core Gameplay Loop
 
