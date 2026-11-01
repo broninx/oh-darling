@@ -78,7 +78,7 @@ The town should feel like a postcard retouched one time too many: inviting, symm
 ### World Map
 
 The open map is a compact town where every location is accessible and interactable, with no filler spaces.
-Every location has its own opening and closing hours: stores, homes, the pub, the park, and the Town Hall alike. A place is only accessible while it is open, or, in the case of homes, while the resident is in, so the player must plan each visit around the schedule and accept that some places will be closed when they need them.
+Every location has its own opening and closing hours: stores, homes, the pub, the park, and the Town Hall alike. A place is only accessible while it is open, or, in the case of homes, while the resident is in, so the player must plan each visit around the schedule *(see [Time Management System](#time-management-system))* and accept that some places will be closed when they need them.
 
 | Location | Description | 
 | --- | --- |
