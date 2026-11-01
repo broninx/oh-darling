@@ -4,13 +4,13 @@
 
 Oh Darling is an abstract, narrative-driven RPG where you play as a bipolar protagonist trapped in a world that reflects your fractured mind. Blending the deep psychological introspection of Disco Elysium with visual novel romance elements, it is a game about the terrifying tension between acting on what feels "personally right" and fighting to maintain your own sanity.
 
-Our vision is to create a highly immersive, uncompromising psychological experience that challenges traditional concepts of difficulty, morality, and narration. Instead of relying on combat or twitch-based skills, Oh Darling grants the player freedom through a highly reactive world governed by dialogue and emotional consequence. The core fantasy is not one of empowerment, but of survival and self-discovery; the player must navigate a deeply unreliable reality, decode their own hidden emotional states, and grapple with the permanent consequences of their fractured psyche.
+Our vision is to create a highly immersive, uncompromising psychological experience that challenges traditional concepts of difficulty, morality, and narration. Oh Darling grants the player freedom through a highly reactive world governed by dialogue and emotional consequence. The core fantasy is not one of empowerment, but of survival and self-discovery; the player must navigate a deeply unreliable reality, decode their own hidden emotional states, and grapple with the permanent consequences of their fractured psyche.
 
 ## Gameplay
 
 ### Gameplay Overview and Intent
 
-*Oh Darling* is an abstract, narrative-driven RPG with visual novel romance elements. The gameplay is heavily inspired by *Disco Elysium*, placing dialogue and psychological introspection at the core of the player experience. While the player character can navigate the world and interact with the environment, the vast majority of interactions with characters, items, and the world occur through dialogue.
+The gameplay is heavily inspired by *Disco Elysium*, placing dialogue and psychological introspection at the core of the player experience. While the player character can navigate the world and interact with the environment, the vast majority of interactions with characters, items, and the world occur through dialogue.
 
 **Intent:** The primary goal of the gameplay design is to create a highly immersive experience that challenges traditional concepts of difficulty and narration. Instead of relying on combat or twitch-based skills, *Oh Darling* grants the player freedom through a highly interactive and reactive world. The gameplay loop emphasizes the tension between acting on what feels temporarily "personally right" (which deepens psychosis and potentially undesired gameplay elements) and acting conservatively (which stabilizes the character at a cost). 
 
