@@ -2,6 +2,10 @@
 
 ## Overview and vision statement
 
+Oh Darling is an abstract, narrative-driven RPG where you play as a bipolar protagonist trapped in a world that reflects your fractured mind. Blending the deep psychological introspection of Disco Elysium with visual novel romance elements, it is a game about the terrifying tension between acting on what feels "personally right" and fighting to maintain your own sanity.
+
+Our vision is to create a highly immersive, uncompromising psychological experience that challenges traditional concepts of difficulty, morality, and narration. Instead of relying on combat or twitch-based skills, Oh Darling grants the player freedom through a highly reactive world governed by dialogue and emotional consequence. The core fantasy is not one of empowerment, but of survival and self-discovery; the player must navigate a deeply unreliable reality, decode their own hidden emotional states, and grapple with the permanent consequences of their fractured psyche.
+
 ## Gameplay
 
 ### Gameplay Overview and Intent
