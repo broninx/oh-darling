@@ -79,13 +79,12 @@ The game stores a set of hidden values, organized into emotional scales. The fiv
 
 When the hidden values are pushed to extreme limits (shifting towards specific far ends of their respective scales), the protagonist enters a state of **Distortion** (Psychosis).
 
-* **Mechanic:** Distortion is a survival system. The more the player makes choices that feel "personally right" to the character, the deeper they fall into Distortion. Conversely, acting instinctively and illogically (or logically, if for the better) stabilizes the character.
+* **Mechanic:** Distortion is a survival system. The more the player makes choices that feel "personally right" to the character, the deeper they fall into Distortion. Conversely, strategically acting illogically (or logically, if for the better) may stabilizes the character.
 * **Consequences:** Distortion causes severe negative gameplay consequences. However, it is a natural and intended part of the narrative arc. Reaching Distortion fundamentally alters familiar game elements (making them untrustworthy) and warps the player's perception of reality. 
 * **Intent:** To subvert traditional "min-maxing" game mechanics. Emotions are meant to be explored, and the player must navigate the tension between morality and mental survival without the safety net of save-scumming (the game features **Autosave only**; every choice is permanent).
 
 ## Progression and Narrative Flow
 
-*[Link to Player Objectives and Progression section]*
 
 Progression is non-linear and driven entirely by the management of the aforementioned systems. A "level" in *Oh Darling* is not a physical space, but a narrative scene, a conversation, or an internal moment. Early scenes are grounded and reliable. As the protagonist's emotions shift and Distortion rises, the gameplay transforms: text becomes unreliable, the meaning of words shifts dynamically, and the NPCs' behavior evolves based on the protagonist's state.
 
