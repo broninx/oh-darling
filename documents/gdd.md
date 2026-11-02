@@ -164,6 +164,8 @@ Some key objects, such as the window, the mirror and the door, change with the m
 
 An object never changes while the player is looking at it. The swap happens when it leaves the frame or after a dialogue, so the player is never sure what they saw before.
 
+## Media list
+Here, will eventually feature soundtracks, character's portraits and town's pictures.
 ## Technical specification (if applicable)
 
 ## Team
