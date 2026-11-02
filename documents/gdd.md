@@ -60,20 +60,49 @@ When the player's hidden emotional states are pushed to extreme limits (shifting
 Progression is non-linear and driven entirely by the management of the aforementioned systems. A "level" in *Oh Darling* is not a physical space, but a narrative scene, a conversation, or an internal moment. Early scenes are grounded and reliable. As the protagonist's emotions shift and Distortion rises, the gameplay transforms: text becomes unreliable, the meaning of words shifts dynamically, and the NPC's behavior evolves based on the protagonist's state.
 
 
-## Characters 
+## Characters
 
+* **The Protagonist (Main Character)** <br>
+Raised by a mother who over-validated them, they possess a brilliant brain and a keen eye for detail, but suffer from extreme stubbornness that fuels obsessive thoughts. They come to town after a series of life-altering events caused by a psychotic episode: their marriage collapsed because their partner couldn't handle the intensity of it, they were fired from their previous job for causing a scene and their doctor forced them back onto medication. Now, they hold a position as the Town Hall's archivist and are ready to rebuild their life. However, the quiet archive that was supposed to cater to their need for stability and routine also grants them access to the town's sensitive information, which might ignite and fuel their paranoia into insane conspiracies.
+
+* **Chris MacLean (The Respectable Mayor)** <br>
+A charismatic, wildly popular leader who gentrified the town and built its famous and successful farmers' market. However, his entire legacy is built on a grotesque, closely guarded secret: to secure the land for the market, he exploited a bizarre database glitch to legally marry a prize-winning truffle pig that had inherited a massive estate from an eccentric countess. On the surface, he displays a fun and endearing demeanor despite his well-known perfectionism; however, he shows no mercy in suppressing anyone who threatens his reputation and position.
+
+* **Jolly Roger (Mad Clochard)**<br>
+Once an archivist and the Mayor's right-hand man, Roger discovered the truth about the Mayor's marriage, which led to his disastrous downfall at the Mayor's hands. Desperation and the abuse of recreational substances have reduced him to acting like an unreasonable, crazed man. Knowing the actual source of the town's prosperity, he believes all of the MC's crazy theories and serves as their main enabler.
+
+* **Neha Sharma (The Neon Padma's Owner)** <br>
+An inherently nurturing woman of Indian descent who endured a painful divorce after discovering her infertility. She channels her maternal instincts into her business and charity work. Taught botanical history and tea brewing by her *Dadima*, she built a successful career as a mixologist; however, the fast-paced city life eventually prompted her to move to this town. Highly perceptive and spiritually grounded, she provides the only genuinely stable, non-toxic environment in the game, despite her undying curiosity about whatever happens in people's lives. If the MC is able to earn her trust, she will share very interesting stories. She easily notices the MC's increasingly unusual behavior and frequently offers them a calming solution from her personal recipe book.
+
+* **The PR Agent (Female Love Interest)**<sup>a</sup> <br>
+Ambitious, magnetic and deeply manipulative. She has a history of ending relationships perfectly, leaving her exes with fond memories while she extracts exactly what she needs. She aims to climb the political ladder by uncovering the town elite's dirt. She deliberately acts as an emotional mirror for the MC, providing the unconditional validation the MC craves. Instead of grounding the MC, she maliciously encourages and enables their paranoid delusions ("You're the only one smart enough to see the truth"), pushing them toward a psychotic break just to extract the archive secrets she needs for her career, with total disregard for the MC's well-being.
+
+* **The Head Contractor (Male Love Interest)**<sup>a</sup> <br>
+Reliable, protective and deeply codependent. He has a history of playing the indispensable hero, keeping his partners helpless and subtly clipping their wings until they inevitably outgrow him. He aims to secure his own self-worth by being the sole protector of a fragile partner. He deliberately acts as an immovable rock for the MC, infiltrating their strict routine and providing the absolute physical safety they crave. Instead of validating the MC's genuine discoveries, he maliciously employs a "well-meaning" form of gaslighting to keep the peace ("Your beautiful brain works too hard. Leave the dark thoughts outside."), pushing them toward a complete loss of self-trust just to ensure they remain entirely dependent on him, with total disregard for the MC's intellectual autonomy.
+
+<sup>a</sup>: Love Interests are meant to be two faces of the same coin, this explains the strict parallelism into describing them.
 ## Story
+The game’s narrative approach is intentionally deceptive. It begins as a methodical slice-of-life simulator, focusing entirely on the protagonist's strict daily routine, their new job as an archivist and the mundane interactions with the town's quirky but seemingly harmless residents. In these early stages, there is no overarching "plot" other than the MC’s personal struggle to rebuild their life after a psychotic episode, alongside uncovering minor, everyday subplots about the other characters. However, as the game progresses and the MC’s mental state begins to deteriorate, a macabre narrative begins to take control.<br>
+The MC slowly convinces themselves that the town’s pristine beautyand its wildly successful farmers' market are not the results of good governance, but the dark blessings of a pagan cult dedicated to [**Freyr, the Norse God of Prosperity and Agriculture**](https://immagina.re/biblioteca-norrena/rituali/invocazione-a-freyr) and the town is a modern recreation of the infamous [Temple of Uppsala](https://en.wikipedia.org/wiki/Temple_at_Uppsala).<br>
+Piece by piece, the protagonist connects harmless town elements to gruesome historical lore and what begins as a quiet game about managing trauma and organizing archives spirals into a claustrophobic psychological horror. The player must navigate a world where it becomes difficult to distinguish between the MC's delusions and the reality around them, and has to figure out a way out.
 
-## World 
+## World
+The game takes place in a town with a rustic charm to it, where old brick facades are sandblasted and spotless, public parks are lush and mathematically manicured. Everything seems so pristine without a single chipped brick or flickering streetlamp, reflecting the Mayor's obsessive perfectionism.
+The famous farmers’ market isn’t a chaotic, it’s an upscale exhibition. Local farmers arrive to peddle their overpriced produce from colorful, inviting stalls carefully designed to give off a nostalgic, "*freshly baked pie*" vibe. The air always smells faintly of fresh lavender, artisan sourdough and expensive coffee.
+They possess the relaxed, smug aura of people who know they’re living the dream. Their devotion to the Mayor borders on a cult of personality, creating a suffocating positivity where complaints are treated as social faux pas.
 
-### Overview
+### Key Locations
+* **The Protagonist's House**<br>
+The interior is designed with neutral decorations and colors to avoid overstimulation, integrating calming details such as potted plants. Heavy curtains act as a crucial element to mitigate the character's paranoia (the intense fear of being watched), allowing them to close off the outside world to gain a sense of protection. The exterior of the house conforms perfectly to the pristine, manicured image of the town enforced by the Mayor.
 
-The game takes place entirely within one small town. It is compact enough to learn by heart and dense enough to reward repeated visits, and every location holds someone to talk to or something to uncover. The town demands constant, polished happiness, and that demand is the pressure the protagonist moves against.
+* **The Park and the Shelter**<br>
+The public park features a beautifully maintained children's playground, surrounded by a walkable, curated forest. Deep within this woods, however, lies an extremely messy and chaotic shelter (Roger's shelter). The surrounding area is littered with abandoned sculptures made entirely of junk and scrap materials. Among these stands a peculiar pig-shaped sculpture, ironically identified as the "town's savior".
 
-### Atmosphere
+* **The Neon Padma**<br>
+The bar features a welcoming interior design, characterized by warm wooden elements and hanging glass lamps. During the day, the atmosphere is calm and bright, perfect for serving breakfast goods. At night, the venue transitions into a moody and slightly mysterious vibe focused on cocktails and snacks. The walls are adorned with traditional mandalas that appear as standard colorful decorations by day, but light up with modern neon accents after dark.
 
-The town has a rustic charm, where green reigns in perfectly defined areas. Old brick facades are sandblasted and spotless, and public parks are lush and mathematically manicured. There is not a single chipped brick or flickering streetlamp, reflecting the Mayor's obsessive perfectionism.
-The town should feel like a postcard retouched one time too many: inviting, symmetrical, and not quite lived in.
+* **The Town Hall & Archives**<br>
+Recently redeveloped under the Mayor's obsessive eye, the Town Hall displays a spotless and gentrified facade. The upper floors are constituted of perfectly lit offices, where the Mayor's and his collaborators work. In stark contrast, the basement houses the quiet and dusty archives.
 
 ### World Map
 
