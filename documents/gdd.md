@@ -6,6 +6,10 @@ Oh Darling is an abstract, narrative-driven RPG where you play as a bipolar prot
 
 Our vision is to create a highly immersive, uncompromising psychological experience that challenges traditional concepts of difficulty, morality, and narration. Oh Darling grants the player freedom through a highly reactive world governed by dialogue and emotional consequence. The core fantasy is not one of empowerment, but of survival and self-discovery; the player must navigate a deeply unreliable reality, decode their own hidden emotional states, and grapple with the permanent consequences of their fractured psyche.
 
+### Target Audience
+
+*Oh Darling* is aimed at adult players (18+) who enjoy story-driven games where reading, choices and atmosphere matter more than action or reflexes. The game deals with mature and dark psychological themes, such as extreme mood swings, losing touch with reality and emotional manipulation.
+
 ## Gameplay
 
 ### Gameplay Overview and Intent
@@ -154,7 +158,7 @@ In Fog and Storm, Distortion *(see [Distortion](#distortion-psychosis))* also ch
 
 #### Echoes
 
-Echoes are things the player sees that aren't really there: the world reflects back what the protagonist feels. In Storm they are grandiose and everything revolves around the protagonist: golden lights, rays pointing at them, people looking at them with admiration. In Fog they are threatening or guilt-inducing: presences at the edges of the room, faces turning away, objects that seem to accuse.
+Echoes are things the player sees that aren't really there: the world reflects back what the protagonist feels. They are what feeds the protagonist's paranoia: someone watching from a window, symbols of Freyr hidden in ordinary objects, harmless details that suddenly seem connected. Their tone follows the mood. In Storm they are grandiose and everything revolves around the protagonist: golden lights, rays pointing at them, people looking at them with admiration. In Fog they are threatening or guilt-inducing: presences at the edges of the room, faces turning away, objects that seem to accuse.
 
 #### Sensitive Objects
 
