@@ -26,7 +26,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/dialogue_manager/plugin.cfg", "res://addons/gittydot/plugin.cfg", "res://addons/godot_vim/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/gittydot/plugin.cfg", "res://addons/godot_vim/plugin.cfg")
 
 [input]
 

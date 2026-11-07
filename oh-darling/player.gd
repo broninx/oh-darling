@@ -12,7 +12,6 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-
 	# Camera basis, flattened to XZ so the ise tilt doesn't affect speed
 	var cam_basis := camera_3d.global_transform.basis
 	var cam_forward := -cam_basis.z

@@ -1,0 +1,3 @@
+In this directory you'll find autoloads (singleton) scripts.
+The scripts here are always automatically loaded by the game and are always 
+present, meaning the code here is high-level and structural.
