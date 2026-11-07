@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://008s02kl3v1c"]
+
+[ext_resource type="PackedScene" uid="uid://dfqlcaw2r1hl1" path="res://dialogues/Test_Assets/_elements/obj_dia.tscn" id="1_g0rtd"]
+[ext_resource type="PackedScene" uid="uid://cr2k0wvspfsyn" path="res://dialogues/Test_Assets/_elements/player_dia.tscn" id="1_kimty"]
+[ext_resource type="PackedScene" uid="uid://bn0l5qgfbw187" path="res://dialogues/Test_Assets/_elements/npc_dia.tscn" id="2_g0rtd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n6ybg"]
+albedo_color = Color(2.5027991e-06, 0.49926436, 2.8878452e-07, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7gex4"]
+
+[sub_resource type="Sky" id="Sky_bs6fw"]
+sky_material = SubResource("ProceduralSkyMaterial_7gex4")
+
+[sub_resource type="Environment" id="Environment_e0yyd"]
+background_mode = 2
+sky = SubResource("Sky_bs6fw")
+tonemap_mode = 3
+tonemap_exposure = 0.6
+tonemap_white = 3.19
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e0yyd"]
+size = Vector3(20.069824, 5.3377686, 0.68852997)
+
+[node name="test_dia" type="Node3D" unique_id=721325679]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1061771392]
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_n6ybg")
+
+[node name="obj_dia" parent="." unique_id=103525244 instance=ExtResource("1_g0rtd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.659, 0, -2.65)
+
+[node name="npc_dia" parent="." unique_id=1850939060 instance=ExtResource("2_g0rtd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.036, 1, -3.4434624)
+
+[node name="player_dia" parent="." unique_id=1855806686 instance=ExtResource("1_kimty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.834, -0.2, 7.306)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1638267004]
+transform = Transform3D(0.90630776, -0.19186468, 0.37655565, 0, 0.8910065, 0.45399052, -0.42261827, -0.41145512, 0.8075261, 0, 0, 0)
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.3
+directional_shadow_max_distance = 1000.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=643225946]
+environment = SubResource("Environment_e0yyd")
+
+[node name="muri_invisibili" type="Node3D" parent="." unique_id=1501043724]
+
+[node name="muro_nord" type="StaticBody3D" parent="muri_invisibili" unique_id=435012157]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="muri_invisibili/muro_nord" unique_id=1255644462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1688843, -10.202808)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_sud" type="StaticBody3D" parent="muri_invisibili" unique_id=441902269]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="muri_invisibili/muro_sud" unique_id=807947391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1688843, 10.193734)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_est" type="StaticBody3D" parent="muri_invisibili" unique_id=372506776]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="muri_invisibili/muro_est" unique_id=380013515]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10.247623, 2.1688843, -0.07286167)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_ovest" type="StaticBody3D" parent="muri_invisibili" unique_id=600294241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.448027, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="muri_invisibili/muro_ovest" unique_id=1170893210]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10.247623, 2.1688843, -0.07286167)
+shape = SubResource("BoxShape3D_e0yyd")

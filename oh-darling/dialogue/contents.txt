@@ -1,1 +1,0 @@
-This folder contains dialogues (.dialogue files) according to the plugins format.

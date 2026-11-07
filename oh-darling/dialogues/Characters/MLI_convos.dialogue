@@ -1,0 +1,12 @@
+~ one
+MC: My notes. The files, I left them right here! Someone came in. They know I'm onto them!
+Contractor: Shh, you're shaking. You didn't bring any files with you, remember?
+MC: [[(select your answer...)]]
+
+- No, I swear I brought them with me! I need them!
+Contractor: Look, maybe you lost them in the way. Come on, get your coffee and let's check. I put two sugars in it, just the way you need it today.
+- Am... am I forgetting things again?
+Contractor: It's just the stress. Let me take care of everything. You don't have to worry about work when I'm here.
+* Go back => one
+* End => END
+=> END

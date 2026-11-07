@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://cfrcgqswgweu6"
+path="res://.godot/imported/Pub_Obs.dialogue-9388b35a92593a8a20dda5780de7e3a3.tres"
+
+[deps]
+
+source_file="res://dialogues/Objects/Pub_Obs.dialogue"
+dest_files=["res://.godot/imported/Pub_Obs.dialogue-9388b35a92593a8a20dda5780de7e3a3.tres"]
+
+[params]
+
+defaults=true
