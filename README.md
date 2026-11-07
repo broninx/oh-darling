@@ -161,3 +161,153 @@ The team must decide these. They are also marked `TODO` in the scripts.
 3. **Distortion.** For how it comes from the axis only.
 4. **Midnight.** What happens when the clock passes 24:00?
 5. **Mood presets.** Thresholds are constants now. They should move to `MoodPreset` `.tres` files.
+
+# TASKS
+# Oh Darling: Task List
+
+This part lists most programming tasks for the prototype.
+Each task is one unit of work for **one** programmer.
+
+---
+
+## 1. Overview
+
+| ID | Task | Depends on | Main folder |
+| --- | --- | --- | --- |
+| T00 | Foundation (autoload stubs, README, settings) | none | `core/`, `project.godot` |
+| T01 | Debug panel | none | `scenes/debug/` |
+| T02 | Dialogue balloon (Disco Elysium style) | none | `scenes/ui/dialogue_ui/`, `dialogue/` |
+| T03 | Player and click-to-move | none | `scenes/characters/player/` |
+| T04 | Isometric camera rig | T03 (soft) | `scenes/camera/` |
+| T05 | Painterly shader and mood presets | none | `art/shaders/`, `data/moods/` |
+| T06 | Interaction system | T03 | `scenes/interactables/` |
+| T07 | NPC base and schedules | T06 | `scenes/characters/npcs/`, `data/` |
+| T08 | World greybox and locations | T03 (soft) | `scenes/world/` |
+| T09 | HUD and menus | none | `scenes/ui/` |
+| T10 | Distortion effects | T05 | `art/shaders/` |
+| T11 | Echoes | T05, T06 | `scenes/interactables/echoes/` |
+| T12 | Sensitive objects | T06, T11 (soft) | `scenes/interactables/sensitive/` |
+| T13 | Audio: stems, tuning, effects | audio files | `audio/`, `core/audio_manager.gd` |
+| T14 | Save and load completion | T07, T15 | `core/save_manager.gd` |
+| T15 | Story flags | lead approval | `core/` |
+| T16 | Vertical slice: one full in-game day | all | everyone |
+| T17 | Build, export and playtest | T16 | `export_presets.cfg` |
+
+"Soft" means: you can start without it. Use a stub (a fake, simple version) and connect the real one later.
+
+### Dependency diagram
+
+The diagram shows only the hard dependencies. (GitHub and GitLab draw it. Use a Mermaid viewer if your editor does not.)
+
+```mermaid
+flowchart LR
+  T03[T03 Player] --> T06[T06 Interaction]
+  T03 -.-> T04[T04 Camera]
+  T02[T02 Balloon] -.-> T06
+  T06 --> T07[T07 NPCs]
+  T06 --> T11[T11 Echoes]
+  T05[T05 Shader + moods] --> T10[T10 Distortion]
+  T05 --> T11
+  T11 -.-> T12[T12 Sensitive objects]
+  T06 --> T12
+  T15[T15 Story flags] --> T14[T14 Save/load]
+  T07 --> T14
+  T07 --> T16[T16 Vertical slice]
+  T08[T08 World] --> T16
+  T09[T09 HUD + menus] --> T16
+  T10 --> T16
+  T12 --> T16
+  T13[T13 Audio] --> T16
+  T14 --> T16
+  T16 --> T17[T17 Build + playtest]
+```
+
+---
+
+## 2. Task overviews
+
+### T00: Foundation
+
+The structure that all other tasks use: the six autoload stubs, `README.md`, the folders, the Input Map (`pause`), the audio bus `Music` and the `Main` scene. The lead owns this task. It is done when the project opens and runs with no errors, and all autoloads load in the order given in the README.
+
+### T01: Debug panel
+
+A debug overlay that opens with F1 and exists only in debug builds (`OS.is_debug_build()`). It shows the game state, the mood, the Distortion level and the day and time. It has buttons to change energy (−20 and +20), advance time (10 and 60 minutes) and reset emotion and time. It uses only the public API of the managers, so every programmer can test their own task without playing the game. `EmotionManager` does not give the raw value yet, so the lead must add a `debug_get_axis(name)` getter for debug builds.
+
+### T02: Dialogue balloon
+
+The Disco Elysium style dialogue screen, built as a custom balloon for the Dialogue Manager plugin: a scrolling log of lines, inner voices, numbered choices, locked choices, and a theme that follows the mood. The balloon opens only through `GameManager.start_dialogue()`. If the plugin does not send `dialogue_ended`, the balloon calls `GameManager.end_dialogue()` when it closes. It may call `GameManager.on_choice_made()` after each choice to trigger an autosave. This task also delivers `dialogue/_test/test.dialogue` (a mood condition, an emotion mutation and a time mutation), which all other tasks use as a stub.
+
+### T03: Player and click-to-move
+
+A `CharacterBody3D` with a `NavigationAgent3D`. A click on the ground sends a ray from the camera and the player walks to that point. The player reacts to clicks only in the `EXPLORATION` state and stops in `DIALOGUE` (listen to `GameManager.state_changed`). Contract: group `player`, `move_to(position, stop_distance)`, signal `arrived`, and `set_input_enabled(enabled)`. Build and test it in `scenes/_sandbox/player_sandbox.tscn` (a flat floor, a navigation region and a few obstacles).
+
+### T04: Isometric camera rig
+
+A fixed-angle isometric camera that follows a `target` (`Node3D`) with smooth movement. It reacts to `mood_changed` with a `Tween`: in Storm it sways a little, and in Fog it moves back so the player looks small. Use constants for the values at first, then move them into `MoodPreset` when T05 is ready.
+
+### T05: Painterly shader and mood presets
+
+The five painted looks, made with **one** shader (a README rule). The task has three parts: the `MoodPreset` Resource with five `.tres` files; an `EnvironmentController` on the `Environment` node that listens to `mood_changed` and tweens the values to the new preset in about 1 to 2 seconds; and the shader. Build the color change first (hue, saturation, value, light color, fog), then the painted look (palette, brush size, edges). `MoodPreset` fields: `mood`, `hue_shift`, `saturation`, `value`, `palette`, `brush_size`, `light_color`, `light_energy`, `fog_density`, `camera_sway`, `camera_distance`, `ui_theme`. The game must stay at 60 FPS on a normal laptop.
+
+### T06: Interaction system
+
+One base scene for everything the player can click. It has a collision shape, a hover highlight and a cursor change. On a click, the player walks to the `interaction_point`, and on `arrived` the base calls `GameManager.start_dialogue(dialogue_resource, dialogue_title)`. It does nothing when the state is not `EXPLORATION`. Contract: `@export dialogue_resource`, `@export dialogue_title` (default `"start"`), `@export interaction_point` (`Marker3D`), and `can_interact() -> bool`, which child scenes override. Use `dialogue/_test/test.dialogue` until T02 is ready.
+
+### T07: NPC base and schedules
+
+NPCs with a daily routine (GDD: strict schedule). `NpcData` holds `id`, `display_name`, `portrait` and a list of `ScheduleEntry`. Each `ScheduleEntry` holds `start_hour`, `end_hour` and `spot_id`. The NPC scene extends `Interactable`. It listens to `TimeManager.time_changed`, finds the active entry with `TimeManager.is_between()`, and goes to the matching spot (a `Marker3D` in group `spots`). With no active entry, the NPC is away and `can_interact()` returns `false`. Schedules live in `.tres` files only. Roger (rests at night) and Neha (at the bar) are the first two NPCs.
+
+### T08: World greybox and locations
+
+A walkable town made of simple boxes: Town Hall with the basement archive, the Square, the Neon Padma, the Park and shelter, the protagonist's home and two stores. It has one `NavigationRegion3D`. Each place has a `Location` node with a `LocationData` Resource (`id`, `open_hour`, `close_hour`), and `is_open()` reads `TimeManager`. A closed door shows a one-line inner thought through a short dialogue. The scene also holds the `spots` markers that T07 needs. Keep node and scene names stable, because the final art replaces the boxes later.
+
+### T09: HUD and menus
+
+The screens around the game. The HUD shows the clock ("Day 1, 07:00") and listens to `time_changed`. The main menu has New Game, Continue (disabled when `SaveManager.has_save()` is false) and Quit. The pause menu has Resume and Back to menu, with `process_mode` set to "When Paused". All screens register with `UIManager.register_screen(...)`. The UI never shows the hidden emotion values.
+
+### T10: Distortion effects
+
+The three visual Distortion levels from the GDD table, driven by `distortion_changed`. Level 1 sends a signal for small anomalies (T11 and T12 use it). Level 2 makes the room sway or tilt, with a camera roll and a shader wobble. Level 3 breaks the scene into fragments. At level 0 the effect is off and costs nothing.
+
+### T11: Echoes
+
+Things the player sees that are not real. An `Echo` scene has a tone that follows the mood: Storm is grand (golden light, admiring faces), Fog is threatening (faces turning away, accusing objects). An `EchoSpot` marker holds `echo_scene`, a `mood` filter and `min_distortion`. The staging rule applies: an Echo appears or disappears only when it is outside the camera view (`VisibleOnScreenNotifier3D`) or after a dialogue. This task builds that rule as a reusable node named `OffscreenSwapper`, which T12 also uses.
+
+### T12: Sensitive objects
+
+The window, the mirror and the door, which change with the mood. `SensitiveObject` extends `Interactable`. A Resource maps each mood to a dialogue title, a description and a visual variant. In Overcast and Bright the object stays the same but its meaning changes. In Fog and Storm it shows an Echo. Swaps use `OffscreenSwapper` from T11, or happen only after a dialogue if it is not ready yet.
+
+### T13: Audio: stems, tuning, effects
+
+The real soundtrack in `AudioManager`. Replace the placeholder stem names with the real ones and set loop in the import settings. Tune the `MOOD_VOLUMES_DB` table with the composer. Add `play_sfx(name)` and a small list of effects (click, footsteps, door). The five moods must sound different, the stems must stay in sync, and the loop must have no click.
+
+### T14: Save and load completion
+
+Complete the save file. Add the story flags, NPC state (if it changes), the player position and the Dialogue Manager variables. Finish the Continue flow and handle a broken save file with a clear message and no crash. The game keeps autosave only: no manual save and no second slot.
+
+### T15: Story flags
+
+One place for story facts, such as "the player met Roger". Write a half-page proposal first. The lead approves it, because it may add a new autoload. The suggested content is a `Dictionary` of flags with `set_flag()`, `has_flag()`, the signal `flag_changed`, and `get_save_data()` / `load_save_data()`. Dialogue files use it like this: `[if StoryFlags.has_flag("met_roger")]`.
+
+### T16: Vertical slice, one full in-game day
+
+The whole team builds one complete day, from start to end. It has Roger, Neha and the Mayor with their real schedules, and the mood goes through at least Clear, Bright and Storm (or Fog). The team plays the day many times and writes the bugs on the board, and each programmer fixes the bugs in their own area. A new player must be able to play the day (20 to 40 minutes) with no crash, and a time conflict between two NPCs must have a visible consequence. The lead leads this task.
+
+### T17: Build, export and playtest
+
+Export presets for Windows and Linux, a test on a clean computer, a check of the basic settings (volume, window), and a list of known bugs. Someone outside the team should run the build and play for 10 minutes.
+
+---
+
+## 3. If we are late: what to cut
+
+Cut in this order. Do not cut a task that is higher in the list.
+
+1. T17 polish (extra settings) and T13 sound effects
+2. T12 Sensitive objects (keep only the mirror)
+3. T10 Distortion level 3 (fragmentation)
+4. T05 second shader version (keep the color change only)
+5. T11 Echoes (keep only one Echo for each mood)
+
+**Never cut:** T02, T03, T06, T07, T14 and T16. Without them there is no game.
