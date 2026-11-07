@@ -1,7 +1,7 @@
 # oh-darling
 A project for the 2026 Videogame Design and Programming (VDP) course at the Politecnico di Milano.
 
-# FOR DEVELOPERS!!!  Oh Darling: Project Guide
+# (WIP) FOR DEVELOPERS!!!  Oh Darling: Project Guide
  
 This file explains how the Godot project is built and how to work in it.
 Read it before you add code. It is short on purpose and can be updated over time.
