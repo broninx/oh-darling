@@ -52,7 +52,7 @@ const MOOD_VOLUMES_DB: Dictionary = {
 }
 
 var _players: Dictionary = { } # stem name -> AudioStreamPlayer
-var _tween: Tween
+var _tween: Tween = create_tween()
 
 
 func _ready() -> void:

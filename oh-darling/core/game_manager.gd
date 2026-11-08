@@ -68,7 +68,10 @@ func _ready() -> void:
 	var dialogue_manager: Node = get_node_or_null("/root/DialogueManager")
 	if dialogue_manager and dialogue_manager.has_signal("dialogue_ended"):
 		dialogue_manager.dialogue_ended.connect(_on_dialogue_ended)
+	_debug_ready()
 
+func _debug_ready()->void:
+	state = State.EXPLORATION
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Add the action "pause" in Project Settings > Input Map.
@@ -127,6 +130,7 @@ func on_choice_made() -> void:
 
 func toggle_pause() -> void:
 	if state == State.PAUSED:
+		print("paused")
 		get_tree().paused = false
 		change_state(_state_before_pause)
 	elif state == State.EXPLORATION or state == State.DIALOGUE:
