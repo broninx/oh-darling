@@ -1,0 +1,11 @@
+~ one
+Roger: You see it, they bow to the pig! To feed the soil!
+MC: [[(select your answer...)]]
+
+- The soil... the sacrifices? It's all for the harvest?
+Roger: Sacrifices, inheritances, contracts! It’s all blood and slop to them! Don't drink the water, kid. The roots go way too deep!
+- You're just a crazy old man. There's no pig.
+Roger: Crazy? Ha! The sane ones are the ones rotting under the tulips. Keep your eyes closed, it's safer in the dark!
+- Go back => one
+- End => END
+=> END

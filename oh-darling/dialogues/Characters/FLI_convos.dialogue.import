@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://ca6xgiix2frun"
+path="res://.godot/imported/FLI_convos.dialogue-d856ac1e83f354c6bb8557a31ab71c0a.tres"
+
+[deps]
+
+source_file="res://dialogues/Characters/FLI_convos.dialogue"
+dest_files=["res://.godot/imported/FLI_convos.dialogue-d856ac1e83f354c6bb8557a31ab71c0a.tres"]
+
+[params]
+
+defaults=true

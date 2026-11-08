@@ -1,0 +1,12 @@
+~ one
+MC: Neha, I need my cold coffee. Fast. I figured out what the town's geometry means. The stalls, they form a—
+Neha: Wooo, you’re vibrating at a very dangerous frequency today, my friend. Relax a bit, shall we? Drink this ashwagandha and lavender blend, while I make your coffee.
+MC: [[(select your answer...)]]
+
+- I can't stop now, they're watching—
+Neha: Hush. The town’s messy secrets will still be there tomorrow, but your mind needs a sanctuary right now. Drink.
+- Are you trying to drug me?
+Neha: I am trying to keep you from burning out. I only serve peace in my pub. If you want chaos, you'll have to find it outside.
+* Go back => one
+* End => END
+=> END

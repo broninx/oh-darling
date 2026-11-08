@@ -1,0 +1,12 @@
+~ one
+MC: Mr. Mayor, I was reorganizing the 1990s zoning permits, but the files for the farmers' market estate seem... redacted. There's a gap in the records.
+Mayor: Such a sharp mind, our new archivist! It’s truly refreshing. But remember, the beauty of our town lies in its flourishing present, not its dusty past. Keep the archives tidy, enjoy the sunshine and don't get lost in the dark down there. We wouldn't want you to... overexert yourself, would we?
+MC: [[(select your answer...)]]
+
+- Sure, I'll go back to work
+	Mayor: Fantastic! Keep this up and we will get along wonderfully.
+- Are you threatening me?
+	Mayor: I would never, I deeply value an attentive employee. However, my success has always been farsighted and so I espect from my team mates.
+- Go back => one
+- End => END
+=> END

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bn0l5qgfbw187"]
+
+[ext_resource type="Script" uid="uid://dt7gvxw6kxpji" path="res://dialogues/Test_Assets/_elements/npc.gd" id="1_sl071"]
+[ext_resource type="Resource" uid="uid://55bhhxw2neye" path="res://dialogues/Characters/CM_convos.dialogue" id="2_sl071"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_e0yyd"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_e0yyd"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0x18h"]
+radius = 4.0
+
+[node name="npc_dia" type="Node3D" unique_id=1850939060]
+
+[node name="NPC" type="StaticBody3D" parent="." unique_id=1351835065]
+script = ExtResource("1_sl071")
+diaFile = ExtResource("2_sl071")
+diaID = "one"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NPC" unique_id=1708899128]
+shape = SubResource("CylinderShape3D_e0yyd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NPC" unique_id=537763454]
+mesh = SubResource("CylinderMesh_e0yyd")
+
+[node name="Label3D" type="Label3D" parent="NPC" unique_id=1073519819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+billboard = 1
+text = "NPC
+"
+font_size = 80
+
+[node name="Area3D" type="Area3D" parent="NPC" unique_id=966349435]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NPC/Area3D" unique_id=961686506]
+shape = SubResource("SphereShape3D_0x18h")

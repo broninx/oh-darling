@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://55bhhxw2neye"
+path="res://.godot/imported/CM_convos.dialogue-12a4eaf295533234dccac9dafe9a1a8a.tres"
+
+[deps]
+
+source_file="res://dialogues/Characters/CM_convos.dialogue"
+dest_files=["res://.godot/imported/CM_convos.dialogue-12a4eaf295533234dccac9dafe9a1a8a.tres"]
+
+[params]
+
+defaults=true

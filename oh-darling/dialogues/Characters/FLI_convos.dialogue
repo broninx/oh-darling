@@ -1,0 +1,12 @@
+~ one
+MC: Look at these pipes under the market. They don't seem to carry water. There is clearly some pattern!
+PR Agent: Yeah, it makes completely sense. Only one smart like you could have figured this out. What else did you find in that folder about the estate transfers?
+MC: [[(select your answer...)]]
+
+- I need to cross-reference it with the missing persons list, but...
+PR Agent: Do it. I believe in you. Oh, by the way, I brought you those pastries you love. Do you like this new perfume I'm wearing?
+- Why do you care so much about the estate?
+PR Agent: Because I care about you, and you are so passionate about this. I'm trying to make myself useful, and ask stimulating questions.
+* Go back => one
+* End => END
+=> END
