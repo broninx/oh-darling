@@ -68,10 +68,12 @@ func _ready() -> void:
 	var dialogue_manager: Node = get_node_or_null("/root/DialogueManager")
 	if dialogue_manager and dialogue_manager.has_signal("dialogue_ended"):
 		dialogue_manager.dialogue_ended.connect(_on_dialogue_ended)
-	_debug_ready()
+	if OS.is_debug_build():
+		_debug_ready()
 
 func _debug_ready()->void:
-	state = State.EXPLORATION
+	new_game()
+	#state = State.EXPLORATION
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Add the action "pause" in Project Settings > Input Map.

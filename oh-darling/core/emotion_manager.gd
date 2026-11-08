@@ -131,3 +131,8 @@ func _calculate_distortion(energy: float) -> int:
 	if distance >= 60.0:
 		return 1
 	return 0
+
+## Debug functions
+## DEBUG ONLY. Used by the debug panel (T01). Game code must not call this.
+func debug_get_axis(axis: String) -> float:
+	return _axes.get (axis, 0.0)
