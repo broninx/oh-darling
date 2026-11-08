@@ -120,7 +120,7 @@ func start_dialogue(resource: Resource, title: String = "start") -> void:
 func end_dialogue() -> void:
 	if state != State.DIALOGUE:
 		return
-	SaveManager.save()
+	#SaveManager.save()
 	change_state(State.EXPLORATION)
 
 

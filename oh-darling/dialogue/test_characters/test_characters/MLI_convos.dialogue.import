@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://dtto3f23kwydl"
+path="res://.godot/imported/MLI_convos.dialogue-9dccd0c9b5d48b797bba70f022b42cd7.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_characters/MLI_convos.dialogue"
+dest_files=["res://.godot/imported/MLI_convos.dialogue-9dccd0c9b5d48b797bba70f022b42cd7.tres"]
+
+[params]
+
+defaults=true

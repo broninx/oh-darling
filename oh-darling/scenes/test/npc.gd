@@ -2,7 +2,7 @@ extends StaticBody3D
 
 @export var diaFile: DialogueResource
 @export var diaID: String = "start"
-var outline = preload("res://dialogues/Test_Assets/_elements/outline.tres")
+var outline = preload("res://scenes/test/outline.tres")
 
 @onready var mesh = $MeshInstance3D 
 @onready var area = $Area3D 
@@ -28,4 +28,5 @@ func _on_area_exited(body: Node3D) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if player_proximity and event.is_action_pressed("ui_accept"):
 		if diaFile != null:
-			DialogueManager.show_example_dialogue_balloon(diaFile, diaID)
+			GameManager.start_dialogue(diaFile, diaID)
+			#DialogueManager.show_example_dialogue_balloon(diaFile, diaID)

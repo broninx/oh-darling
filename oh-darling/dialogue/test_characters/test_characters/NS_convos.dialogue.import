@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://b0dlje3xc4jln"
+path="res://.godot/imported/NS_convos.dialogue-3876c8353b2a3840d2bc58fef00f19f0.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_characters/NS_convos.dialogue"
+dest_files=["res://.godot/imported/NS_convos.dialogue-3876c8353b2a3840d2bc58fef00f19f0.tres"]
+
+[params]
+
+defaults=true

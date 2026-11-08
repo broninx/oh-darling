@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://bn0l5qgfbw187"]
 
-[ext_resource type="Script" uid="uid://dt7gvxw6kxpji" path="res://dialogues/Test_Assets/_elements/npc.gd" id="1_sl071"]
-[ext_resource type="Resource" uid="uid://55bhhxw2neye" path="res://dialogues/Characters/CM_convos.dialogue" id="2_sl071"]
+[ext_resource type="Script" uid="uid://dt7gvxw6kxpji" path="res://scenes/test/npc.gd" id="1_sl071"]
+[ext_resource type="Resource" uid="uid://55bhhxw2neye" path="res://dialogue/test_characters/test_characters/CM_convos.dialogue" id="2_sl071"]
+
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e0yyd"]
 

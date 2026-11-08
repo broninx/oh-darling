@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cjl5qd2ps1dfa"]
 
-[ext_resource type="PackedScene" uid="uid://pmx4bmneklpe" path="res://scenes/test/player.tscn" id="1_m7npr"]
+[ext_resource type="PackedScene" uid="uid://pmx4bmneklpe" path="res://scenes/test/old/player.tscn" id="1_m7npr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37kl0"]
 

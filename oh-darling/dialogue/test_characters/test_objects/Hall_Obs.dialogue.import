@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://cj24jgyg1oory"
+path="res://.godot/imported/Hall_Obs.dialogue-7bb2816d380cbf8cdfc38035e182336c.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_objects/Hall_Obs.dialogue"
+dest_files=["res://.godot/imported/Hall_Obs.dialogue-7bb2816d380cbf8cdfc38035e182336c.tres"]
+
+[params]
+
+defaults=true

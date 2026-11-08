@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://by6ic05iq133f"
+path="res://.godot/imported/Park_Obs.dialogue-4859c2abba4c30bb73ea0c2418a6b2fd.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_objects/Park_Obs.dialogue"
+dest_files=["res://.godot/imported/Park_Obs.dialogue-4859c2abba4c30bb73ea0c2418a6b2fd.tres"]
+
+[params]
+
+defaults=true

@@ -70,7 +70,7 @@ debug_toggle={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://dialogues/Characters/CM_convos.dialogue", "res://dialogues/Characters/FLI_convos.dialogue", "res://dialogues/Characters/JR_convos.dialogue", "res://dialogues/Characters/MLI_convos.dialogue", "res://dialogues/Characters/NS_convos.dialogue", "res://dialogues/Objects/Hall_Obs.dialogue", "res://dialogues/Objects/Home_Obs.dialogue", "res://dialogues/Objects/Park_Obs.dialogue", "res://dialogues/Objects/Pub_Obs.dialogue", "res://dialogues/Objects/Town_Obs.dialogue")
+locale/translations_pot_files=PackedStringArray("res://dialogue/test_characters/test_characters/NS_convos.dialogue", "res://dialogue/test_characters/test_characters/MLI_convos.dialogue", "res://dialogue/test_characters/test_characters/JR_convos.dialogue", "res://dialogue/test_characters/test_characters/FLI_convos.dialogue", "res://dialogue/test_characters/test_characters/CM_convos.dialogue", "res://dialogue/test_characters/test_objects/Town_Obs.dialogue", "res://dialogue/test_characters/test_objects/Pub_Obs.dialogue", "res://dialogue/test_characters/test_objects/Park_Obs.dialogue", "res://dialogue/test_characters/test_objects/Home_Obs.dialogue", "res://dialogue/test_characters/test_objects/Hall_Obs.dialogue")
 
 [physics]
 

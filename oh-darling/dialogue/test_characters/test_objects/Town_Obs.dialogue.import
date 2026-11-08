@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://dvfwos7ts81ra"
+path="res://.godot/imported/Town_Obs.dialogue-c5c7b64f92b1c6b47bca13f5782c3ce6.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_objects/Town_Obs.dialogue"
+dest_files=["res://.godot/imported/Town_Obs.dialogue-c5c7b64f92b1c6b47bca13f5782c3ce6.tres"]
+
+[params]
+
+defaults=true

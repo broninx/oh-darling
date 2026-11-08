@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cr2k0wvspfsyn"]
 
-[ext_resource type="Script" uid="uid://bbaxhjlik0vyn" path="res://dialogues/Test_Assets/_elements/player.gd" id="1_cxqrc"]
+[ext_resource type="Script" uid="uid://bbaxhjlik0vyn" path="res://scenes/test/player.gd" id="1_cxqrc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n6ybg"]
 albedo_color = Color(0.87133354, 0.2750741, 0.73141944, 1)
@@ -25,6 +25,7 @@ mesh = SubResource("PrismMesh_g0rtd")
 shape = SubResource("CapsuleShape3D_bs6fw")
 
 [node name="Camera3D" type="Camera3D" parent="Player" unique_id=290734627]
-transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 6, 8, 0)
-projection = 1
-size = 10.0
+transform = Transform3D(0.7071068, -0.45451948, 0.54167527, 0, 0.7660445, 0.64278764, -0.7071068, -0.45451948, 0.54167527, 20, 23.372677, 20.113)
+fov = 20.9
+size = 15.894
+near = 0.059

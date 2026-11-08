@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://c272gugviqn0a"
+path="res://.godot/imported/Home_Obs.dialogue-e2fbb8ccc8b0ec3133892116f9d7bcdb.tres"
+
+[deps]
+
+source_file="res://dialogue/test_characters/test_objects/Home_Obs.dialogue"
+dest_files=["res://.godot/imported/Home_Obs.dialogue-e2fbb8ccc8b0ec3133892116f9d7bcdb.tres"]
+
+[params]
+
+defaults=true
