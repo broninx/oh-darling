@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://008s02kl3v1c"]
+
+[ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_cntqm"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/interactables/item.tscn" id="2_omf4g"]
+[ext_resource type="PackedScene" uid="uid://d1e27rhe1m7g2" path="res://scenes/characters/test_npc/test_npc.tscn" id="3_cntqm"]
+[ext_resource type="Resource" uid="uid://cfrcgqswgweu6" path="res://dialogue/test_characters/test_objects/Pub_Obs.dialogue" id="3_omf4g"]
+[ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="5_0eyv0"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lnxtk"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7gex4"]
+
+[sub_resource type="Sky" id="Sky_bs6fw"]
+sky_material = SubResource("ProceduralSkyMaterial_7gex4")
+
+[sub_resource type="Environment" id="Environment_e0yyd"]
+background_mode = 2
+sky = SubResource("Sky_bs6fw")
+tonemap_mode = 3
+tonemap_exposure = 0.6
+tonemap_white = 3.19
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n6ybg"]
+albedo_color = Color(2.5027991e-06, 0.49926436, 2.8878452e-07, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e0yyd"]
+size = Vector3(20.069824, 5.3377686, 0.68852997)
+
+[node name="Test Scene" type="Node3D" unique_id=721325679]
+
+[node name="Player" parent="." unique_id=1543590871 instance=ExtResource("1_cntqm")]
+
+[node name="Item-Test object" parent="." unique_id=1417887828 instance=ExtResource("2_omf4g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -5)
+
+[node name="InteractionComponent" parent="Item-Test object" index="1" unique_id=2042955081]
+dialogue_resource = ExtResource("3_omf4g")
+dialogue_title = "one"
+
+[node name="Item - Test object 2" parent="." unique_id=702316144 instance=ExtResource("2_omf4g")]
+
+[node name="MeshInstance3D" parent="Item - Test object 2" index="0" unique_id=338424483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, -5)
+mesh = SubResource("CylinderMesh_lnxtk")
+
+[node name="InteractionComponent" parent="Item - Test object 2" index="1" unique_id=2042955081]
+dialogue_resource = ExtResource("5_0eyv0")
+
+[node name="NPC-Test NPC" parent="." unique_id=1874629868 instance=ExtResource("3_cntqm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -4)
+
+[node name="InteractionComponent" parent="NPC-Test NPC" index="1" unique_id=1944455497]
+interaction_range = 3.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1638267004]
+transform = Transform3D(-0.042612165, -0.4535782, 0.8901973, 1.3505038e-08, 0.89100665, 0.45399058, -0.9990918, 0.019345552, -0.03796774, 0, 0, 0)
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.3
+directional_shadow_max_distance = 1000.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=643225946]
+environment = SubResource("Environment_e0yyd")
+
+[node name="Structure" type="Node3D" parent="." unique_id=794074374]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Structure" unique_id=1061771392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+use_collision = true
+size = Vector3(20, 2, 20)
+material = SubResource("StandardMaterial3D_n6ybg")
+
+[node name="Furniture" type="Node3D" parent="." unique_id=2129663328]
+
+[node name="muri_invisibili" type="Node3D" parent="Furniture" unique_id=1501043724]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="muro_nord" type="StaticBody3D" parent="Furniture/muri_invisibili" unique_id=435012157]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/muri_invisibili/muro_nord" unique_id=1255644462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1688843, -10.202808)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_sud" type="StaticBody3D" parent="Furniture/muri_invisibili" unique_id=441902269]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/muri_invisibili/muro_sud" unique_id=807947391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1688843, 10.193734)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_est" type="StaticBody3D" parent="Furniture/muri_invisibili" unique_id=372506776]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/muri_invisibili/muro_est" unique_id=380013515]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10.247623, 2.1688843, -0.07286167)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[node name="muro_ovest" type="StaticBody3D" parent="Furniture/muri_invisibili" unique_id=600294241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.448027, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/muri_invisibili/muro_ovest" unique_id=1170893210]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10.247623, 2.1688843, -0.07286167)
+shape = SubResource("BoxShape3D_e0yyd")
+
+[editable path="Item-Test object"]
+[editable path="Item - Test object 2"]
+[editable path="NPC-Test NPC"]

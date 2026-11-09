@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://pmx4bmneklpe"]
+[gd_scene format=3 uid="uid://cyu7opcwl2vow"]
 
-[ext_resource type="Script" uid="uid://dwocy0imuitkq" path="res://scenes/test/old/player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://bypumrxaeccdx" path="res://scenes/characters/player/player.gd" id="1_7uws0"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rq2rp"]
 
@@ -8,8 +8,8 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_rq2rp"]
 
-[node name="Player" type="CharacterBody3D" unique_id=1543590871]
-script = ExtResource("1_4flbx")
+[node name="Player" type="CharacterBody3D" unique_id=1543590871 groups=["player"]]
+script = ExtResource("1_7uws0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2001110767]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

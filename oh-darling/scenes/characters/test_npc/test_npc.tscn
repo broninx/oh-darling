@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://d1e27rhe1m7g2"]
+
+[ext_resource type="PackedScene" uid="uid://c27wr74cxdr2i" path="res://scenes/interactables/npc.tscn" id="1_gvydp"]
+[ext_resource type="Resource" uid="uid://55bhhxw2neye" path="res://dialogue/test_characters/test_characters/CM_convos.dialogue" id="2_8r6tc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewhxa"]
+albedo_color = Color(0.116666794, 1, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_rq2rp"]
+material = SubResource("StandardMaterial3D_ewhxa")
+
+[node name="Test NPC" unique_id=1874629868 instance=ExtResource("1_gvydp")]
+
+[node name="MeshInstance3D" parent="." index="0" unique_id=1213824177]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_rq2rp")
+
+[node name="InteractionComponent" parent="." index="1" unique_id=1944455497 node_paths=PackedStringArray("target_mesh")]
+target_mesh = NodePath("../MeshInstance3D")
+dialogue_resource = ExtResource("2_8r6tc")
+dialogue_title = "one"
+interaction_range = 3.0

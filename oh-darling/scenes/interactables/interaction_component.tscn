@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://ixyg4uapykm8"]
+
+[ext_resource type="Script" uid="uid://b34mlhyjbcjg7" path="res://scenes/interactables/interaction_component.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://dk1gt4hkxal7p" path="res://scenes/interactables/highlight.tres" id="2_lnxtk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_default"]
+
+[node name="InteractionComponent" type="Area3D" unique_id=257515836]
+script = ExtResource("1_script")
+interaction_range = 3.0
+highlight_material = ExtResource("2_lnxtk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1263871887]
+shape = SubResource("BoxShape3D_default")

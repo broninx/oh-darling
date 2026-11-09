@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://c27wr74cxdr2i"]
+
+[ext_resource type="PackedScene" uid="uid://ixyg4uapykm8" path="res://scenes/interactables/interaction_component.tscn" id="1_comp"]
+[ext_resource type="Material" uid="uid://6cbferlgvne0" path="res://scenes/interactables/outline.tres" id="2_2wjnd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_default"]
+
+[node name="Npc" type="Node3D" unique_id=945198299 groups=["npcs"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1213824177]
+mesh = SubResource("BoxMesh_default")
+
+[node name="InteractionComponent" parent="." unique_id=1944455497 instance=ExtResource("1_comp")]
+interaction_range = null
+hover_material = ExtResource("2_2wjnd")

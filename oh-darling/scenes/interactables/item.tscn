@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dytegas5fvgrk"]
+
+[ext_resource type="PackedScene" uid="uid://ixyg4uapykm8" path="res://scenes/interactables/interaction_component.tscn" id="1_comp"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_default"]
+
+[node name="Item" type="Node3D" unique_id=702316144 groups=["items"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=338424483]
+mesh = SubResource("BoxMesh_default")
+
+[node name="InteractionComponent" parent="." unique_id=2042955081 node_paths=PackedStringArray("target_mesh") instance=ExtResource("1_comp")]
+target_mesh = NodePath("../MeshInstance3D")
