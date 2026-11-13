@@ -1,0 +1,163 @@
+[gd_resource type="VisualShader" format=3 uid="uid://bxthmjkncwl2q"]
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_thr"]
+parameter_name = "glow_threshold"
+default_value_enabled = true
+default_value = 0.6
+
+[sub_resource type="VisualShaderNodeSmoothStep" id="smooth"]
+
+[sub_resource type="VisualShaderNodeColorParameter" id="p_hi"]
+parameter_name = "highlight_tint"
+default_value_enabled = true
+default_value = Color(0.8392157, 0.9019608, 0.99215686, 1)
+
+[sub_resource type="VisualShaderNodeVectorOp" id="op_luce"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_glow"]
+parameter_name = "glow_strength"
+default_value_enabled = true
+default_value = 0.2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="op_forza"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeColorOp" id="screen"]
+
+[sub_resource type="VisualShaderNodeFloatOp" id="dark"]
+default_input_values = [0, 1.0, 1, 0.0]
+operator = 1
+
+[sub_resource type="VisualShaderNodeColorParameter" id="p_sh"]
+parameter_name = "shadow_tint"
+default_value_enabled = true
+default_value = Color(0.478, 0.455, 0.424, 1)
+
+[sub_resource type="VisualShaderNodeVectorOp" id="op_ombra"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeInput" id="in_uv"]
+input_name = "screen_uv"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_shamt"]
+parameter_name = "shadow_amount"
+default_value_enabled = true
+default_value = 0.1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="op_quant"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="add"]
+
+[sub_resource type="VisualShaderNodeMix" id="mix_flat"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(0.5, 0.5, 0.5), 2, 0.5]
+op_type = 4
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_flat"]
+parameter_name = "flatten"
+default_value_enabled = true
+default_value = 0.2
+
+[sub_resource type="VisualShaderNodeVectorDistance" id="dist"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeSmoothStep" id="vsmooth"]
+default_input_values = [0, 0.0, 1, 0.75, 2, 0.5]
+
+[sub_resource type="VisualShaderNodeFloatOp" id="vmul"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeTexture" id="tex"]
+source = 1
+
+[sub_resource type="VisualShaderNodeFloatOp" id="vinv"]
+default_input_values = [0, 1.0, 1, 0.0]
+operator = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="vapply"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeColorFunc" id="gray"]
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_sat"]
+parameter_name = "Saturation"
+default_value_enabled = true
+default_value = 0.9
+
+[sub_resource type="VisualShaderNodeMix" id="mix_sat"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(1, 1, 1), 2, 0.5]
+op_type = 4
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="p_bright"]
+parameter_name = "Brightness"
+default_value_enabled = true
+default_value = 0.8
+
+[sub_resource type="VisualShaderNodeVectorOp" id="op_bright"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorDecompose" id="lum"]
+
+[resource]
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(3000, 300)
+nodes/fragment/2/node = SubResource("in_uv")
+nodes/fragment/2/position = Vector2(-600, 300)
+nodes/fragment/3/node = SubResource("tex")
+nodes/fragment/3/position = Vector2(-300, 300)
+nodes/fragment/4/node = SubResource("gray")
+nodes/fragment/4/position = Vector2(0, 160)
+nodes/fragment/5/node = SubResource("p_sat")
+nodes/fragment/5/position = Vector2(0, 460)
+nodes/fragment/6/node = SubResource("mix_sat")
+nodes/fragment/6/position = Vector2(400, 300)
+nodes/fragment/7/node = SubResource("p_bright")
+nodes/fragment/7/position = Vector2(400, 520)
+nodes/fragment/8/node = SubResource("op_bright")
+nodes/fragment/8/position = Vector2(760, 320)
+nodes/fragment/9/node = SubResource("lum")
+nodes/fragment/9/position = Vector2(400, -100)
+nodes/fragment/10/node = SubResource("p_thr")
+nodes/fragment/10/position = Vector2(400, -360)
+nodes/fragment/11/node = SubResource("smooth")
+nodes/fragment/11/position = Vector2(760, -220)
+nodes/fragment/12/node = SubResource("p_hi")
+nodes/fragment/12/position = Vector2(760, -480)
+nodes/fragment/13/node = SubResource("op_luce")
+nodes/fragment/13/position = Vector2(1100, -300)
+nodes/fragment/14/node = SubResource("p_glow")
+nodes/fragment/14/position = Vector2(1100, -80)
+nodes/fragment/15/node = SubResource("op_forza")
+nodes/fragment/15/position = Vector2(1440, -200)
+nodes/fragment/16/node = SubResource("screen")
+nodes/fragment/16/position = Vector2(1640, 200)
+nodes/fragment/17/node = SubResource("dark")
+nodes/fragment/17/position = Vector2(760, 40)
+nodes/fragment/18/node = SubResource("p_sh")
+nodes/fragment/18/position = Vector2(1100, 600)
+nodes/fragment/19/node = SubResource("op_ombra")
+nodes/fragment/19/position = Vector2(1440, 500)
+nodes/fragment/20/node = SubResource("p_shamt")
+nodes/fragment/20/position = Vector2(1440, 760)
+nodes/fragment/21/node = SubResource("op_quant")
+nodes/fragment/21/position = Vector2(1700, 560)
+nodes/fragment/22/node = SubResource("add")
+nodes/fragment/22/position = Vector2(1960, 320)
+nodes/fragment/23/node = SubResource("mix_flat")
+nodes/fragment/23/position = Vector2(2240, 300)
+nodes/fragment/24/node = SubResource("p_flat")
+nodes/fragment/24/position = Vector2(1960, 560)
+nodes/fragment/25/node = SubResource("dist")
+nodes/fragment/25/position = Vector2(1700, 980)
+nodes/fragment/27/node = SubResource("vsmooth")
+nodes/fragment/27/position = Vector2(1960, 1000)
+nodes/fragment/29/node = SubResource("vmul")
+nodes/fragment/29/position = Vector2(2240, 1060)
+nodes/fragment/30/node = SubResource("vinv")
+nodes/fragment/30/position = Vector2(2480, 980)
+nodes/fragment/31/node = SubResource("vapply")
+nodes/fragment/31/position = Vector2(2740, 320)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 0, 3, 0, 4, 0, 4, 0, 6, 0, 3, 0, 6, 1, 5, 0, 6, 2, 6, 0, 8, 0, 7, 0, 8, 1, 4, 0, 9, 0, 10, 0, 11, 0, 9, 0, 11, 2, 12, 0, 13, 0, 11, 0, 13, 1, 13, 0, 15, 0, 14, 0, 15, 1, 8, 0, 16, 0, 15, 0, 16, 1, 9, 0, 17, 1, 18, 0, 19, 0, 17, 0, 19, 1, 19, 0, 21, 0, 20, 0, 21, 1, 16, 0, 22, 0, 21, 0, 22, 1, 22, 0, 23, 0, 24, 0, 23, 2, 2, 0, 25, 0, 23, 0, 31, 0, 30, 0, 31, 1, 31, 0, 0, 0, 27, 0, 29, 0, 29, 0, 30, 1, 25, 0, 27, 2)

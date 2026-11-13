@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://qwbcjr0bu8ki"]
+
+[ext_resource type="PackedScene" uid="uid://008s02kl3v1c" path="res://scenes/test/test_scene.tscn" id="1_xn8ax"]
+[ext_resource type="Texture2D" uid="uid://dkwrepw4lcb1h" path="res://scenes/test/test_shaders/lone_monk.webp" id="2_djkem"]
+[ext_resource type="Shader" uid="uid://c12wvuh5x4w2v" path="res://art/shaders/test_shaders_fog.gdshader" id="3_xn8ax"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yjamj"]
+shader = ExtResource("3_xn8ax")
+shader_parameter/intensity = 1.0
+shader_parameter/thin = 0.0
+shader_parameter/stretch = 0.0
+shader_parameter/saturation = 0.12
+shader_parameter/contrast = 0.7
+shader_parameter/brightness = 1.0
+shader_parameter/deep_blue = Color(0.05, 0.08, 0.16, 1)
+shader_parameter/grey_blue = Color(0.3, 0.38, 0.47, 1)
+shader_parameter/dull_green = Color(0.42, 0.47, 0.42, 1)
+shader_parameter/dirty_ochre = Color(0.66, 0.6, 0.45, 1)
+shader_parameter/palette_amount = 0.5
+shader_parameter/line_strength = 0.567
+shader_parameter/line_threshold = 0.5
+shader_parameter/line_gaps = 0.209
+shader_parameter/line_jitter = 0.473
+shader_parameter/jitter_fps = 4.44
+shader_parameter/line_color = Color(0.04, 0.05, 0.09, 1)
+shader_parameter/canvas_color = Color(0.78, 0.76, 0.7, 1)
+shader_parameter/canvas_amount = 0.162000007695
+shader_parameter/canvas_scale = 1.8050000619875
+shader_parameter/fade = 0.06
+shader_parameter/edge_canvas = 0.062
+
+[node name="test shaders" type="Node2D" unique_id=738827780]
+
+[node name="Test Scene" parent="." unique_id=721325679 instance=ExtResource("1_xn8ax")]
+
+[node name="TextureRect" type="TextureRect" parent="Test Scene" unique_id=2097137383]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_djkem")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1564015449]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=974746611]
+material = SubResource("ShaderMaterial_yjamj")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

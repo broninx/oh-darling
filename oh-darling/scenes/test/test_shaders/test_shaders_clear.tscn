@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cecco3a5whkfc"]
+
+[ext_resource type="PackedScene" uid="uid://008s02kl3v1c" path="res://scenes/test/test_scene.tscn" id="1_rqpt6"]
+[ext_resource type="Texture2D" uid="uid://dkwrepw4lcb1h" path="res://scenes/test/test_shaders/lone_monk.webp" id="2_bnva5"]
+[ext_resource type="Shader" uid="uid://b7lyefgfqtk2" path="res://art/shaders/kuwahara_clear.gdshader" id="3_b3cwf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pwe8y"]
+shader = ExtResource("3_b3cwf")
+shader_parameter/radius = 9
+shader_parameter/offset = Vector3(0, 0, 0)
+
+[node name="test shaders" type="Node2D" unique_id=738827780]
+
+[node name="Test Scene" parent="." unique_id=721325679 instance=ExtResource("1_rqpt6")]
+
+[node name="TextureRect" type="TextureRect" parent="Test Scene" unique_id=2097137383]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bnva5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1564015449]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=974746611]
+material = SubResource("ShaderMaterial_pwe8y")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

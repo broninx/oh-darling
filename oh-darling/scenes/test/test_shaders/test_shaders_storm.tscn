@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bjr67at6454a6"]
+
+[ext_resource type="PackedScene" uid="uid://008s02kl3v1c" path="res://scenes/test/test_scene.tscn" id="1_21107"]
+[ext_resource type="Texture2D" uid="uid://dkwrepw4lcb1h" path="res://scenes/test/test_shaders/lone_monk.webp" id="2_inn81"]
+[ext_resource type="Shader" uid="uid://c56nchjeoddpt" path="res://art/shaders/test_shaders_storm.gdshader" id="3_21107"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pwe8y"]
+shader = ExtResource("3_21107")
+shader_parameter/intensity = 1.0
+shader_parameter/wave_strength = 1.143
+shader_parameter/wave_size = 6.0
+shader_parameter/sway = 2.0
+shader_parameter/swirl_strength = 4.0
+shader_parameter/swirl_scale = 4.0
+shader_parameter/swirl_speed = 0.15
+shader_parameter/follow_forms = 0.6
+shader_parameter/stroke_length = 6.0
+shader_parameter/stroke_samples = 6
+shader_parameter/impasto = 0.45
+shader_parameter/stroke_width = 4.0
+shader_parameter/outline_strength = 0.58
+shader_parameter/outline_thickness = 2.212
+shader_parameter/outline_threshold = 0.15
+shader_parameter/outline_color = Color(0.04, 0.05, 0.12, 1)
+shader_parameter/halo_strength = 0.966
+shader_parameter/halo_threshold = 0.427
+shader_parameter/halo_radius = 60.0
+shader_parameter/lamp_brightness = 0.228
+shader_parameter/ring_count = 7.919
+shader_parameter/ring_speed = 2.566
+shader_parameter/halo_tint = Color(1, 0.69, 0, 1)
+shader_parameter/saturation = 3.0
+shader_parameter/contrast = 0.854
+shader_parameter/brightness = 1.275
+shader_parameter/gamma = 0.7
+shader_parameter/shadow_lift = 0.7
+shader_parameter/ultramarine = Color(0.18, 0.26, 0.72, 1)
+shader_parameter/deep_blue = Color(0.025, 0.025, 0.12, 1)
+shader_parameter/orange = Color(1, 0.49, 0.12, 1)
+shader_parameter/chrome_yellow = Color(1, 0.79, 0.11, 1)
+shader_parameter/tint_amount = 1.47
+shader_parameter/yellow_strength = 1.0
+shader_parameter/yellow_threshold = 0.708
+shader_parameter/pulse = 0.082
+shader_parameter/pulse_speed = 1.011
+
+[node name="test shaders" type="Node2D" unique_id=738827780]
+
+[node name="Test Scene" parent="." unique_id=721325679 instance=ExtResource("1_21107")]
+
+[node name="TextureRect" type="TextureRect" parent="Test Scene" unique_id=2097137383]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_inn81")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1564015449]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=974746611]
+material = SubResource("ShaderMaterial_pwe8y")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_right = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

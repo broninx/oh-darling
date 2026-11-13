@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://bsjnai4kf32fv"]
+
+[ext_resource type="PackedScene" uid="uid://008s02kl3v1c" path="res://scenes/test/test_scene.tscn" id="1_chkx8"]
+[ext_resource type="Texture2D" uid="uid://dkwrepw4lcb1h" path="res://scenes/test/test_shaders/lone_monk.webp" id="2_u37os"]
+[ext_resource type="Shader" uid="uid://b7lyefgfqtk2" path="res://art/shaders/kuwahara_clear.gdshader" id="3_x1yv8"]
+[ext_resource type="Shader" uid="uid://bxthmjkncwl2q" path="res://art/shaders/test_shaders_Overcast.tres" id="4_chkx8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pwe8y"]
+shader = ExtResource("3_x1yv8")
+shader_parameter/radius = 5
+shader_parameter/offset = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gtiic"]
+shader = ExtResource("4_chkx8")
+shader_parameter/Saturation = 0.9
+shader_parameter/Brightness = 0.8
+shader_parameter/highlight_tint = Color(0.839216, 0.901961, 0.992157, 1)
+shader_parameter/glow_threshold = 0.6
+shader_parameter/glow_strength = 0.2
+shader_parameter/shadow_tint = Color(0.478, 0.455, 0.424, 1)
+shader_parameter/shadow_amount = 0.1
+shader_parameter/flatten = 0.2
+
+[node name="test shaders" type="Node2D" unique_id=738827780]
+
+[node name="Test Scene" parent="." unique_id=721325679 instance=ExtResource("1_chkx8")]
+
+[node name="TextureRect" type="TextureRect" parent="Test Scene" unique_id=2097137383]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_u37os")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1564015449]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=974746611]
+material = SubResource("ShaderMaterial_pwe8y")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer" unique_id=250189072]
+copy_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer" unique_id=388932695]
+material = SubResource("ShaderMaterial_gtiic")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -87.0
+offset_top = -103.0
+offset_right = 84.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
