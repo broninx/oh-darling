@@ -193,5 +193,5 @@ void fragment() {
 	// pulse
 	col *= 1.0 + sin(t * pulse_speed) * pulse;
 
-	COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), 1.0);
+		COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), COLOR.a);
 }

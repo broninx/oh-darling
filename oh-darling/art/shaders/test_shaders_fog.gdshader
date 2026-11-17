@@ -127,5 +127,5 @@ void fragment() {
 	float edge_mask = smoothstep(0.45, 0.85, length(c) + (fbm(fc / 60.0) - 0.5) * 0.2);
 	col = mix(col, canvas, max(edge_mask * edge_canvas, 1.0 - inside));
 
-	COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), 1.0);
+		COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), COLOR.a);
 }
