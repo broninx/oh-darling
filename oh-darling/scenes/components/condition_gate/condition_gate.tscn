@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/components/condition_gate/condition_gate.gd" id="1_gate"]
+
+[node name="ConditionGate" type="Node"]
+script = ExtResource("1_gate")
