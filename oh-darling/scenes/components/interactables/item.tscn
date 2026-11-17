@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dytegas5fvgrk"]
 
-[ext_resource type="PackedScene" uid="uid://ixyg4uapykm8" path="res://scenes/interactables/interaction_component.tscn" id="1_comp"]
+[ext_resource type="PackedScene" uid="uid://ixyg4uapykm8" path="res://scenes/components/interactables/interaction_component.tscn" id="1_comp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_default"]
 

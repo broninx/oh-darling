@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d1e27rhe1m7g2"]
 
-[ext_resource type="PackedScene" uid="uid://c27wr74cxdr2i" path="res://scenes/interactables/npc.tscn" id="1_gvydp"]
+[ext_resource type="PackedScene" uid="uid://c27wr74cxdr2i" path="res://scenes/components/interactables/npc.tscn" id="1_gvydp"]
 [ext_resource type="Resource" uid="uid://55bhhxw2neye" path="res://dialogue/test_characters/test_characters/CM_convos.dialogue" id="2_8r6tc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewhxa"]

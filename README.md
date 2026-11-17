@@ -17,6 +17,7 @@ core/        the autoloads (managers) and core/debug_panel/
 data/        Resource scripts and .tres data (moods, schedules)
 dialogue/    .dialogue files, one folder for each character
 scenes/      scenes AND their scripts, grouped by feature
+             (scenes/components/ = reusable parts: interactables, condition_gate)
 art/         models, textures, portraits, shaders
 audio/       music stems and sound effects
 addons/      plugins (do not edit)
@@ -102,14 +103,14 @@ Level (Node3D)
 
 ### Add an item
 
-1. Drag `scenes/interactables/item.tscn` into the scene.
+1. Drag `scenes/components/interactables/item.tscn` into the scene.
 2. Right-click it and choose **Editable Children**.
 3. On `MeshInstance3D`, set the mesh.
 4. On `InteractionComponent`, set `dialogue_resource` and `dialogue_title`.
 
 ### Add an NPC
 
-1. Do not edit `npc.tscn`. Choose *Scene → New Inherited Scene* from `scenes/interactables/npc.tscn`.
+1. Do not edit `npc.tscn`. Choose *Scene → New Inherited Scene* from `scenes/components/interactables/npc.tscn`.
 2. Set the mesh on `MeshInstance3D`. Set `target_mesh` (the `MeshInstance3D`), `dialogue_resource` and `dialogue_title` on `InteractionComponent`.
 3. Save it in `scenes/characters/npcs/` (see `scenes/characters/test_npc/test_npc.tscn` for an example).
 4. Put the dialogue files in the folder of the character in `dialogue/`.
@@ -130,11 +131,42 @@ It makes one object clickable. The mouse is over the object and the player is cl
 | `hover_material`, `highlight_material` | The two overlays. |
 | `enabled` | The owner's switch. |
 
-Another component stops the object with `block(source)` and frees it with `unblock(source)`. Do not use `enabled` for this. Each source has its own block, so two sources cannot remove each other's block.
+Another component (or a `ConditionGate`) stops the object with `block(source)` and frees it with `unblock(source)`. Do not use `enabled` for this. Each source has its own block, so two sources cannot remove each other's block.
 
 Limits: do not scale the target mesh in a non-uniform way. Call `refresh()` after you change `target_mesh.mesh` in code. A wall or a `Control` in front of the object blocks the mouse.
 
+### Lock or hide something: `ConditionGate`
+
+First try the dialogue file. If an object only needs a different line (closed shop, line for one mood), use an `if` in the `.dialogue` file. No node is needed.
+
+Use a `ConditionGate` (`scenes/components/condition_gate/condition_gate.tscn`) when an object must appear, disappear, or stop being clickable.
+
+1. Add the gate as a child of the object (use **Editable Children** on an instance).
+2. In **Conditions**, fill in only what you need. All must be true. A field with its default value is ignored.
+3. In **Effects**, drag in the nodes to change. Do not write these node fields by hand in a `.tscn` file.
+
+| Conditions | Meaning |
+| --- | --- |
+| Min Day / Max Day | Day range. Max 0 = no limit. |
+| From Hour / To Hour | Hour range. 22 to 4 crosses midnight. 0 to 24 = any time. |
+| Moods | Ticked moods only. None ticked = any mood. |
+| Min Distortion | Lowest Distortion level. |
+| Required Flags | Story flags (T15). Always false until `StoryFlags` exists. |
+| Invert | Reverse the result. |
+
+| Effects | Meaning |
+| --- | --- |
+| Hide Target | Shown when true. Hidden and disabled (not clickable) when false. |
+| Interaction | The `InteractionComponent` is blocked when false. |
+| Locked Title | With Interaction: the object is not blocked. A click starts this dialogue title. |
+
+Examples: a note from day 2 = Min Day 2 + Hide Target. An NPC away at night = From 7, To 22 + Hide Target. A shop closed after 19:00 = From 9, To 19 + Interaction + Locked Title.
+
+It checks when the scene loads. After that it checks only in `EXPLORATION`, so a change waits for the dialogue to end (Staging Rule). For another effect, connect to its signal `changed(met)`. For a rule the fields cannot express, extend the script and override `_extra_check() -> bool`. It saves nothing.
+
 ### Make something depend on the mood
+
+For an object that appears or hides by mood, use a `ConditionGate`. For anything else:
 
 1. Connect to `EmotionManager.mood_changed` in `_ready()`.
 2. Read `EmotionManager.get_mood()` once, to set the first state.
@@ -224,13 +256,13 @@ Each task is one unit of work for **one** programmer. The status is on the Figma
 | T03 | Player and movement | `scenes/characters/player/` |
 | T04 | Isometric camera rig | `scenes/camera/` |
 | T05 | Painterly shader and mood presets | `art/shaders/`, `data/moods/` |
-| T06 | Interaction system | `scenes/interactables/` |
+| T06 | Interaction system | `scenes/components/interactables/` |
 | T07 | NPC schedules | `scenes/characters/npcs/`, `data/` |
 | T08 | World greybox and locations | `scenes/world/` |
 | T09 | HUD and menus | `scenes/ui/` |
 | T10 | Distortion effects | `art/shaders/` |
-| T11 | Echoes | `scenes/interactables/echoes/` |
-| T12 | Sensitive objects | `scenes/interactables/sensitive/` |
+| T11 | Echoes | `scenes/components/echoes/` |
+| T12 | Sensitive objects | `scenes/components/sensitive/` |
 | T13 | Audio: stems, tuning, effects | `audio/`, `core/audio_manager.gd` |
 | T14 | Save and load completion | `core/save_manager.gd` |
 | T15 | Story flags | `core/` |
@@ -247,7 +279,7 @@ Each task is one unit of work for **one** programmer. The status is on the Figma
 
 **T06 Interaction system.** The `InteractionComponent` (see section 5). Contract: `dialogue_resource`, `dialogue_title`, the signal `interacted`, `block()`, `unblock()` and `is_available()`.
 
-**T07 NPC schedules.** `NpcData` (`id`, `display_name`, `portrait`, list of `ScheduleEntry`). `ScheduleEntry` has `start_hour`, `end_hour` and `spot_id`. A `ScheduleComponent` on the NPC finds the active entry with `TimeManager.is_between()` and puts the NPC at the matching spot (`Marker3D` in the group `spots`). With no active entry, it calls `block(&"schedule")` on the `InteractionComponent`. The NPC changes place only through one function (`go_to_spot()`). Schedules are `.tres` files.
+**T07 NPC schedules.** `NpcData` (`id`, `display_name`, `portrait`, list of `ScheduleEntry`). `ScheduleEntry` has `start_hour`, `end_hour` and `spot_id`. A `ScheduleComponent` on the NPC finds the active entry with `TimeManager.is_between()` and puts the NPC at the matching spot (`Marker3D` in the group `spots`). With no active entry, it calls `block(&"schedule")` on the `InteractionComponent`. (A `ConditionGate` with hours can do the simple cases.) The NPC changes place only through one function (`go_to_spot()`). Schedules are `.tres` files.
 
 **T08 World greybox.** A walkable town made of boxes: Town Hall with archive, Square, Neon Padma, Park and shelter, protagonist's home, two stores. Each place has a `Location` node with a `LocationData` Resource (`id`, `open_hour`, `close_hour`), and `is_open()` reads `TimeManager`. The scene holds the `spots` markers for T07. Keep node names stable.
 
@@ -255,7 +287,7 @@ Each task is one unit of work for **one** programmer. The status is on the Figma
 
 **T10 Distortion effects.** The three visual levels from the GDD, driven by `distortion_changed`. Level 1: small anomalies (a signal for T11 and T12). Level 2: the room sways or tilts. Level 3: the scene breaks into fragments. Level 0 costs nothing.
 
-**T11 Echoes.** Things the player sees that are not real. The tone follows the mood. An `EchoSpot` marker holds `echo_scene`, a `mood` filter and `min_distortion`. An Echo appears or disappears only outside the camera view, or after a dialogue. This task makes the reusable node `OffscreenSwapper` for this rule.
+**T11 Echoes.** Things the player sees that are not real. The tone follows the mood. An `EchoSpot` marker holds `echo_scene`, a `mood` filter and `min_distortion`. (A `ConditionGate` can do the mood and Distortion filter.) An Echo appears or disappears only outside the camera view, or after a dialogue. This task makes the reusable node `OffscreenSwapper` for this rule.
 
 **T12 Sensitive objects.** The window, the mirror and the door. Each has an `InteractionComponent` and a `MoodVariants` component. `MoodVariants` holds a Resource that maps each mood (and Distortion level) to a dialogue title, a description and a visual variant. In Fog and Storm the object shows an Echo. Changes use `OffscreenSwapper`.
 
