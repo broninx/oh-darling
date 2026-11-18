@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://cm82dwyfxojj6"]
+
+[ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_cg8ws"]
+[ext_resource type="PackedScene" uid="uid://b07tcs06qf71d" path="res://art/models/room.glb" id="2_nkf0s"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/interactables/item.tscn" id="3_pyhmg"]
+[ext_resource type="PackedScene" uid="uid://p65inp1rsdik" path="res://art/models/clock.glb" id="4_a5xv8"]
+[ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="5_a5xv8"]
+
+[sub_resource type="Environment" id="Environment_a5xv8"]
+ambient_light_color = Color(0.17114529, 0.8371664, 0.66206837, 1)
+ambient_light_energy = 4.85
+ssao_enabled = true
+
+[sub_resource type="Compositor" id="Compositor_0ly1f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yi3jn"]
+size = Vector3(5.788395, 1, 5.8624268)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8w1li"]
+size = Vector3(6.1141357, 3.185669, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4ixiu"]
+size = Vector3(1, 3.2514648, 4.6779785)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xak6r"]
+size = Vector3(6.2686768, 3.2303467, 0.36120605)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2rem1"]
+size = Vector3(0.4326172, 3.2694092, 4.571289)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wkwx1"]
+size = Vector3(2.1259766, 1.4064941, 2.5164185)
+
+[node name="camera" type="Node3D" unique_id=1640405920]
+
+[node name="Player" parent="." unique_id=1543590871 instance=ExtResource("1_cg8ws")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03620267, 0, -0.054543495)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=335044014]
+environment = SubResource("Environment_a5xv8")
+compositor = SubResource("Compositor_0ly1f")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1826636236]
+transform = Transform3D(1, 0, 0, 0, 0.48792666, 0.87288463, 0, -0.87288463, 0.48792666, -0.33063698, 5.437831, 2.054424)
+light_energy = 0.366
+light_indirect_energy = 1.95
+light_volumetric_fog_energy = 5.119
+light_angular_distance = 1.4
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=968981493]
+
+[node name="room" parent="StaticBody3D" unique_id=761003557 instance=ExtResource("2_nkf0s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5847869, 0.008789659, 1.3580472)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1286589204]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6587875, -0.5894124, 0.55478835)
+shape = SubResource("BoxShape3D_yi3jn")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=1190206818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6675415, 1.0928345, 3.585432)
+shape = SubResource("BoxShape3D_8w1li")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D" unique_id=1026523270]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4972074, 1.1257324, 1.1468506)
+shape = SubResource("BoxShape3D_4ixiu")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D" unique_id=805790204]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7387085, 1.1151733, -0.8203945)
+shape = SubResource("BoxShape3D_xak6r")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="StaticBody3D" unique_id=1274169347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.751175, 1.1347046, 1.105957)
+shape = SubResource("BoxShape3D_2rem1")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="StaticBody3D" unique_id=1939383038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.289937, 0.20324707, 0.6045376)
+shape = SubResource("BoxShape3D_wkwx1")
+
+[node name="Item" parent="." unique_id=702316144 instance=ExtResource("3_pyhmg")]
+
+[node name="MeshInstance3D" parent="Item" index="0" unique_id=338424483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5859733)
+visible = false
+
+[node name="InteractionComponent" parent="Item" index="1" unique_id=2042955081 node_paths=PackedStringArray("target_mesh")]
+target_mesh = NodePath("../clock/Cylinder")
+dialogue_resource = ExtResource("5_a5xv8")
+
+[node name="clock" parent="Item" unique_id=760966154 instance=ExtResource("4_a5xv8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3993542)
+
+[editable path="StaticBody3D/room"]
+[editable path="Item"]
+[editable path="Item/clock"]
