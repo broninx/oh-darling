@@ -102,10 +102,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.448027, 0, 0)
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -10.247623, 2.1688843, -0.07286167)
 shape = SubResource("BoxShape3D_e0yyd")
 
-[node name="Node3D" type="Node3D" parent="." unique_id=1755823603]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D" unique_id=762626882]
-
 [editable path="Item-Test object"]
 [editable path="Item - Test object 2"]
 [editable path="NPC-Test NPC"]
