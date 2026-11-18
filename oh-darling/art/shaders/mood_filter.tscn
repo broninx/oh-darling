@@ -118,6 +118,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="fog" unique_id=839177762]
 material = SubResource("ShaderMaterial_mqki2")
@@ -136,6 +137,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="overcast" unique_id=1347152082]
 material = SubResource("ShaderMaterial_rqjvi")
@@ -175,6 +177,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="clear" unique_id=308770667]
 material = SubResource("ShaderMaterial_xm1cc")
@@ -193,6 +196,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="bright" unique_id=947229119]
 material = SubResource("ShaderMaterial_3skvw")
@@ -228,6 +232,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="storm" unique_id=847534060]
 material = SubResource("ShaderMaterial_tm38c")

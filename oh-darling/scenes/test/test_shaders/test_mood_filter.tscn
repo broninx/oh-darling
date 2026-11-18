@@ -1,10 +1,15 @@
 [gd_scene format=3 uid="uid://cdo4a0n65nokj"]
 
 [ext_resource type="PackedScene" uid="uid://008s02kl3v1c" path="res://scenes/test/test_scene.tscn" id="1_43n72"]
-[ext_resource type="PackedScene" uid="uid://c7oxem4w2prf" path="res://art/shaders/mood_filter.tscn" id="2_bd5r3"]
+[ext_resource type="PackedScene" uid="uid://c7oxem4w2prf" path="res://art/shaders/mood_filter.tscn" id="2_43n72"]
 
 [node name="Test Mood Filter" type="Node" unique_id=1243878514]
 
+[node name="MoodFilter" parent="." unique_id=164119760 instance=ExtResource("2_43n72")]
+
 [node name="Test Scene" parent="." unique_id=721325679 instance=ExtResource("1_43n72")]
 
-[node name="MoodFilter" parent="." unique_id=164119760 instance=ExtResource("2_bd5r3")]
+[editable path="Test Scene"]
+[editable path="Test Scene/Item-Test object"]
+[editable path="Test Scene/Item - Test object 2"]
+[editable path="Test Scene/NPC-Test NPC"]
