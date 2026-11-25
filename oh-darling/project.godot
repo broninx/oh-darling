@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Oh Darling"
-run/main_scene="uid://cm82dwyfxojj6"
+run/main_scene="uid://tqsrjshvohes"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

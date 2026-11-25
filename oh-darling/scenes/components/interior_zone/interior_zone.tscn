@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/components/interior_zone/interior_zone.gd" id="1_zone"]
+
+[node name="InteriorZone" type="Area3D"]
+input_ray_pickable = false
+monitorable = false
+script = ExtResource("1_zone")

@@ -1,0 +1,247 @@
+[gd_scene format=3 uid="uid://c7oxem4w2prf"]
+
+[ext_resource type="Script" uid="uid://btbg4nvrg0h6j" path="res://art/shaders/mood_filter.gd" id="1_5w4m5"]
+[ext_resource type="Shader" uid="uid://c12wvuh5x4w2v" path="res://art/shaders/test_shaders_fog.gdshader" id="2_knxiq"]
+[ext_resource type="Shader" uid="uid://b7lyefgfqtk2" path="res://art/shaders/kuwahara_clear.gdshader" id="3_8wlhm"]
+[ext_resource type="Shader" uid="uid://bxthmjkncwl2q" path="res://art/shaders/test_shaders_Overcast.tres" id="4_0obqr"]
+[ext_resource type="Shader" uid="uid://dnyoexc03vvvc" path="res://art/shaders/test_shaders_bright.tres" id="5_6fgq6"]
+[ext_resource type="Shader" uid="uid://c56nchjeoddpt" path="res://art/shaders/test_shaders_storm.gdshader" id="6_4pfvy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mqki2"]
+shader = ExtResource("2_knxiq")
+shader_parameter/intensity = 1.0
+shader_parameter/thin = 0.0
+shader_parameter/stretch = 0.0
+shader_parameter/saturation = 0.12
+shader_parameter/contrast = 0.7
+shader_parameter/brightness = 1.0
+shader_parameter/deep_blue = Color(0.05, 0.08, 0.16, 1)
+shader_parameter/grey_blue = Color(0.3, 0.38, 0.47, 1)
+shader_parameter/dull_green = Color(0.42, 0.47, 0.42, 1)
+shader_parameter/dirty_ochre = Color(0.66, 0.6, 0.45, 1)
+shader_parameter/palette_amount = 0.5
+shader_parameter/line_strength = 0.567
+shader_parameter/line_threshold = 0.5
+shader_parameter/line_gaps = 0.209
+shader_parameter/line_jitter = 0.473
+shader_parameter/jitter_fps = 4.44
+shader_parameter/line_color = Color(0.04, 0.05, 0.09, 1)
+shader_parameter/canvas_color = Color(0.78, 0.76, 0.7, 1)
+shader_parameter/canvas_amount = 0.162000007695
+shader_parameter/canvas_scale = 1.8050000619875
+shader_parameter/fade = 0.06
+shader_parameter/edge_canvas = 0.062
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rqjvi"]
+shader = ExtResource("3_8wlhm")
+shader_parameter/radius = 5
+shader_parameter/offset = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_423ci"]
+shader = ExtResource("4_0obqr")
+shader_parameter/Saturation = 0.9
+shader_parameter/Brightness = 0.8
+shader_parameter/highlight_tint = Color(0.839216, 0.901961, 0.992157, 1)
+shader_parameter/glow_threshold = 0.6
+shader_parameter/glow_strength = 0.2
+shader_parameter/shadow_tint = Color(0.478, 0.455, 0.424, 1)
+shader_parameter/shadow_amount = 0.1
+shader_parameter/flatten = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xm1cc"]
+shader = ExtResource("3_8wlhm")
+shader_parameter/radius = 9
+shader_parameter/offset = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3skvw"]
+shader = ExtResource("3_8wlhm")
+shader_parameter/radius = 5
+shader_parameter/offset = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cagyc"]
+shader = ExtResource("5_6fgq6")
+shader_parameter/Saturation = 3.0
+shader_parameter/Brightness = 1.5
+shader_parameter/highlight_tint = Color(1, 0.851, 0.627, 1)
+shader_parameter/glow_threshold = 0.5
+shader_parameter/glow_strength = 0.7
+shader_parameter/shadow_tint = Color(0.549, 0.502, 0.851, 1)
+shader_parameter/shadow_amount = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tm38c"]
+shader = ExtResource("6_4pfvy")
+shader_parameter/intensity = 1.0
+shader_parameter/wave_strength = 1.143
+shader_parameter/wave_size = 6.0
+shader_parameter/sway = 2.0
+shader_parameter/swirl_strength = 4.0
+shader_parameter/swirl_scale = 4.0
+shader_parameter/swirl_speed = 0.15
+shader_parameter/follow_forms = 0.6
+shader_parameter/stroke_length = 6.0
+shader_parameter/stroke_samples = 6
+shader_parameter/impasto = 0.45
+shader_parameter/stroke_width = 4.0
+shader_parameter/outline_strength = 0.58
+shader_parameter/outline_thickness = 2.212
+shader_parameter/outline_threshold = 0.15
+shader_parameter/outline_color = Color(0.04, 0.05, 0.12, 1)
+shader_parameter/halo_strength = 0.966
+shader_parameter/halo_threshold = 0.427
+shader_parameter/halo_radius = 60.0
+shader_parameter/lamp_brightness = 0.228
+shader_parameter/ring_count = 7.919
+shader_parameter/ring_speed = 2.566
+shader_parameter/halo_tint = Color(1, 0.69, 0, 1)
+shader_parameter/saturation = 3.0
+shader_parameter/contrast = 0.854
+shader_parameter/brightness = 1.275
+shader_parameter/gamma = 0.7
+shader_parameter/shadow_lift = 0.7
+shader_parameter/ultramarine = Color(0.18, 0.26, 0.72, 1)
+shader_parameter/deep_blue = Color(0.025, 0.025, 0.12, 1)
+shader_parameter/orange = Color(1, 0.49, 0.12, 1)
+shader_parameter/chrome_yellow = Color(1, 0.79, 0.11, 1)
+shader_parameter/tint_amount = 1.47
+shader_parameter/yellow_strength = 1.0
+shader_parameter/yellow_threshold = 0.708
+shader_parameter/pulse = 0.082
+shader_parameter/pulse_speed = 1.011
+
+[node name="MoodFilter" type="CanvasLayer" unique_id=164119760]
+script = ExtResource("1_5w4m5")
+
+[node name="fog" type="Control" parent="." unique_id=914465416]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="fog" unique_id=839177762]
+material = SubResource("ShaderMaterial_mqki2")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="overcast" type="Control" parent="." unique_id=1932312820]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="overcast" unique_id=1347152082]
+material = SubResource("ShaderMaterial_rqjvi")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="overcast" unique_id=47769362]
+copy_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="overcast" unique_id=1623846566]
+material = SubResource("ShaderMaterial_423ci")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -87.0
+offset_top = -103.0
+offset_right = 84.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="clear" type="Control" parent="." unique_id=1645149243]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="clear" unique_id=308770667]
+material = SubResource("ShaderMaterial_xm1cc")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="bright" type="Control" parent="." unique_id=101734989]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="bright" unique_id=947229119]
+material = SubResource("ShaderMaterial_3skvw")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="bright" unique_id=1278543032]
+copy_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="bright" unique_id=902719875]
+material = SubResource("ShaderMaterial_cagyc")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="storm" type="Control" parent="." unique_id=663191702]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="storm" unique_id=847534060]
+material = SubResource("ShaderMaterial_tm38c")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_right = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

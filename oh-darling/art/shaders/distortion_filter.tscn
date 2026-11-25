@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cffcjmc2iqk0w"]
+
+[ext_resource type="Script" uid="uid://c8bga573nlbbd" path="res://art/shaders/distortion_filter.gd" id="1_d21yk"]
+[ext_resource type="Shader" uid="uid://dxpi7lnnw83kq" path="res://art/shaders/Distortion_level_2.gdshader" id="2_spger"]
+[ext_resource type="Shader" uid="uid://b8kgqo8bjcq7a" path="res://art/shaders/Distortion_level_3.gdshader" id="3_b8412"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_busfc"]
+shader = ExtResource("2_spger")
+shader_parameter/warp_intensity = 0.01
+shader_parameter/time_scale = 1.0
+shader_parameter/center_amount = 1.0
+shader_parameter/wave_count = 5.00000019
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iri1a"]
+shader = ExtResource("3_b8412")
+shader_parameter/amount = 1.0
+shader_parameter/shard_size = 220.0
+shader_parameter/shard_shift = 14.0
+shader_parameter/shard_turn = 3.0
+shader_parameter/move_speed = 0.6
+shader_parameter/gap_width = 4.0
+shader_parameter/gap_color = Color(0.06, 0.05, 0.07, 1)
+shader_parameter/edge_shade = 0.35
+
+[node name="DistortionFilter" type="CanvasLayer" unique_id=609285505]
+layer = 2
+script = ExtResource("1_d21yk")
+
+[node name="Sway" type="ColorRect" parent="." unique_id=1062513704]
+material = SubResource("ShaderMaterial_busfc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=2003809485]
+copy_mode = 2
+
+[node name="Shatter" type="ColorRect" parent="." unique_id=952868052]
+material = SubResource("ShaderMaterial_iri1a")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

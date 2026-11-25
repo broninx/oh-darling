@@ -102,5 +102,5 @@ void fragment() {
         if (sigma2 < min_sigma2) { min_sigma2 = sigma2; best_color = m3; }
     }
 
-    COLOR = vec4(best_color, 1.0);
+        COLOR = vec4(best_color, COLOR.a);
 }

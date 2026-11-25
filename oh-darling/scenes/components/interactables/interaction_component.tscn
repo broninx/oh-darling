@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ixyg4uapykm8"]
 
-[ext_resource type="Script" uid="uid://b34mlhyjbcjg7" path="res://scenes/interactables/interaction_component.gd" id="1_script"]
-[ext_resource type="Material" uid="uid://dk1gt4hkxal7p" path="res://scenes/interactables/highlight.tres" id="2_lnxtk"]
+[ext_resource type="Script" uid="uid://b34mlhyjbcjg7" path="res://scenes/components/interactables/interaction_component.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://dk1gt4hkxal7p" path="res://scenes/components/interactables/highlight.tres" id="2_lnxtk"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_default"]
 

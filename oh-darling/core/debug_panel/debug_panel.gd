@@ -26,14 +26,14 @@
 extends CanvasLayer
 ## Debug overlay. F1 toggles it. Debug builds only.
 
-const ENERGY_STEP: float = 20.0
+const ENERGY_STEP: float = 0.25
 const PANEL_WIDTH: float = 280.0
 
-@export var start_visible: bool = false
+@export var start_visible: bool = true # Local: the VM does not send F1.
 
 var _panel: PanelContainer
 var _info: Label
-var _slider: HSlider
+var _sliders: Dictionary
 
 
 func _ready() -> void:
@@ -85,18 +85,22 @@ func _build_ui() -> void:
 	_add_label(box, "DEBUG (F1 to hide)")
 	_info = _add_label(box, "")
 
-	_add_label(box, "Energy (hidden emotion value)")
-	_slider = HSlider.new()
-	_slider.min_value = EmotionManager.AXIS_MIN
-	_slider.max_value = EmotionManager.AXIS_MAX
-	_slider.step = 1.0
-	_slider.focus_mode = Control.FOCUS_NONE
-	_slider.value_changed.connect(_on_slider_changed)
-	box.add_child(_slider)
 
+	# One slider for each hidden axis (list in EmotionManager.AXES).
+	for axis: String in EmotionManager.AXES:
+		_add_label(box, axis)
+		var slider := HSlider.new()
+		slider.min_value = EmotionManager.AXIS_MIN
+		slider.max_value = EmotionManager.AXIS_MAX
+		slider.step = 0.01 # Axes go from -1 to 1.
+		slider.focus_mode = Control.FOCUS_NONE
+		slider.value_changed.connect(_on_slider_changed.bind(axis))
+		box.add_child(slider)
+		_sliders[axis] = slider
+		
 	var emotion_row := _add_row(box)
-	_add_button(emotion_row, "-%d" % ENERGY_STEP, _shift_energy.bind(-ENERGY_STEP))
-	_add_button(emotion_row, "+%d" % ENERGY_STEP, _shift_energy.bind(ENERGY_STEP))
+	_add_button(emotion_row, "-%.2f" % ENERGY_STEP, _shift_energy.bind(-ENERGY_STEP))
+	_add_button(emotion_row, "+%.2f" % ENERGY_STEP, _shift_energy.bind(ENERGY_STEP))
 	_add_button(emotion_row, "Reset emotion", _reset_emotion)
 
 	_add_label(box, "Time")
@@ -138,11 +142,11 @@ func _shift_energy(amount: float) -> void:
 	_refresh()
 
 
-func _on_slider_changed(value: float) -> void:
+func _on_slider_changed(value: float, axis: String) -> void:
 	# The slider sets an exact value. EmotionManager only has shift(),
 	# so we shift by the difference.
-	_shift_energy(value - EmotionManager.debug_get_axis("energy"))
-
+	EmotionManager.shift(axis, value - EmotionManager.debug_get_axis(axis))
+	_refresh()
 
 func _reset_emotion() -> void:
 	EmotionManager.reset()
@@ -167,13 +171,17 @@ func _on_manager_changed(_new_value: Variant, _old_value: Variant) -> void:
 
 
 func _refresh() -> void:
-	var energy: float = EmotionManager.debug_get_axis("energy")
-	_info.text = "State: %s\nMood: %s\nDistortion: %d\nEnergy: %d\nDay %d, %s" % [
+	_info.text = "State: %s\nMental state: %.2f\nMood: %s\nDistortion: %d\nDay %d, %s" % [
 		GameManager.State.keys()[GameManager.state],
+		EmotionManager.debug_get_mental_state(),
 		EmotionManager.get_mood(),
 		EmotionManager.get_distortion(),
-		roundi(energy),
 		TimeManager.day,
 		TimeManager.get_time_string(),
 	]
-	_slider.set_value_no_signal(energy)  # No signal, so no loop.
+	for axis: String in _sliders:
+		var value: float = EmotionManager.debug_get_axis(axis)
+		_info.text += "\n%s: %.2f" % [axis, value]
+		var slider: HSlider = _sliders[axis]
+		slider.set_value_no_signal(value) # No signal, so no loop.
+	

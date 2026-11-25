@@ -1,0 +1,240 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/components/interior_zone/interior_zone.tscn" id="1_zone"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="i_item"]
+[ext_resource type="Resource" uid="uid://cfrcgqswgweu6" path="res://dialogue/test_characters/test_objects/Pub_Obs.dialogue" id="d_pub"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npcs/neha.tscn" id="n_neha"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_frame"]
+albedo_color = Color(0.2, 0.15, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_frame"]
+material = SubResource("Mat_frame")
+size = Vector3(1, 0.7, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_mandala"]
+albedo_color = Color(0.9, 0.3, 0.7, 1)
+emission_enabled = true
+emission = Color(0.9, 0.3, 0.7, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="BoxMesh" id="Mesh_mandala"]
+material = SubResource("Mat_mandala")
+size = Vector3(0.05, 1.5, 1.5)
+
+
+[sub_resource type="StandardMaterial3D" id="Mat_roof"]
+albedo_color = Color(0.3, 0.2, 0.3, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_interior"]
+size = Vector3(12, 3, 10)
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.55, 0.38, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.7, 0.52, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wood"]
+albedo_color = Color(0.42, 0.28, 0.16, 1)
+
+[node name="NeonPadma" type="Node3D"]
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+billboard = 1
+text = "NEON PADMA"
+font_size = 160
+outline_size = 32
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+size = Vector3(12, 0.02, 10)
+material = SubResource("Mat_floor")
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="WallNorthLeft" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.5, -5)
+use_collision = true
+size = Vector3(5, 3, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallNorthRight" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.5, -5)
+use_collision = true
+size = Vector3(5, 3, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallWest" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 0)
+use_collision = true
+size = Vector3(0.3, 3, 10)
+material = SubResource("Mat_wall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 5)
+use_collision = true
+size = Vector3(12, 1, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallEast" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
+use_collision = true
+size = Vector3(0.3, 1, 10)
+material = SubResource("Mat_wall")
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="BarCounter" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.55, 0)
+use_collision = true
+size = Vector3(0.8, 1.1, 6)
+material = SubResource("Mat_wood")
+
+[node name="Stool1" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, -2)
+use_collision = true
+radius = 0.25
+height = 0.7
+sides = 8
+material = SubResource("Mat_wood")
+
+[node name="Stool2" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, 0)
+use_collision = true
+radius = 0.25
+height = 0.7
+sides = 8
+material = SubResource("Mat_wood")
+
+[node name="Stool3" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, 2)
+use_collision = true
+radius = 0.25
+height = 0.7
+sides = 8
+material = SubResource("Mat_wood")
+
+[node name="Table1" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.4, -2)
+use_collision = true
+radius = 0.6
+height = 0.8
+sides = 12
+material = SubResource("Mat_wood")
+
+[node name="Table2" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.4, 2)
+use_collision = true
+radius = 0.6
+height = 0.8
+sides = 12
+material = SubResource("Mat_wood")
+
+[node name="Table3" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 2.5)
+use_collision = true
+radius = 0.6
+height = 0.8
+sides = 12
+material = SubResource("Mat_wood")
+
+[node name="WindowWest1" type="CSGBox3D" parent="Walls/WallWest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -3.2)
+operation = 2
+size = Vector3(0.6, 1.2, 1.4)
+
+[node name="WindowWest2" type="CSGBox3D" parent="Walls/WallWest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 3.2)
+operation = 2
+size = Vector3(0.6, 1.2, 1.4)
+
+[node name="Exterior" type="Node3D" parent="."]
+
+[node name="Roof" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.05, 0)
+material = SubResource("Mat_roof")
+size = Vector3(12.3, 0.1, 10.3)
+
+[node name="WallSouthUpper" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
+material = SubResource("Mat_wall")
+size = Vector3(12, 2, 0.3)
+
+[node name="WallEastUpper" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 0)
+material = SubResource("Mat_wall")
+size = Vector3(0.3, 2, 10)
+
+[node name="WindowEast1" type="CSGBox3D" parent="Exterior/WallEastUpper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2.5)
+operation = 2
+size = Vector3(0.6, 1.2, 1.6)
+
+[node name="WindowEast2" type="CSGBox3D" parent="Exterior/WallEastUpper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2.5)
+operation = 2
+size = Vector3(0.6, 1.2, 1.6)
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="BarLamp" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 2.5, 0)
+light_color = Color(1, 0.75, 0.5, 1)
+light_energy = 1.2
+omni_range = 6.0
+
+[node name="TableLamp" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 2.4, 0)
+light_color = Color(1, 0.75, 0.5, 1)
+light_energy = 1.0
+omni_range = 6.0
+
+[node name="MandalaGlow" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.8, 0)
+light_color = Color(0.9, 0.3, 0.7, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="InteriorAmbient" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+size = Vector3(12, 3.2, 10)
+interior = true
+ambient_mode = 2
+ambient_color = Color(0.16, 0.12, 0.1, 1)
+
+[node name="InteriorZone" parent="." node_paths=PackedStringArray("exterior") instance=ExtResource("1_zone")]
+exterior = NodePath("../Exterior")
+
+[node name="Shape" type="CollisionShape3D" parent="InteriorZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("Shape_interior")
+
+[node name="Neha" parent="Furniture" instance=ExtResource("n_neha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1, 0, 0)
+
+[node name="CrookedFrame" parent="Furniture" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -4.8)
+
+[node name="MeshInstance3D" parent="Furniture/CrookedFrame" index="0"]
+transform = Transform3D(0.992546, -0.121869, 0, 0.121869, 0.992546, 0, 0, 0, 1, 0, 1.8, 0)
+mesh = SubResource("Mesh_frame")
+
+[node name="InteractionComponent" parent="Furniture/CrookedFrame" index="1"]
+dialogue_resource = ExtResource("d_pub")
+dialogue_title = "one"
+
+[node name="Mandala" parent="Walls" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0, 0)
+
+[node name="MeshInstance3D" parent="Walls/Mandala" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+mesh = SubResource("Mesh_mandala")
+
+[node name="InteractionComponent" parent="Walls/Mandala" index="1"]
+dialogue_resource = ExtResource("d_pub")
+dialogue_title = "two"
+
+[editable path="Furniture/CrookedFrame"]
+[editable path="Walls/Mandala"]

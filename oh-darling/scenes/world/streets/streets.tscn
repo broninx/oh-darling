@@ -1,0 +1,326 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/props/tree.tscn" id="1_tree"]
+[ext_resource type="PackedScene" path="res://scenes/world/props/market_stall.tscn" id="2_stall"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="i_item"]
+[ext_resource type="Resource" uid="uid://dvfwos7ts81ra" path="res://dialogue/test_characters/test_objects/Town_Obs.dialogue" id="d_town"]
+[ext_resource type="Resource" uid="uid://by6ic05iq133f" path="res://dialogue/test_characters/test_objects/Park_Obs.dialogue" id="d_park"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_post"]
+albedo_color = Color(0.25, 0.25, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_notice"]
+albedo_color = Color(0.85, 0.8, 0.65, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_notice"]
+material = SubResource("Mat_notice")
+size = Vector3(1.2, 0.8, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="Mat_lamp"]
+albedo_color = Color(1, 0.85, 0.4, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.4, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="Mesh_lamp"]
+material = SubResource("Mat_lamp")
+radius = 0.25
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_bench"]
+albedo_color = Color(0.45, 0.32, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_bench"]
+material = SubResource("Mat_bench")
+size = Vector3(1.8, 0.45, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_sculpture"]
+albedo_color = Color(0.55, 0.3, 0.18, 1)
+
+[sub_resource type="PrismMesh" id="Mesh_sculpture"]
+material = SubResource("Mat_sculpture")
+size = Vector3(0.8, 1.4, 0.6)
+
+
+[sub_resource type="StandardMaterial3D" id="Mat_ground"]
+albedo_color = Color(0.55, 0.58, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_road"]
+albedo_color = Color(0.3, 0.3, 0.32, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_plaza"]
+albedo_color = Color(0.78, 0.74, 0.66, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_lawn"]
+albedo_color = Color(0.35, 0.6, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_dirt"]
+albedo_color = Color(0.5, 0.4, 0.28, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_stone"]
+albedo_color = Color(0.65, 0.65, 0.68, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_building"]
+albedo_color = Color(0.8, 0.62, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_playground"]
+albedo_color = Color(0.9, 0.75, 0.2, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_edge_x"]
+size = Vector3(102, 6, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_edge_z"]
+size = Vector3(1, 6, 102)
+
+[node name="Streets" type="Node3D"]
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("Mat_ground")
+
+[node name="Roads" type="Node3D" parent="."]
+
+[node name="AvenueEastWest" type="CSGBox3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+size = Vector3(90, 0.02, 6)
+material = SubResource("Mat_road")
+
+[node name="AvenueNorthSouth" type="CSGBox3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+size = Vector3(6, 0.02, 90)
+material = SubResource("Mat_road")
+
+[node name="PathHome" type="CSGBox3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0.01, -7)
+size = Vector3(3, 0.02, 8)
+material = SubResource("Mat_road")
+
+[node name="PathTownHall" type="CSGBox3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.01, -6.5)
+size = Vector3(3, 0.02, 7)
+material = SubResource("Mat_road")
+
+[node name="PathNeonPadma" type="CSGBox3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0.01, 6.5)
+size = Vector3(3, 0.02, 7)
+material = SubResource("Mat_road")
+
+[node name="Square" type="Node3D" parent="."]
+
+[node name="Plaza" type="CSGBox3D" parent="Square"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+size = Vector3(18, 0.02, 18)
+material = SubResource("Mat_plaza")
+
+[node name="Fountain" type="CSGCylinder3D" parent="Square"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+use_collision = true
+radius = 2.0
+height = 0.8
+sides = 16
+material = SubResource("Mat_stone")
+
+[node name="StallNorthWest" parent="Square" instance=ExtResource("2_stall")]
+transform = Transform3D(0.7071068, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071068, -6, 0, -6)
+
+[node name="StallNorthEast" parent="Square" instance=ExtResource("2_stall")]
+transform = Transform3D(0.7071068, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.7071068, 6, 0, -6)
+
+[node name="StallSouthWest" parent="Square" instance=ExtResource("2_stall")]
+transform = Transform3D(0.7071068, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.7071068, -6, 0, 6)
+
+[node name="StallSouthEast" parent="Square" instance=ExtResource("2_stall")]
+transform = Transform3D(0.7071068, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071068, 6, 0, 6)
+
+[node name="Park" type="Node3D" parent="."]
+
+[node name="Lawn" type="CSGBox3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 0.012, 26.5)
+size = Vector3(33, 0.02, 37)
+material = SubResource("Mat_lawn")
+
+[node name="PathShelter" type="CSGBox3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0.02, 14.5)
+size = Vector3(2.5, 0.02, 23)
+material = SubResource("Mat_dirt")
+
+[node name="Playground" type="CSGBox3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.6, 14)
+use_collision = true
+size = Vector3(3, 1.2, 1.5)
+material = SubResource("Mat_playground")
+
+[node name="Trees" type="Node3D" parent="Park"]
+
+[node name="Tree1" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 20)
+
+[node name="Tree2" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 24)
+
+[node name="Tree3" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 30)
+
+[node name="Tree4" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 36)
+
+[node name="Tree5" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, 40)
+
+[node name="Tree6" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 12)
+
+[node name="Tree7" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0, 12)
+
+[node name="Tree8" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 16)
+
+[node name="Tree9" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 0, 22)
+
+[node name="Tree10" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43, 0, 28)
+
+[node name="Tree11" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 40)
+
+[node name="Tree12" parent="Park/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 42)
+
+[node name="Buildings" type="Node3D" parent="."]
+
+[node name="ShopNorthWest" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 2.5, -13)
+use_collision = true
+size = Vector3(7, 5, 7)
+material = SubResource("Mat_building")
+
+[node name="ShopNorthEast" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 2.5, -14)
+use_collision = true
+size = Vector3(6, 5, 6)
+material = SubResource("Mat_building")
+
+[node name="ShopSouth" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, 14)
+use_collision = true
+size = Vector3(6, 3, 8)
+material = SubResource("Mat_building")
+
+[node name="HouseWest1" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 2, -12)
+use_collision = true
+size = Vector3(7, 4, 7)
+material = SubResource("Mat_building")
+
+[node name="HouseWest2" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 2, 12)
+use_collision = true
+size = Vector3(7, 4, 7)
+material = SubResource("Mat_building")
+
+[node name="HouseSouth1" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 30)
+use_collision = true
+size = Vector3(8, 3, 8)
+material = SubResource("Mat_building")
+
+[node name="HouseSouth2" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 1.5, 35)
+use_collision = true
+size = Vector3(8, 3, 8)
+material = SubResource("Mat_building")
+
+[node name="TownEdge" type="Node3D" parent="."]
+
+[node name="EdgeNorth" type="StaticBody3D" parent="TownEdge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -50.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TownEdge/EdgeNorth"]
+shape = SubResource("Shape_edge_x")
+
+[node name="EdgeSouth" type="StaticBody3D" parent="TownEdge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 50.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TownEdge/EdgeSouth"]
+shape = SubResource("Shape_edge_x")
+
+[node name="EdgeWest" type="StaticBody3D" parent="TownEdge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.5, 3, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TownEdge/EdgeWest"]
+shape = SubResource("Shape_edge_z")
+
+[node name="EdgeEast" type="StaticBody3D" parent="TownEdge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.5, 3, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TownEdge/EdgeEast"]
+shape = SubResource("Shape_edge_z")
+
+[node name="NoticeBoard" parent="Square" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 8.3)
+
+[node name="MeshInstance3D" parent="Square/NoticeBoard" index="0"]
+transform = Transform3D(0.994522, 0.104528, 0, -0.104528, 0.994522, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("Mesh_notice")
+
+[node name="InteractionComponent" parent="Square/NoticeBoard" index="1"]
+dialogue_resource = ExtResource("d_town")
+dialogue_title = "one"
+
+[node name="Post" type="CSGCylinder3D" parent="Square/NoticeBoard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+use_collision = true
+radius = 0.06
+height = 1.1
+sides = 8
+material = SubResource("Mat_post")
+
+[node name="StreetLamp" parent="Square" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
+
+[node name="MeshInstance3D" parent="Square/StreetLamp" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+mesh = SubResource("Mesh_lamp")
+
+[node name="InteractionComponent" parent="Square/StreetLamp" index="1"]
+dialogue_resource = ExtResource("d_town")
+dialogue_title = "two"
+
+[node name="Post" type="CSGCylinder3D" parent="Square/StreetLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+use_collision = true
+radius = 0.07
+height = 2.9
+sides = 8
+material = SubResource("Mat_post")
+
+[node name="CrookedBench" parent="Park" instance=ExtResource("i_item")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 30, 0, 18)
+
+[node name="MeshInstance3D" parent="Park/CrookedBench" index="0"]
+transform = Transform3D(0.996195, 0.087156, 0, -0.087156, 0.996195, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("Mesh_bench")
+
+[node name="InteractionComponent" parent="Park/CrookedBench" index="1"]
+dialogue_resource = ExtResource("d_park")
+dialogue_title = "one"
+
+[node name="StrangeSculpture" parent="Park" instance=ExtResource("i_item")]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 26, 0, 22)
+
+[node name="MeshInstance3D" parent="Park/StrangeSculpture" index="0"]
+transform = Transform3D(0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("Mesh_sculpture")
+
+[node name="InteractionComponent" parent="Park/StrangeSculpture" index="1"]
+dialogue_resource = ExtResource("d_park")
+dialogue_title = "two"
+
+[editable path="Square/NoticeBoard"]
+[editable path="Square/StreetLamp"]
+[editable path="Park/CrookedBench"]
+[editable path="Park/StrangeSculpture"]

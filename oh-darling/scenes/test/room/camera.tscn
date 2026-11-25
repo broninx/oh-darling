@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_cg8ws"]
 [ext_resource type="PackedScene" uid="uid://b07tcs06qf71d" path="res://art/models/room.glb" id="2_nkf0s"]
-[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/interactables/item.tscn" id="3_pyhmg"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="3_pyhmg"]
 [ext_resource type="PackedScene" uid="uid://p65inp1rsdik" path="res://art/models/clock.glb" id="4_a5xv8"]
 [ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="5_a5xv8"]
 

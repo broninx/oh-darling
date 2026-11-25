@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://008s02kl3v1c"]
 
 [ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_cntqm"]
-[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/interactables/item.tscn" id="2_omf4g"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="2_omf4g"]
 [ext_resource type="PackedScene" uid="uid://d1e27rhe1m7g2" path="res://scenes/characters/test_npc/test_npc.tscn" id="3_cntqm"]
 [ext_resource type="Resource" uid="uid://cfrcgqswgweu6" path="res://dialogue/test_characters/test_objects/Pub_Obs.dialogue" id="3_omf4g"]
+[ext_resource type="PackedScene" path="res://scenes/components/condition_gate/condition_gate.tscn" id="4_0eyv0"]
 [ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="5_0eyv0"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lnxtk"]
@@ -36,6 +37,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -5)
 [node name="InteractionComponent" parent="Item-Test object" index="1" unique_id=2042955081]
 dialogue_resource = ExtResource("3_omf4g")
 dialogue_title = "one"
+
+[node name="ConditionGate" parent="Item-Test object" unique_id=1174697061 node_paths=PackedStringArray("interaction") instance=ExtResource("4_0eyv0")]
+moods = 4
+interaction = NodePath("../InteractionComponent")
 
 [node name="Item - Test object 2" parent="." unique_id=702316144 instance=ExtResource("2_omf4g")]
 

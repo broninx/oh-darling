@@ -96,7 +96,7 @@ const HIGHLIGHT_ACTION: StringName = &"highlight_interactables"
 
 @export_group("Materials")
 ## Shown while the mouse is over the object and the player is close enough.
-@export var hover_material: Material = preload("res://scenes/interactables/outline.tres")
+@export var hover_material: Material = preload("res://scenes/components/interactables/outline.tres")
 ## Shown while the highlight key is held. If empty, a yellow default is used.
 @export var highlight_material: Material
 

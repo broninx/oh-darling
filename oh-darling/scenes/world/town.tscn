@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://tqsrjshvohes"]
+
+[ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/world/streets/streets.tscn" id="2_streets"]
+[ext_resource type="PackedScene" path="res://scenes/world/places/home/home.tscn" id="3_home"]
+[ext_resource type="PackedScene" path="res://scenes/world/places/town_hall/town_hall.tscn" id="4_town_hall"]
+[ext_resource type="PackedScene" path="res://scenes/world/places/neon_padma/neon_padma.tscn" id="5_neon_padma"]
+[ext_resource type="PackedScene" path="res://scenes/world/places/roger_shelter/roger_shelter.tscn" id="6_roger_shelter"]
+[ext_resource type="PackedScene" uid="uid://c7oxem4w2prf" path="res://art/shaders/mood_filter.tscn" id="7_mood_filter"]
+[ext_resource type="PackedScene" uid="uid://cffcjmc2iqk0w" path="res://art/shaders/distortion_filter.tscn" id="8_distortion_filter"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_material"]
+
+[sub_resource type="Sky" id="Sky_town"]
+sky_material = SubResource("Sky_material")
+
+[sub_resource type="Environment" id="Environment_town"]
+background_mode = 2
+sky = SubResource("Sky_town")
+tonemap_mode = 3
+tonemap_exposure = 0.6
+tonemap_white = 3.19
+
+[node name="Town" type="Node3D" unique_id=638632931]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=68860812]
+transform = Transform3D(-0.042612165, -0.4535782, 0.8901973, 1.3505038e-08, 0.89100665, 0.45399058, -0.9990918, 0.019345552, -0.03796774, 0, 0, 0)
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.3
+directional_shadow_max_distance = 1000.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1342705691]
+environment = SubResource("Environment_town")
+
+[node name="Streets" parent="." unique_id=1165374641 instance=ExtResource("2_streets")]
+
+[node name="Places" type="Node3D" parent="." unique_id=117318903]
+
+[node name="Home" parent="Places" unique_id=1227897198 instance=ExtResource("3_home")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0, -15)
+
+[node name="TownHall" parent="Places" unique_id=1866100246 instance=ExtResource("4_town_hall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, -17)
+
+[node name="NeonPadma" parent="Places" unique_id=944159705 instance=ExtResource("5_neon_padma")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, 15)
+
+[node name="RogerShelter" parent="Places" unique_id=1090466728 instance=ExtResource("6_roger_shelter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 32)
+
+[node name="Player" parent="." unique_id=62408548 instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.1, -13)
+
+[node name="MoodFilter" parent="." unique_id=331656312 instance=ExtResource("7_mood_filter")]
+visible = false
+
+[node name="DistortionFilter" parent="." unique_id=1591151409 instance=ExtResource("8_distortion_filter")]
+visible = false
