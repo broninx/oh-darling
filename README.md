@@ -17,7 +17,10 @@ core/        the autoloads (managers) and core/debug_panel/
 data/        Resource scripts and .tres data (moods, schedules)
 dialogue/    .dialogue files, one folder for each character
 scenes/      scenes AND their scripts, grouped by feature
-             (scenes/components/ = reusable parts: interactables, condition_gate)
+             (scenes/components/ = reusable parts: interactables, condition_gate,
+              interior_zone)
+             (scenes/world/ = the town, the places, the props)
+             (scenes/characters/ = the player and the NPCs in npcs/)
 art/         models, textures, portraits, shaders
 audio/       music stems and sound effects
 addons/      plugins (do not edit)
@@ -80,9 +83,48 @@ Level (Node3D)
 └── WorldEnvironment
 ```
 
-- One scene for each place. Do not copy a scene for each day or time.
+- One sub-scene for each place. Do not copy a scene for each day or time.
 - The player is in the group `player`. Objects use this group to measure the distance.
 - Do not edit the same `.tscn` file as another person at the same time.
+
+### The town scene (prototype)
+
+For the prototype, all of day 1 is in ONE scene: `scenes/world/town.tscn` (T08). Each place is a sub-scene with its own file. The town scene has an instance of each one.
+
+```
+Town (Node3D)
+├── DirectionalLight3D
+├── WorldEnvironment
+├── Streets                instance of streets/streets.tscn (roads, square, park, other buildings)
+├── Places (Node3D)
+│   ├── Home               instance of places/home/home.tscn
+│   ├── TownHall           instance of places/town_hall/town_hall.tscn
+│   ├── NeonPadma          instance of places/neon_padma/neon_padma.tscn
+│   └── RogerShelter       instance of places/roger_shelter/roger_shelter.tscn
+├── Player
+├── MoodFilter
+└── DistortionFilter
+```
+
+- Edit only the sub-scene of your place. Only the T08 owner edits `town.tscn`.
+- **Open map.** There is no level loading and there are no doors. The player walks from place to place.
+- The town is a greybox: CSG boxes with `use_collision`. Small props that repeat (tree, market stall) are in `scenes/world/props/`.
+- The camera looks from the south-east. So the north and west walls of a building are 3 m high, and the south and east walls are 1 m high (a cutaway).
+
+A building (home, Town Hall, Neon Padma) has this structure:
+
+```
+Home (Node3D)
+├── Floor, Walls           visible, with collision. Window holes are CSG subtractions.
+├── Furniture              props, items and NPCs
+├── Exterior (Node3D)      roof and upper south and east walls, no collision
+├── Lights                 OmniLight3D lamps, no shadows
+├── InteriorAmbient        ReflectionProbe, "interior" on: a dark ambient light inside
+└── InteriorZone           hides Exterior while the player is inside (see section 5)
+```
+
+The roof and the upper walls block the sun, so the room is dark. Light comes in only through the windows and from the lamps.
+- An NPC that is in two places during the day has one instance in each place. A `ConditionGate` with hours shows the correct one.
 
 ### Player
 
@@ -134,6 +176,18 @@ It makes one object clickable. The mouse is over the object and the player is cl
 Another component (or a `ConditionGate`) stops the object with `block(source)` and frees it with `unblock(source)`. Do not use `enabled` for this. Each source has its own block, so two sources cannot remove each other's block.
 
 Limits: do not scale the target mesh in a non-uniform way. Call `refresh()` after you change `target_mesh.mesh` in code. A wall or a `Control` in front of the object blocks the mouse.
+
+### Show the inside of a building: `InteriorZone`
+
+`scenes/components/interior_zone/interior_zone.tscn` is an `Area3D`. While the player is inside it, every `GeometryInstance3D` under its `exterior` node casts shadows only. You cannot see the roof and the front walls, but the light inside does not change.
+
+1. Put the roof and the upper walls under one node (`Exterior`).
+2. Add `interior_zone.tscn` to the place scene. Give it a `CollisionShape3D` child that fills the room.
+3. Set `exterior` in the Inspector.
+
+It sends `player_inside_changed(inside)` (for example, for audio).
+
+**Rule for all big `Area3D` nodes** (zones, triggers): set `input_ray_pickable` to off. If not, the area catches the mouse clicks, and the objects inside it cannot be clicked.
 
 ### Lock or hide something: `ConditionGate`
 
@@ -203,6 +257,8 @@ Dialogue files ask only for the mood **name**. The thresholds stay in `EmotionMa
 
 ### Save new data
 
+The prototype does not save (see "Prototype" below). Use these steps after the prototype.
+
 1. Give your script `get_save_data() -> Dictionary` and `load_save_data(data)`.
 2. Add one line in `SaveManager.save()` and one line in `SaveManager.load_game()`.
 3. Change `SAVE_VERSION` if old saves are no longer valid.
@@ -244,30 +300,54 @@ In a debug build, `GameManager` starts a new game when it loads, and this delete
 
 ---
 
+# PROTOTYPE (December 6)
+
+Proposed in the group chat on 2026-11-25. Wait for the team to agree (see `documents/decisions.md`, D23 to D26).
+
+- **Goal:** day 1 of the story, playable from start to end.
+- **Why:** the full game is one in-game week (about 2 to 6 hours). The prototype needs only day 1. The time goes into dialogues and story, as the professors said.
+- **Places:** home, Town Hall, Neon Padma, Roger's shelter, and the streets with a part of the town outside.
+- **One scene:** all places are in one town scene (see section 4). There is no level loading.
+- **No save:** the prototype does not save or load.
+- **No NPC schedules:** put each NPC where it is on day 1. If an NPC moves, use one instance for each place and a `ConditionGate` with hours.
+- **Rule:** make a system only if the game uses it 3 or more times. Otherwise, use an `if` in the `.dialogue` file or a `ConditionGate`.
+
+The cut systems are not lost. We can add them after the prototype.
+
 # TASKS
 
 Each task is one unit of work for **one** programmer. The status is on the Figma board.
 
-| ID | Task | Main folder |
-| --- | --- | --- |
-| T00 | Foundation | `core/`, `project.godot` |
-| T01 | Debug panel | `core/debug_panel/` |
-| T02 | Dialogue balloon | `scenes/ui/dialogue_ui/` |
-| T03 | Player and movement | `scenes/characters/player/` |
-| T04 | Isometric camera rig | `scenes/camera/` |
-| T05 | Painterly shader and mood presets | `art/shaders/`, `data/moods/` |
-| T06 | Interaction system | `scenes/components/interactables/` |
-| T07 | NPC schedules | `scenes/characters/npcs/`, `data/` |
-| T08 | World greybox and locations | `scenes/world/` |
-| T09 | HUD and menus | `scenes/ui/` |
-| T10 | Distortion effects | `art/shaders/` |
-| T11 | Echoes | `scenes/components/echoes/` |
-| T12 | Sensitive objects | `scenes/components/sensitive/` |
-| T13 | Audio: stems, tuning, effects | `audio/`, `core/audio_manager.gd` |
-| T14 | Save and load completion | `core/save_manager.gd` |
-| T15 | Story flags | `core/` |
-| T16 | Vertical slice: one full in-game day | everyone |
-| T17 | Build, export and playtest | `export_presets.cfg` |
+The column "Prototype" shows what the prototype needs:
+
+| Value | Meaning |
+| --- | --- |
+| Done | The code exists. |
+| Needed | The prototype needs it. |
+| Smaller | The prototype needs a small version. See the task text. |
+| After | Not in the prototype. |
+| Ask | Not decided yet. Ask the team. |
+
+| ID | Task | Main folder | Prototype |
+| --- | --- | --- | --- |
+| T00 | Foundation | `core/`, `project.godot` | Done |
+| T01 | Debug panel | `core/debug_panel/` | Done |
+| T02 | Dialogue balloon | `scenes/ui/dialogue_ui/` | Needed |
+| T03 | Player and movement | `scenes/characters/player/` | Done |
+| T04 | Isometric camera rig | `scenes/camera/` | Ask |
+| T05 | Painterly shader and mood presets | `art/shaders/`, `data/moods/` | Ask |
+| T06 | Interaction system | `scenes/components/interactables/` | Done |
+| T07 | NPC schedules | `scenes/characters/npcs/`, `data/` | After |
+| T08 | World greybox and locations | `scenes/world/` | Smaller |
+| T09 | HUD and menus | `scenes/ui/` | Smaller |
+| T10 | Distortion effects | `art/shaders/` | Ask |
+| T11 | Echoes | `scenes/components/echoes/` | Ask |
+| T12 | Sensitive objects | `scenes/components/sensitive/` | Ask |
+| T13 | Audio: stems, tuning, effects | `audio/`, `core/audio_manager.gd` | Ask |
+| T14 | Save and load completion | `core/save_manager.gd` | After |
+| T15 | Story flags | `core/` | Ask |
+| T16 | Vertical slice: one full in-game day | everyone | Needed (this is the prototype) |
+| T17 | Build, export and playtest | `export_presets.cfg` | Ask |
 
 **T02 Dialogue balloon.** A custom balloon for the Dialogue Manager plugin, in the style of Disco Elysium: a scrolling log, inner voices, numbered choices, locked choices, a theme that follows the mood. It opens only through `GameManager.start_dialogue()`. If the plugin does not send `dialogue_ended`, the balloon calls `GameManager.end_dialogue()` when it closes. It may call `GameManager.on_choice_made()` after each choice (autosave). It must stop its own input, so a click on it does not reach the world.
 
@@ -280,10 +360,14 @@ Each task is one unit of work for **one** programmer. The status is on the Figma
 **T06 Interaction system.** The `InteractionComponent` (see section 5). Contract: `dialogue_resource`, `dialogue_title`, the signal `interacted`, `block()`, `unblock()` and `is_available()`.
 
 **T07 NPC schedules.** `NpcData` (`id`, `display_name`, `portrait`, list of `ScheduleEntry`). `ScheduleEntry` has `start_hour`, `end_hour` and `spot_id`. A `ScheduleComponent` on the NPC finds the active entry with `TimeManager.is_between()` and puts the NPC at the matching spot (`Marker3D` in the group `spots`). With no active entry, it calls `block(&"schedule")` on the `InteractionComponent`. (A `ConditionGate` with hours can do the simple cases.) The NPC changes place only through one function (`go_to_spot()`). Schedules are `.tres` files.
+*Prototype: not needed. Put one NPC instance in each place, with a `ConditionGate` for the hours.*
 
 **T08 World greybox.** A walkable town made of boxes: Town Hall with archive, Square, Neon Padma, Park and shelter, protagonist's home, two stores. Each place has a `Location` node with a `LocationData` Resource (`id`, `open_hour`, `close_hour`), and `is_open()` reads `TimeManager`. The scene holds the `spots` markers for T07. Keep node names stable.
+*Prototype: one town scene (`scenes/world/town.tscn`) with home, Town Hall, Neon Padma, Roger's shelter, the streets and a part of the town outside (see section 4). Each place is a sub-scene. Not needed yet: `LocationData` and the `spots` markers. Open map (no doors).*
+*Status (2026-11-25): the greybox exists. It has the town, the 4 places, the 4 test NPCs (`scenes/characters/npcs/`) and test items that use the dialogues in `dialogue/test_characters/`.*
 
 **T09 HUD and menus.** The HUD clock listens to `time_changed`. The main menu has New Game, Continue (disabled without a save) and Quit. The pause menu has Resume and Back to menu (`process_mode` = "When Paused"). All screens register with `UiManager`. This task also makes the real `Main` scene.
+*Prototype: there is no save, so the main menu has no Continue button (New Game and Quit only).*
 
 **T10 Distortion effects.** The three visual levels from the GDD, driven by `distortion_changed`. Level 1: small anomalies (a signal for T11 and T12). Level 2: the room sways or tilts. Level 3: the scene breaks into fragments. Level 0 costs nothing.
 
@@ -294,9 +378,11 @@ Each task is one unit of work for **one** programmer. The status is on the Figma
 **T13 Audio.** Real stems in `AudioManager`, loops, the `MOOD_VOLUMES_DB` table, and `play_sfx(name)`. Fix the tween error in `_apply_mood()` first.
 
 **T14 Save and load.** Add story flags, NPC state, player position and Dialogue Manager variables. Connect the autosave. Handle a broken save file with no crash. Autosave only: no manual save and no second slot.
+*Prototype: not needed. The prototype does not save. The dialogue balloon must not call `GameManager.on_choice_made()`, because that function saves.*
 
 **T15 Story flags.** One place for story facts. Write a half-page proposal first. The lead approves it, because it may add an autoload. Suggested API: `set_flag()`, `has_flag()`, the signal `flag_changed`, `get_save_data()` and `load_save_data()`.
 
 **T16 Vertical slice.** One complete in-game day with Roger, Neha and the Mayor, and at least three moods. A new player must be able to play it with no crash.
+*Prototype: this is the prototype. Day 1, ready on December 6.*
 
 **T17 Build and playtest.** Export presets for Windows and Linux, a test on a clean computer, and a playtest with someone outside the team.
