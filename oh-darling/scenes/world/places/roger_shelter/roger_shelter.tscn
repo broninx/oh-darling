@@ -1,0 +1,219 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/props/tree.tscn" id="1_tree"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npcs/roger.tscn" id="n_roger"]
+
+
+
+[sub_resource type="StandardMaterial3D" id="Mat_dirt"]
+albedo_color = Color(0.45, 0.36, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wood"]
+albedo_color = Color(0.35, 0.26, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_tarp"]
+albedo_color = Color(0.25, 0.35, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_junk"]
+albedo_color = Color(0.5, 0.5, 0.45, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_rust"]
+albedo_color = Color(0.55, 0.3, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_pig"]
+albedo_color = Color(0.9, 0.6, 0.65, 1)
+
+[node name="RogerShelter" type="Node3D"]
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+billboard = 1
+text = "ROGER'S SHELTER"
+font_size = 160
+outline_size = 32
+
+[node name="Clearing" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+radius = 6.0
+height = 0.02
+sides = 16
+material = SubResource("Mat_dirt")
+
+[node name="Shelter" type="Node3D" parent="."]
+
+[node name="Post1" type="CSGCylinder3D" parent="Shelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.1, -1.4)
+use_collision = true
+radius = 0.08
+height = 2.2
+sides = 6
+material = SubResource("Mat_wood")
+
+[node name="Post2" type="CSGCylinder3D" parent="Shelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.1, -1.4)
+use_collision = true
+radius = 0.08
+height = 2.2
+sides = 6
+material = SubResource("Mat_wood")
+
+[node name="Post3" type="CSGCylinder3D" parent="Shelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.1, 1.4)
+use_collision = true
+radius = 0.08
+height = 2.2
+sides = 6
+material = SubResource("Mat_wood")
+
+[node name="Post4" type="CSGCylinder3D" parent="Shelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.1, 1.4)
+use_collision = true
+radius = 0.08
+height = 2.2
+sides = 6
+material = SubResource("Mat_wood")
+
+[node name="Tarp" type="CSGBox3D" parent="Shelter"]
+transform = Transform3D(0.9848078, -0.17364818, 0, 0.17364818, 0.9848078, 0, 0, 0, 1, 0, 2.25, 0)
+size = Vector3(3.4, 0.08, 3.4)
+material = SubResource("Mat_tarp")
+
+[node name="Mattress" type="CSGBox3D" parent="Shelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.15, -0.6)
+use_collision = true
+size = Vector3(1.8, 0.3, 1)
+material = SubResource("Mat_junk")
+
+[node name="JunkPiles" type="Node3D" parent="."]
+
+[node name="Pile1" type="CSGBox3D" parent="JunkPiles"]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -2.4, 0.3, -1.8)
+use_collision = true
+size = Vector3(1.2, 0.6, 0.9)
+material = SubResource("Mat_rust")
+
+[node name="Pile2" type="CSGBox3D" parent="JunkPiles"]
+transform = Transform3D(0.9396926, -0.34202015, 0, 0.34202015, 0.9396926, 0, 0, 0, 1, 2.3, 0.4, -0.5)
+use_collision = true
+size = Vector3(0.8, 0.8, 0.8)
+material = SubResource("Mat_junk")
+
+[node name="Pile3" type="CSGBox3D" parent="JunkPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.25, 2.2)
+use_collision = true
+size = Vector3(1.5, 0.5, 0.7)
+material = SubResource("Mat_rust")
+
+[node name="Sculptures" type="Node3D" parent="."]
+
+[node name="SculptureTower" type="Node3D" parent="Sculptures"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 3.5)
+
+[node name="Base" type="CSGBox3D" parent="Sculptures/SculptureTower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+use_collision = true
+size = Vector3(1, 1, 1)
+material = SubResource("Mat_junk")
+
+[node name="Middle" type="CSGBox3D" parent="Sculptures/SculptureTower"]
+transform = Transform3D(0.7071068, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.7071068, 0, 1.35, 0)
+size = Vector3(0.8, 0.7, 0.8)
+material = SubResource("Mat_rust")
+
+[node name="Top" type="CSGBox3D" parent="Sculptures/SculptureTower"]
+transform = Transform3D(0.9396926, -0.34202015, 0, 0.34202015, 0.9396926, 0, 0, 0, 1, 0.1, 1.95, 0)
+size = Vector3(0.5, 0.5, 0.5)
+material = SubResource("Mat_junk")
+
+[node name="SculptureArch" type="Node3D" parent="Sculptures"]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 2.5, 0, 3.5)
+
+[node name="LegLeft" type="CSGBox3D" parent="Sculptures/SculptureArch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.8, 0)
+use_collision = true
+size = Vector3(0.3, 1.6, 0.3)
+material = SubResource("Mat_rust")
+
+[node name="LegRight" type="CSGBox3D" parent="Sculptures/SculptureArch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.8, 0)
+use_collision = true
+size = Vector3(0.3, 1.6, 0.3)
+material = SubResource("Mat_rust")
+
+[node name="Beam" type="CSGBox3D" parent="Sculptures/SculptureArch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+size = Vector3(2, 0.25, 0.35)
+material = SubResource("Mat_junk")
+
+[node name="PigSculpture" type="Node3D" parent="Sculptures"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -2.5)
+
+[node name="Body" type="CSGBox3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+use_collision = true
+size = Vector3(2, 1, 1.1)
+material = SubResource("Mat_pig")
+
+[node name="Head" type="CSGBox3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 1.2, 0)
+size = Vector3(0.7, 0.7, 0.8)
+material = SubResource("Mat_pig")
+
+[node name="Snout" type="CSGBox3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1.1, 0)
+size = Vector3(0.2, 0.3, 0.4)
+material = SubResource("Mat_pig")
+
+[node name="LegFrontLeft" type="CSGCylinder3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.3, -0.4)
+radius = 0.15
+height = 0.6
+sides = 6
+material = SubResource("Mat_pig")
+
+[node name="LegFrontRight" type="CSGCylinder3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.3, 0.4)
+radius = 0.15
+height = 0.6
+sides = 6
+material = SubResource("Mat_pig")
+
+[node name="LegBackLeft" type="CSGCylinder3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.3, -0.4)
+radius = 0.15
+height = 0.6
+sides = 6
+material = SubResource("Mat_pig")
+
+[node name="LegBackRight" type="CSGCylinder3D" parent="Sculptures/PigSculpture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.3, 0.4)
+radius = 0.15
+height = 0.6
+sides = 6
+material = SubResource("Mat_pig")
+
+[node name="Trees" type="Node3D" parent="."]
+
+[node name="Tree1" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -2)
+
+[node name="Tree2" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 6.5)
+
+[node name="Tree3" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+
+[node name="Tree4" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 5)
+
+[node name="Tree5" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -1)
+
+[node name="Tree6" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -6)
+
+[node name="Tree7" parent="Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7)
+
+[node name="Roger" parent="." instance=ExtResource("n_roger")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0.6)

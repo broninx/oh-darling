@@ -1,0 +1,199 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/components/interior_zone/interior_zone.tscn" id="1_zone"]
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="i_item"]
+[ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="d_home"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_notebook"]
+albedo_color = Color(0.55, 0.15, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_notebook"]
+material = SubResource("Mat_notebook")
+size = Vector3(0.4, 0.05, 0.3)
+
+
+[sub_resource type="StandardMaterial3D" id="Mat_roof"]
+albedo_color = Color(0.5, 0.3, 0.27, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_interior"]
+size = Vector3(10, 3, 8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.62, 0.5, 0.38, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.88, 0.86, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_furniture"]
+albedo_color = Color(0.7, 0.68, 0.62, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_curtains"]
+albedo_color = Color(0.4, 0.22, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_plant"]
+albedo_color = Color(0.25, 0.5, 0.25, 1)
+
+[node name="Home" type="Node3D"]
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+billboard = 1
+text = "HOME"
+font_size = 160
+outline_size = 32
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+size = Vector3(10, 0.02, 8)
+material = SubResource("Mat_floor")
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="WallNorth" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4)
+use_collision = true
+size = Vector3(10, 3, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallWest" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 0)
+use_collision = true
+size = Vector3(0.3, 3, 8)
+material = SubResource("Mat_wall")
+
+[node name="WallSouthLeft" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 4)
+use_collision = true
+size = Vector3(4, 1, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallSouthRight" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 4)
+use_collision = true
+size = Vector3(4, 1, 0.3)
+material = SubResource("Mat_wall")
+
+[node name="WallEast" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 0)
+use_collision = true
+size = Vector3(0.3, 1, 8)
+material = SubResource("Mat_wall")
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="Bed" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.3, -2.6)
+use_collision = true
+size = Vector3(1.6, 0.6, 2.2)
+material = SubResource("Mat_furniture")
+
+[node name="Table" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.4, -1)
+use_collision = true
+size = Vector3(1.4, 0.8, 1)
+material = SubResource("Mat_furniture")
+
+[node name="Shelf" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1, 1)
+use_collision = true
+size = Vector3(0.5, 2, 2)
+material = SubResource("Mat_furniture")
+
+[node name="Curtains" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1.6, -3.8)
+size = Vector3(2, 2.2, 0.1)
+material = SubResource("Mat_curtains")
+
+[node name="PlantNorth" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.4, -3.2)
+use_collision = true
+radius = 0.3
+height = 0.8
+sides = 8
+material = SubResource("Mat_plant")
+
+[node name="PlantSouth" type="CSGCylinder3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0.4, 3.2)
+use_collision = true
+radius = 0.3
+height = 0.8
+sides = 8
+material = SubResource("Mat_plant")
+
+[node name="WindowNorth" type="CSGBox3D" parent="Walls/WallNorth"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 0)
+operation = 2
+size = Vector3(1.6, 1.2, 0.6)
+
+[node name="Exterior" type="Node3D" parent="."]
+
+[node name="Roof" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.05, 0)
+material = SubResource("Mat_roof")
+size = Vector3(10.3, 0.1, 8.3)
+
+[node name="WallSouthUpper" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 4)
+material = SubResource("Mat_wall")
+size = Vector3(10, 2, 0.3)
+
+[node name="WallEastUpper" type="CSGBox3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 0)
+material = SubResource("Mat_wall")
+size = Vector3(0.3, 2, 8)
+
+[node name="WindowEast1" type="CSGBox3D" parent="Exterior/WallEastUpper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+operation = 2
+size = Vector3(0.6, 1.2, 1.6)
+
+[node name="WindowEast2" type="CSGBox3D" parent="Exterior/WallEastUpper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+operation = 2
+size = Vector3(0.6, 1.2, 1.6)
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="CeilingLamp" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+light_color = Color(1, 0.85, 0.65, 1)
+light_energy = 1.2
+omni_range = 7.0
+
+[node name="BedLamp" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 1.2, -3.4)
+light_color = Color(1, 0.8, 0.6, 1)
+light_energy = 0.6
+omni_range = 3.0
+
+[node name="InteriorAmbient" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+size = Vector3(10, 3.2, 8)
+interior = true
+ambient_mode = 2
+ambient_color = Color(0.15, 0.14, 0.13, 1)
+
+[node name="DoorSouth" type="CSGBox3D" parent="Exterior/WallSouthUpper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+operation = 2
+size = Vector3(2, 1.4, 0.6)
+
+[node name="InteriorZone" parent="." node_paths=PackedStringArray("exterior") instance=ExtResource("1_zone")]
+exterior = NodePath("../Exterior")
+
+[node name="Shape" type="CollisionShape3D" parent="InteriorZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("Shape_interior")
+
+[node name="Notebook" parent="Furniture" instance=ExtResource("i_item")]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 1.5, 0, -1)
+
+[node name="MeshInstance3D" parent="Furniture/Notebook" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, 0)
+mesh = SubResource("Mesh_notebook")
+
+[node name="InteractionComponent" parent="Furniture/Notebook" index="1"]
+dialogue_resource = ExtResource("d_home")
+dialogue_title = "start"
+
+[editable path="Furniture/Notebook"]

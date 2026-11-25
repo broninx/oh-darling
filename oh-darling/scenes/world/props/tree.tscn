@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="Mat_trunk"]
+albedo_color = Color(0.36, 0.24, 0.14, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_crown"]
+albedo_color = Color(0.22, 0.45, 0.2, 1)
+
+[node name="Tree" type="Node3D"]
+
+[node name="Trunk" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+use_collision = true
+radius = 0.25
+height = 2.4
+sides = 8
+material = SubResource("Mat_trunk")
+
+[node name="Crown" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+radius = 1.4
+radial_segments = 10
+rings = 6
+material = SubResource("Mat_crown")
