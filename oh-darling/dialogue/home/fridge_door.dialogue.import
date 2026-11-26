@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://dox1v04nrj73p"
+path="res://.godot/imported/fridge_door.dialogue-bd51061afdee8fb5b2b923e0d7acc275.tres"
+
+[deps]
+
+source_file="res://dialogue/home/fridge_door.dialogue"
+dest_files=["res://.godot/imported/fridge_door.dialogue-bd51061afdee8fb5b2b923e0d7acc275.tres"]
+
+[params]
+
+defaults=true

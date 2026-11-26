@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://bpre8wlb0wvav"
+path="res://.godot/imported/pill_organizer.dialogue-60b2b2229e42d78a80478fbf6231ed49.tres"
+
+[deps]
+
+source_file="res://dialogue/home/pill_organizer.dialogue"
+dest_files=["res://.godot/imported/pill_organizer.dialogue-60b2b2229e42d78a80478fbf6231ed49.tres"]
+
+[params]
+
+defaults=true

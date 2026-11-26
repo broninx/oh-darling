@@ -3,6 +3,33 @@
 [ext_resource type="PackedScene" path="res://scenes/components/interior_zone/interior_zone.tscn" id="1_zone"]
 [ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="i_item"]
 [ext_resource type="Resource" uid="uid://c272gugviqn0a" path="res://dialogue/test_characters/test_objects/Home_Obs.dialogue" id="d_home"]
+[ext_resource type="Resource" path="res://dialogue/home/pill_organizer.dialogue" id="d_pills"]
+[ext_resource type="Resource" path="res://dialogue/home/answering_machine.dialogue" id="d_machine"]
+[ext_resource type="Resource" path="res://dialogue/home/fridge_door.dialogue" id="d_fridge"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_pills"]
+albedo_color = Color(0.3, 0.55, 0.9, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_pills"]
+material = SubResource("Mat_pills")
+size = Vector3(0.3, 0.06, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Mat_machine"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_machine"]
+material = SubResource("Mat_machine")
+size = Vector3(0.3, 0.1, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="Mat_fridge_door"]
+albedo_color = Color(0.95, 0.95, 0.97, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_fridge_door"]
+material = SubResource("Mat_fridge_door")
+size = Vector3(0.06, 1.7, 0.66)
+
+[sub_resource type="StandardMaterial3D" id="Mat_fridge"]
+albedo_color = Color(0.8, 0.82, 0.85, 1)
 
 [sub_resource type="StandardMaterial3D" id="Mat_notebook"]
 albedo_color = Color(0.55, 0.15, 0.15, 1)
@@ -196,4 +223,58 @@ mesh = SubResource("Mesh_notebook")
 dialogue_resource = ExtResource("d_home")
 dialogue_title = "start"
 
+[node name="Nightstand" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.25, -3.4)
+use_collision = true
+size = Vector3(0.5, 0.5, 0.5)
+material = SubResource("Mat_furniture")
+
+[node name="HallTable" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.4, 3.5)
+use_collision = true
+size = Vector3(0.7, 0.8, 0.4)
+material = SubResource("Mat_furniture")
+
+[node name="Fridge" type="CSGBox3D" parent="Furniture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.45, 0.9, 1.5)
+use_collision = true
+size = Vector3(0.7, 1.8, 0.7)
+material = SubResource("Mat_fridge")
+
+[node name="PillOrganizer" parent="Furniture" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0, -3.4)
+
+[node name="MeshInstance3D" parent="Furniture/PillOrganizer" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0)
+mesh = SubResource("Mesh_pills")
+
+[node name="InteractionComponent" parent="Furniture/PillOrganizer" index="1"]
+dialogue_resource = ExtResource("d_pills")
+dialogue_title = "start"
+
+[node name="AnsweringMachine" parent="Furniture" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 3.5)
+
+[node name="MeshInstance3D" parent="Furniture/AnsweringMachine" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("Mesh_machine")
+
+[node name="InteractionComponent" parent="Furniture/AnsweringMachine" index="1"]
+dialogue_resource = ExtResource("d_machine")
+dialogue_title = "start"
+
+[node name="FridgeDoor" parent="Furniture" instance=ExtResource("i_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07, 0, 1.5)
+
+[node name="MeshInstance3D" parent="Furniture/FridgeDoor" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_fridge_door")
+
+[node name="InteractionComponent" parent="Furniture/FridgeDoor" index="1"]
+dialogue_resource = ExtResource("d_fridge")
+dialogue_title = "start"
+
 [editable path="Furniture/Notebook"]
+[editable path="Furniture/PillOrganizer"]
+[editable path="Furniture/AnsweringMachine"]
+[editable path="Furniture/FridgeDoor"]

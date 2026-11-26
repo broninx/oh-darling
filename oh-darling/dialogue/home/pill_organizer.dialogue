@@ -1,0 +1,94 @@
+# Home observation: the pill organizer (bedside table). Day 1 morning.
+# Base text is for every mood. Mood remarks show only in their mood.
+# Options are open in every mood, except a few locks for extreme moods.
+# Text effects: the balloon gives The Fog and The Storm their own font and
+# motion. Lines here add BBCode ([wave], [shake], [glitch], [fade], [speed],
+# [wait]) only where the moment asks for it.
+
+~ start
+A plastic pill organizer, seven little doors with the days of the week printed on them. Someone wrote the dose on the lid with a marker.
+Not your hand.[wait=0.6] [font=res://art/fonts/clinical.tres]The doctor's.[/font]
+if EmotionManager.get_mood() == "fog"
+	The Fog: Another day, another door. Open it or don't. [fade start=0 length=40]The day will be grey either way.[/fade]
+elif EmotionManager.get_mood() == "overcast"
+	Today's door is still closed. [speed=0.6]One more small task in a row of small tasks.[/speed]
+elif EmotionManager.get_mood() == "clear"
+	Today's door is still closed. It is medicine. Nothing more, nothing less.
+elif EmotionManager.get_mood() == "bright"
+	It looks almost cheerful, like an advent calendar. [wave amp=12 freq=3]Seven little gifts[/wave] from somebody who wants you to be well.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Seven doors. Seven days. Seven chances for them to dull [glitch rate=16 level=5 chance=0.35]the sharpest thing you own.[/glitch]
+- Read the label on the lid.
+	[font=res://art/fonts/clinical.tres][color=#9fb4c8]"Take one in the morning, with food. Until you settle in the new town."[/color][/font]
+	=> choice
+- Count the pills.
+	=> count
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]Hold a pill up to the light. Is it the same pill as last week?[/glitch]
+	White. Round. A number pressed into it. [wait=0.5]You never looked at the number before.
+	do EmotionManager.shift("paranoia", 0.05)
+	if EmotionManager.get_mood() == "storm"
+		The Storm: Then how would you know if they [glitch chance=0.4]changed it?[/glitch]
+	elif EmotionManager.get_mood() == "clear"
+		You could look the number up. Later. It is probably exactly what the label says.
+	=> choice
+- Leave it.
+	=> END
+
+~ count
+[speed=0.5]Six[/speed] pills in [speed=0.5]seven[/speed] doors. You opened yesterday's door last night to check the dose.
+if EmotionManager.get_mood() == "fog"
+	The Fog: Six, seven. Counting is just another thing you do so the hours pass.
+elif EmotionManager.get_mood() == "overcast"
+	Six. Fine. You remember doing it, more or less.
+elif EmotionManager.get_mood() == "clear"
+	You remember it clearly, like a receipt\: the lamp on, the little click of the door.
+elif EmotionManager.get_mood() == "bright"
+	[wave amp=10 freq=4]Six![/wave] Look at you, keeping track. A whole week, already under control.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Do you [shake rate=30 level=8]REALLY[/shake] remember?[wait=0.4] Or do you remember [glitch chance=0.3]remembering?[/glitch]
+=> choice
+
+~ choice
+Today's door is under your thumb.
+- [font_size=26][wave amp=6 freq=0.5 connected=1]Take it, with the pain au chocolat.[/wave][/font_size]
+	=> take
+- [font=res://art/fonts/dream.tres][wave amp=2 freq=9 connected=1]Not today. You want a clear head for the archive.[/wave][/font] [if EmotionManager.get_mood() != "fog" /]
+	You close the little door. [b]Click.[/b][wait=0.5] The edges of the room get sharper. You notice the dust on the curtain rail. [shake rate=25 level=2]You notice everything.[/shake]
+	do EmotionManager.shift("dereism", 0.08)
+	do EmotionManager.shift("energy", 0.05)
+	# TODO flag: took_pill_day1 = false
+	if EmotionManager.get_mood() == "storm"
+		The Storm: Good. That is [shake rate=30 level=6]exactly[/shake] what they didn't want.
+	elif EmotionManager.get_mood() == "bright"
+		The morning feels [rainbow freq=0.4 sat=0.4 val=1.0]wide open.[/rainbow]
+	elif EmotionManager.get_mood() == "clear"
+		One day. Just one. You can tell yourself that.
+	=> END
+- [color=#e85a35][font_size=26]Write a question for the doctor on your list. "How long is 'a while'?"[/font_size][/color] [if EmotionManager.get_mood() != "storm" /]
+	You underline it [u]once[/u], not twice. Then you take the pill anyway, because the question is not an answer.
+	do EmotionManager.shift("dereism", -0.06)
+	do EmotionManager.shift("self_perception", 0.03)
+	# TODO flag: took_pill_day1 = true
+	=> END
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]Put the box in the drawer. Decide later.[/glitch]
+	The drawer closes over it. [fade start=14 length=20]Out of sight is not out of mind.[/fade]
+	do EmotionManager.shift("paranoia", 0.02)
+	do TimeManager.advance(2)
+	=> END
+
+~ take
+[speed=0.7]It goes down with a sip of cold bitter coffee.[/speed]
+do EmotionManager.shift("dereism", -0.08)
+do EmotionManager.shift("energy", -0.05)
+# TODO flag: took_pill_day1 = true
+if EmotionManager.get_mood() == "fog"
+	The Fog: There. Now nothing can surprise you.[wait=0.8] [fade start=0 length=12]Not even you.[/fade]
+elif EmotionManager.get_mood() == "overcast"
+	[speed=0.4]Bitter,[wait=0.3] quiet,[wait=0.3] flat.[/speed] The taste of the last few months.
+elif EmotionManager.get_mood() == "clear"
+	Done. One thing off the list.
+elif EmotionManager.get_mood() == "bright"
+	A small thing for a good day.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Swallowed. Like [glitch chance=0.3]everything else they gave you.[/glitch]
+=> END

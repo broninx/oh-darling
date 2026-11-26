@@ -1,0 +1,114 @@
+# Home observation: the answering machine (hallway). Day 1 morning.
+# Base text is for every mood. Mood remarks show only in their mood.
+# Options are open in every mood, except a few locks for extreme moods.
+# Text effects: Mum's recorded voice has a warm colour and a small tape
+# wobble ([wave] with a high frequency). On the phone she has no wobble.
+
+~ start
+An old answering machine with a real tape. A red light blinks. [pulse freq=1.2 color=#ff303080 ease=-2.0]One new message.[/pulse]
+- Play it.
+	=> message
+- Look at the tape counter.
+	The tape is almost full. Most of it is one voice.
+	if EmotionManager.get_mood() == "fog"
+		The Fog: All her messages. You saved every one. [fade start=0 length=30]You never called back once.[/fade]
+	elif EmotionManager.get_mood() == "overcast"
+		You should clear the tape one day. Not today.
+	elif EmotionManager.get_mood() == "clear"
+		Forty minutes of Mum. You know most of it by heart.
+	elif EmotionManager.get_mood() == "bright"
+		It makes you smile. [wave amp=8 freq=2]Somebody is always thinking about you.[/wave]
+	elif EmotionManager.get_mood() == "storm"
+		The Storm: A full tape. A record. [glitch chance=0.25]Someone could listen to all of it[/glitch] while you're at work.
+	=> start
+- Not now.
+	=> END
+
+~ message
+[b]Click.[/b][wait=0.4] [shake rate=40 level=1]Hiss.[/shake][wait=0.6] Then her voice, too close to the microphone.
+[color=#e8c39a][wave amp=3 freq=7 connected=1]"Hi, baby. It's Mum. First month at the archive, huh? I told your aunt. My baby has a job with the Town Hall now."[/wave][/color]
+[color=#e8c39a][wave amp=3 freq=7 connected=1]"Are you eating your breakfast? Don't skip it, you know you get...[wait=0.7] you know."[/wave][/color]
+[color=#e8c39a][wave amp=3 freq=7 connected=1]"And baby, if people get weird with you, you call me. Day or night. We're [b]too great[/b] for small people, remember that."[/wave][/color]
+[b]Click.[/b]
+if EmotionManager.get_mood() == "fog"
+	The Fog: "If people get weird." She already knows they will. [fade start=0 length=14]She knows you.[/fade]
+elif EmotionManager.get_mood() == "overcast"
+	The same message as last week, more or less. [speed=0.5]You feel tired just hearing it.[/speed]
+elif EmotionManager.get_mood() == "clear"
+	"If people get weird." She said that before the last job too.[wait=0.5] And before the wedding.
+elif EmotionManager.get_mood() == "bright"
+	[rainbow freq=0.3 sat=0.4 val=1.0]Too great for small people.[/rainbow] She's right. This town is lucky to have you.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: She is the only one who ever saw it. The only one who [shake rate=30 level=6]never laughed.[/shake]
+- Think about the last time people "got weird".
+	=> memory
+- Call her back.
+	=> call
+- [color=#e85a35]Play it again.[/color]
+	[color=#e8c39a][wave amp=3 freq=7 connected=1]"...we're [b]too great[/b] for small people, remember that."[/wave][/color]
+	do EmotionManager.shift("self_perception", 0.04)
+	=> message
+- [color=#8a9fc4][wave amp=6 freq=0.5 connected=1]Erase the message.[/wave][/color]
+	[shake rate=40 level=2]Whirr.[/shake] The red light stops. [fade start=10 length=30]The hallway gets darker by one small light.[/fade]
+	do EmotionManager.shift("energy", -0.03)
+	do EmotionManager.shift("self_perception", -0.03)
+	=> END
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]Take the tape out and hide it.[/glitch]
+	It goes in the sock drawer, under the winter socks. Nobody looks there.
+	do EmotionManager.shift("paranoia", 0.05)
+	if EmotionManager.get_mood() == "storm"
+		The Storm: Nobody looks there.[wait=0.8] [glitch chance=0.5 level=6]Yet.[/glitch]
+	elif EmotionManager.get_mood() == "clear"
+		You are hiding a cassette from an empty house. You notice that.
+	=> END
+
+~ memory
+The old office. Colleagues [tornado radius=2 freq=3]whispering[/tornado] at the coffee machine. Your spouse looking at you over dinner like a stranger. [speed=0.5]Then a meeting,[wait=0.3] a letter with the word [font=res://art/fonts/typewriter.tres]"omission"[/font],[wait=0.3] a judge,[wait=0.3] a train.[/speed]
+if EmotionManager.get_mood() == "fog"
+	The Fog: Or nobody changed. Only you.[wait=0.6] Do you want to know which one is worse?
+elif EmotionManager.get_mood() == "overcast"
+	It was a long time ago. Four months is a long time. [fade start=0 length=16]It has to be.[/fade]
+elif EmotionManager.get_mood() == "clear"
+	That was the old town. This one is new. A quiet place, a quiet job, a routine. That was the deal.
+elif EmotionManager.get_mood() == "bright"
+	And look where you are now. A new start. Most people never get one.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: They [glitch chance=0.4 level=6]changed.[/glitch] You saw it. Nobody believed you, and that is not the same as being wrong.
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]"They changed. All of them, at the same time."[/glitch]
+	do EmotionManager.shift("paranoia", 0.06)
+	=> END
+- [color=#8a9fc4][outline_size=5][outline_color=#ffffff4d]"Maybe I changed."[/outline_color][/outline_size][/color]
+	do EmotionManager.shift("paranoia", -0.04)
+	do EmotionManager.shift("self_perception", -0.04)
+	=> END
+- [font_size=26]Stop. Think about breakfast instead.[/font_size]
+	do EmotionManager.shift("dereism", -0.03)
+	=> END
+
+~ call
+It rings once.[wait=0.6] Twice.
+[color=#e8c39a]"Baby! I knew it was you. Mothers know."[/color]
+- [color=#e85a35]"Everything is fine, Mum."[/color]
+	[color=#e8c39a]"Of course it is. Now go, eat something sweet."[/color]
+	do EmotionManager.shift("self_perception", 0.03)
+	do TimeManager.advance(5)
+	=> END
+- [font_size=26][glitch rate=6 level=1 chance=0.03 tint=0.3]"Mum... did I really skip breakfast, back then?"[/glitch][/font_size]
+	[speed=0.3]A long pause.[/speed][wait=1.0] [color=#e8c39a]"Don't think about back then, baby. It wasn't your fault. It was them."[/color]
+	It wasn't an answer. You both know it.
+	do EmotionManager.shift("dereism", -0.05)
+	do EmotionManager.shift("paranoia", 0.02)
+	do TimeManager.advance(10)
+	=> END
+- [color=#e85a35][wave amp=2 freq=9 connected=1]Tell her everything. The flowers, the archive, the perfect streets.[/wave][/color] [if EmotionManager.get_mood() != "fog" /]
+	You talk for twenty minutes. She laughs at [wave amp=6 freq=3]all the right places.[/wave]
+	do EmotionManager.shift("energy", 0.05)
+	do EmotionManager.shift("self_perception", 0.04)
+	do TimeManager.advance(20)
+	=> END
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]"Has anyone called you? Asking about me?"[/glitch]
+	[color=#e8c39a]"No, baby. Why? Is somebody bothering you? You tell me [b]who[/b]."[/color]
+	She sounds ready to get on a train. [shake rate=15 level=2]That is somehow worse.[/shake]
+	do EmotionManager.shift("paranoia", 0.05)
+	do TimeManager.advance(10)
+	=> END
