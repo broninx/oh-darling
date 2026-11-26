@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://hudp4tlrvvtl"]
+
+[ext_resource type="PackedScene" uid="uid://cyu7opcwl2vow" path="res://scenes/characters/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://c02y0oyu4jul8" path="res://art/models/town/oh_darling_town.glb" id="2_model"]
+[ext_resource type="PackedScene" uid="uid://c7oxem4w2prf" path="res://art/shaders/mood_filter.tscn" id="3_mood_filter"]
+[ext_resource type="PackedScene" uid="uid://cffcjmc2iqk0w" path="res://art/shaders/distortion_filter.tscn" id="4_distortion_filter"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_material"]
+
+[sub_resource type="Sky" id="Sky_town"]
+sky_material = SubResource("Sky_material")
+
+[sub_resource type="Environment" id="Environment_town"]
+background_mode = 2
+sky = SubResource("Sky_town")
+tonemap_mode = 3
+tonemap_exposure = 0.6
+tonemap_white = 3.19
+
+[node name="TownHills" type="Node3D" unique_id=2118347805]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=715008970]
+transform = Transform3D(-0.042612165, -0.4535782, 0.8901973, 1.3505038e-08, 0.89100665, 0.45399058, -0.9990918, 0.019345552, -0.03796774, 0, 0, 0)
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.3
+directional_shadow_max_distance = 1000.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=335088441]
+environment = SubResource("Environment_town")
+
+[node name="TownModel" parent="." unique_id=301960678 instance=ExtResource("2_model")]
+
+[node name="Player" parent="." unique_id=930050308 instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.3, 14)
+
+[node name="MoodFilter" parent="." unique_id=1212608313 instance=ExtResource("3_mood_filter")]
+
+[node name="DistortionFilter" parent="." unique_id=60245277 instance=ExtResource("4_distortion_filter")]
