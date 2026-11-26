@@ -38,19 +38,19 @@ environment = SubResource("Environment_town")
 [node name="Places" type="Node3D" parent="." unique_id=117318903]
 
 [node name="Home" parent="Places" unique_id=1227897198 instance=ExtResource("3_home")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, -12)
 
 [node name="TownHall" parent="Places" unique_id=1866100246 instance=ExtResource("4_town_hall")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, -17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, -13.5)
 
 [node name="NeonPadma" parent="Places" unique_id=944159705 instance=ExtResource("5_neon_padma")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, 12)
 
 [node name="RogerShelter" parent="Places" unique_id=1090466728 instance=ExtResource("6_roger_shelter")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0, 21.5)
 
 [node name="Player" parent="." unique_id=62408548 instance=ExtResource("1_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.1, -13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.1, -10)
 
 [node name="MoodFilter" parent="." unique_id=331656312 instance=ExtResource("7_mood_filter")]
 visible = false
