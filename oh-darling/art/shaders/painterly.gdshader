@@ -11,29 +11,43 @@
 //    Put it on a full-screen ColorRect (mouse_filter = Ignore) in a
 //    CanvasLayer. mood_filter.tscn uses it for clear, overcast and bright.
 //    Each mood has its own ShaderMaterial with its own values.
+//    painterly_camera.gd (in mood_filter.tscn) sets the "camera" uniforms
+//    every frame. Do not set them by hand.
 //
 //  HOW IT WORKS (one pass, no extra viewport)
 //    1. Underpainting: the image is smeared along the stroke direction.
-//    2. Strokes: 3 layers of single brush strokes on a jittered grid
+//    2. Strokes: layers of single brush strokes on a jittered grid
 //       (2 large layers, 1 small layer only where there is detail).
 //       Each stroke takes ONE colour from its centre, and turns with the
 //       edges of the image and with a swirl field.
 //    3. Outlines, colour (saturation, value steps, warm lights and cool
 //       shadows), then light on the paint relief and the canvas grain.
 //
-//  SIZES DO NOT DEPEND ON THE RESOLUTION OR THE ZOOM
-//    All sizes are a part of the SCREEN HEIGHT (brush_size 0.01 = 1% of the
-//    screen height). The strokes have the same size on screen at 720p, at
-//    1080p and at 4K, and when the camera zooms in or out. The direction of
-//    a stroke comes from a mipmap level that matches the stroke size, so the
-//    strokes do not flicker when the camera moves or zooms.
-//    Tested in town_hills at zoom 0.45, 1.0 and 1.4, at 720p and 1080p.
+//  THE STROKES STAY ON THE WORLD (like the dithering of Obra Dinn)
+//    The grid of the strokes, the swirls, the bristle lines and the canvas
+//    are not in screen space. They are on the ground plane at the height of
+//    the player, in metres ("anchor space"). When the camera moves, the
+//    strokes move with the ground.
+//    - The ground is exact. Things above the ground (walls, people) drift a
+//      little (about 10% of the camera movement for a 3 m wall), because
+//      the shader has no depth buffer.
+//    - Zoom: strokes come in two sizes (octaves), 2x apart. When the camera
+//      zooms, one octave fades out and the other fades in, stroke by
+//      stroke. So the strokes stay on the world, and their size on screen
+//      stays near brush_size (0.78x to 1.27x).
+//    - Without camera data (cam_valid = false, for example a 2D test scene)
+//      the pattern is in screen space.
+//
+//  SIZES DO NOT DEPEND ON THE RESOLUTION
+//    brush_size is a part of the SCREEN HEIGHT (0.01 = 1%). The direction
+//    of a stroke comes from a mipmap level that matches the stroke size, so
+//    the strokes do not flicker. Tested in town_hills at zoom 0.45, 1.0 and
+//    1.4, at 720p and 1080p.
 //
 //  RULES
 //    - It ends with COLOR = vec4(..., COLOR.a), so the mood fade works.
-//    - The loops have a fixed size: at most about 125 texture reads for each
-//      pixel, usually fewer.
-//      (The old Kuwahara with radius 9 used 400.)
+//    - The loops have a fixed size. Strokes that cannot touch the pixel are
+//      skipped before any texture read.
 // ==============================================================================
 shader_type canvas_item;
 render_mode unshaded;
@@ -44,7 +58,7 @@ uniform sampler2D screen_tex : hint_screen_texture, repeat_disable, filter_linea
 uniform float intensity : hint_range(0.0, 1.0) = 1.0;
 
 group_uniforms brush;
-// The width of a large stroke, as a part of the screen height.
+// The width of a large stroke on screen, as a part of the screen height.
 uniform float brush_size : hint_range(0.003, 0.03, 0.0005) = 0.011;
 // The length of a stroke, as a multiple of its width.
 uniform float stroke_length : hint_range(1.5, 5.0, 0.1) = 3.8;
@@ -63,8 +77,8 @@ group_uniforms flow;
 uniform float follow_edges : hint_range(0.0, 1.0) = 0.85;
 // The strokes swirl in flat areas (Van Gogh). 0 = straight hatching.
 uniform float swirl : hint_range(0.0, 1.0) = 0.5;
-// The number of swirls in one screen height.
-uniform float swirl_scale : hint_range(0.5, 12.0) = 3.0;
+// The size of one swirl on the ground, in metres.
+uniform float swirl_size : hint_range(1.0, 30.0, 0.1) = 4.5;
 // The swirls move slowly. 0 = still.
 uniform float swirl_speed : hint_range(0.0, 0.2) = 0.0;
 // The direction of the hatching where there is no edge and no swirl (degrees).
@@ -117,8 +131,24 @@ group_uniforms motion;
 uniform float boil_fps : hint_range(0.0, 12.0) = 0.0;
 group_uniforms;
 
+// Set every frame by painterly_camera.gd. Do not set them by hand.
+group_uniforms camera;
+uniform bool cam_valid = false;
+uniform vec3 cam_origin = vec3(0.0);
+uniform vec3 cam_right = vec3(1.0, 0.0, 0.0);
+uniform vec3 cam_up = vec3(0.0, 1.0, 0.0);
+// Camera +Z (the camera looks along -Z). Its y must be > 0 (looks down).
+uniform vec3 cam_back = vec3(0.0, 0.0, 1.0);
+// tan(vertical field of view / 2).
+uniform float cam_tan_half_fov = 0.2;
+// The height (world y) of the ground plane where the pattern lives.
+uniform float plane_height = 0.0;
+group_uniforms;
+
 // A stroke moves at most this part of its grid cell from the cell centre.
 const float CELL_JITTER = 0.3;
+// Without camera data, the screen is this many "metres" high.
+const float FALLBACK_SCREEN_M = 10.0;
 
 // --- Hash and noise ---------------------------------------------------------
 // Hashes without sin(), so they give the same result on all GPUs.
@@ -167,6 +197,57 @@ vec3 vnoise2_d(vec2 x) {
 			du * vec2(k1 + k4 * u.y, k2 + k4 * u.x));
 }
 
+// --- Anchor space ------------------------------------------------------------
+// A point of anchor space (metres) is a point of the ground plane, given by
+// its position along cam_right and cam_up. The camera never turns, so a
+// ground point keeps the same anchor coordinates when the camera moves.
+// On screen, anchor x goes right and anchor y goes UP (screen y goes down).
+
+// The depth of the ground point at the screen centre.
+float ref_depth() {
+	return max((cam_origin.y - plane_height) / max(cam_back.y, 0.05), 0.5);
+}
+
+// Pixels per metre at this depth.
+float ppm_at(float depth, vec2 res) {
+	if (!cam_valid) {
+		return res.y / FALLBACK_SCREEN_M;
+	}
+	return res.y * 0.5 / (cam_tan_half_fov * depth);
+}
+
+// Screen pixel -> anchor space. depth = the depth of the ground point.
+vec2 pix_to_anchor(vec2 pix, vec2 res, out float depth) {
+	if (!cam_valid) {
+		depth = 1.0;
+		return vec2(pix.x, -pix.y) * (FALLBACK_SCREEN_M / res.y);
+	}
+	vec2 ndc = vec2(pix.x / res.x * 2.0 - 1.0, 1.0 - pix.y / res.y * 2.0);
+	// One unit of t along this ray is one metre of depth.
+	vec3 d = cam_right * (ndc.x * cam_tan_half_fov * res.x / res.y)
+			+ cam_up * (ndc.y * cam_tan_half_fov) - cam_back;
+	float t = (plane_height - cam_origin.y) / min(d.y, -1e-4);
+	t = clamp(t, 0.1, ref_depth() * 4.0); // Rays near the horizon.
+	depth = t;
+	vec3 p = cam_origin + d * t;
+	return vec2(dot(p, cam_right), dot(p, cam_up));
+}
+
+// Anchor space -> screen pixel. depth = the depth of the ground point.
+vec2 anchor_to_pix(vec2 a, vec2 res, out float depth) {
+	if (!cam_valid) {
+		depth = 1.0;
+		return vec2(a.x, -a.y) * (res.y / FALLBACK_SCREEN_M);
+	}
+	// The ground point with these anchor coordinates.
+	float s = (plane_height - a.x * cam_right.y - a.y * cam_up.y) / max(cam_back.y, 0.05);
+	vec3 rel = a.x * cam_right + a.y * cam_up + s * cam_back - cam_origin;
+	depth = max(-dot(rel, cam_back), 0.1);
+	vec2 ndc = vec2(dot(rel, cam_right) / (res.x / res.y), dot(rel, cam_up))
+			/ (depth * cam_tan_half_fov);
+	return vec2((ndc.x + 1.0) * 0.5 * res.x, (1.0 - ndc.y) * 0.5 * res.y);
+}
+
 // --- Helpers ----------------------------------------------------------------
 
 float luma(vec3 c) {
@@ -191,21 +272,22 @@ vec3 soft_light(vec3 a, vec3 b) {
 			step(vec3(0.5), b));
 }
 
-// The swirl direction at q (q is in screen heights). The direction goes
+// The swirl direction ON SCREEN at the anchor point a. The direction goes
 // along the contour lines of a noise, so it turns around in closed loops.
-vec2 swirl_dir(vec2 q, float t) {
-	vec2 p = q * swirl_scale + vec2(t, -0.7 * t);
+vec2 swirl_dir(vec2 a, float t) {
+	vec2 p = a / swirl_size + vec2(t, -0.7 * t);
 	vec3 n1 = vnoise2_d(p);
 	vec3 n2 = vnoise2_d(p * 2.03 + vec2(5.2, 1.3));
 	vec2 grad = n1.yz + n2.yz;
 	vec2 d = vec2(-grad.y, grad.x);
+	d = vec2(d.x, -d.y); // Anchor y goes up, screen y goes down.
 	return d / max(length(d), 1e-5);
 }
 
-// The stroke direction at pix. gx and gy are the colour changes along x
-// and y. The directions are mixed as "doubled angles", because a stroke
-// that goes left is the same as a stroke that goes right.
-vec2 stroke_dir(vec2 pix, float unit, vec3 gx, vec3 gy, float t) {
+// The stroke direction on screen. gx and gy are the colour changes along
+// screen x and y. The directions are mixed as "doubled angles", because a
+// stroke that goes left is the same as a stroke that goes right.
+vec2 stroke_dir(vec2 a, vec3 gx, vec3 gy, float t) {
 	float e = dot(gx, gx);
 	float f = dot(gx, gy);
 	float g = dot(gy, gy);
@@ -214,51 +296,68 @@ vec2 stroke_dir(vec2 pix, float unit, vec3 gx, vec3 gy, float t) {
 	float edge_len = length(edge2);
 	float edge_w = follow_edges * smoothstep(0.0004, 0.006, edge_len);
 
-	vec2 s = swirl_dir(pix / unit, t);
+	vec2 s = swirl_dir(a, t);
 	vec2 swirl2 = vec2(s.x * s.x - s.y * s.y, 2.0 * s.x * s.y);
 	float h = radians(hatch_angle) * 2.0;
 	vec2 hatch2 = vec2(cos(h), sin(h));
 
 	vec2 d2 = mix(hatch2, swirl2, swirl);
 	d2 = mix(d2, edge2 / max(edge_len, 1e-6), edge_w);
-	float a = 0.5 * atan(d2.y, d2.x + 1e-6);
-	return vec2(cos(a), sin(a));
+	float ang = 0.5 * atan(d2.y, d2.x + 1e-6);
+	return vec2(cos(ang), sin(ang));
 }
 
-// Paints one layer of strokes. It keeps the two strokes with the highest
-// priority that touch this pixel: top_* and sec_* (colour + alpha, and
-// priority + paint height).
-void paint_layer(vec2 pix, vec2 px, float unit, float w, vec2 seed, vec2 shift,
-		float prio_add, float density_flat, float density_detail, float layer_alpha, vec3 local,
-		float t, inout vec4 top_c, inout vec2 top_ph, inout vec4 sec_c, inout vec2 sec_ph) {
-	float len = w * stroke_length;
+// The canvas weave and bumps at the anchor point a, for a weave cell of
+// "cell" metres.
+float canvas_at(vec2 a, float cell) {
+	vec2 gp = a / cell;
+	return sin(gp.x * PI) * sin(gp.y * PI) + vnoise2(gp * 1.4) - 0.5;
+}
+
+// Paints one layer of strokes of width sm (metres). The grid is in anchor
+// space, so the strokes stay on the world. The shape is tested on screen.
+// weight: 1 = all strokes of the layer, 0 = none (octave fade).
+// It keeps the two strokes with the highest priority that touch this
+// pixel: top_* and sec_* (colour + alpha, and priority + paint height).
+void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float sm,
+		float weight, vec2 seed, vec2 shift, float prio_add, float density_flat,
+		float density_detail, float layer_alpha, vec3 local, float t,
+		inout vec4 top_c, inout vec2 top_ph, inout vec4 sec_c, inout vec2 sec_ph) {
+	// The farthest that any stroke can reach from its centre (half length +
+	// ragged edge + antialiasing), with a margin for the perspective.
+	float reach_m = (0.5 * sm * stroke_length * (1.0 + 0.2 * stroke_jitter) + 0.125 * sm) * 1.05
+			+ 1.5 / ppm_ref;
 	// The cell is large enough that only the 3 x 3 cells around the pixel
-	// can have a stroke that touches it (stroke radius <= 0.6 len + 0.15 w).
-	float cell = (0.6 * len + 0.15 * w + 1.0) / (1.5 - CELL_JITTER);
-	vec2 base = floor((pix + shift) / cell);
-	// The direction comes from a blurred image (stable), the colour from a
-	// nearly sharp one (clean colours, thin things keep their colour).
-	float lod = log2(max(w * 0.5, 1.0));
-	float lod_col = log2(max(w * 0.2, 1.0));
-	float step_px = w * 0.6;
+	// can have a stroke that touches it.
+	float cell = reach_m / (1.5 - CELL_JITTER);
+	vec2 base = floor((a_pix + shift) / cell);
 	float clip = mix(1.2, 0.15, edge_respect);
-	// The farthest that any stroke can reach from its centre
-	// (half length + ragged edge + antialiasing).
-	float reach = 0.5 * len * (1.0 + 0.2 * stroke_jitter) + 0.125 * w + 1.0;
 
 	for (int j = -1; j <= 1; j++) {
 		for (int i = -1; i <= 1; i++) {
 			vec2 id = base + vec2(float(i), float(j));
 			vec4 r1 = hash42(id + seed);
-			vec2 center = (id + 0.5 + (r1.xy - 0.5) * 2.0 * CELL_JITTER * stroke_jitter) * cell - shift;
-			// Skip strokes that cannot touch this pixel, or that do not
-			// exist, before any texture read. About half of them.
-			if (distance(pix, center) > reach || r1.z >= density_detail) {
+			float r_fade = hash12(id + seed + vec2(77.7, 13.1));
+			// Skip strokes that do not exist before any other work.
+			if (r1.z >= density_detail || r_fade >= weight) {
+				continue;
+			}
+			vec2 center_a = (id + 0.5 + (r1.xy - 0.5) * 2.0 * CELL_JITTER * stroke_jitter) * cell - shift;
+			float depth_c;
+			vec2 center = anchor_to_pix(center_a, res, depth_c);
+			float w = sm * ppm_at(depth_c, res); // Stroke width on screen (pixels).
+			float len = w * stroke_length;
+			// Skip strokes that cannot touch this pixel, before any texture read.
+			if (distance(pix, center) > 0.5 * len * (1.0 + 0.2 * stroke_jitter) + 0.125 * w + 1.0) {
 				continue;
 			}
 			vec4 r2 = hash42(id + seed + vec2(19.19, 7.31));
 			vec4 r3 = hash42(id + seed + vec2(3.71, 41.3));
 
+			// The direction comes from a blurred image (stable), the colour
+			// from a nearly sharp one (clean colours, thin things keep theirs).
+			float lod = log2(max(w * 0.5, 1.0));
+			float step_px = w * 0.6;
 			vec3 c0 = screen_at(center, px, lod);
 			vec3 gx = screen_at(center + vec2(step_px, 0.0), px, lod) - c0;
 			vec3 gy = screen_at(center + vec2(0.0, step_px), px, lod) - c0;
@@ -269,7 +368,7 @@ void paint_layer(vec2 pix, vec2 px, float unit, float w, vec2 seed, vec2 shift,
 				continue;
 			}
 
-			vec2 dir = stroke_dir(center, unit, gx, gy, t);
+			vec2 dir = stroke_dir(center_a, gx, gy, t);
 			float ang = (r1.w - 0.5) * 2.0 * angle_jitter;
 			dir = vec2(dir.x * cos(ang) - dir.y * sin(ang), dir.x * sin(ang) + dir.y * cos(ang));
 			if (r2.x < 0.5) {
@@ -296,8 +395,12 @@ void paint_layer(vec2 pix, vec2 px, float unit, float w, vec2 seed, vec2 shift,
 			float bristle = vnoise1(v / w * 4.5 + r3.w * 57.0);
 			float dry = bristles * smoothstep(0.35, 1.0, t01);
 			a *= 1.0 - dry * (1.0 - smoothstep(0.3, 0.55, bristle));
+			// Octave fade: each stroke fades in over a short part of the zoom.
+			if (weight < 0.999) {
+				a *= smoothstep(0.0, 0.08, weight - r_fade);
+			}
 			// The colour of the stroke. Read only for strokes that touch the pixel.
-			vec3 c_stroke = screen_at(center, px, lod_col);
+			vec3 c_stroke = screen_at(center, px, log2(max(w * 0.2, 1.0)));
 			// The stroke does not paint over a very different colour.
 			a *= layer_alpha * (1.0 - smoothstep(clip * 0.5, clip, color_diff(c_stroke, local)));
 			if (a <= 0.002) {
@@ -330,20 +433,52 @@ void paint_layer(vec2 pix, vec2 px, float unit, float w, vec2 seed, vec2 shift,
 	}
 }
 
+// Paints one octave: 2 layers of large strokes and 1 layer of small ones.
+void paint_octave(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float sm,
+		float weight, vec2 seed, float coarse_alpha, vec3 local, float t,
+		inout vec4 top_c, inout vec2 top_ph, inout vec4 sec_c, inout vec2 sec_ph) {
+	paint_layer(pix, a_pix, px, res, ppm_ref, sm, weight, seed, vec2(0.0),
+			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
+	paint_layer(pix, a_pix, px, res, ppm_ref, sm, weight, seed + vec2(113.0, 71.0),
+			vec2(0.5, 0.37) * sm * stroke_length,
+			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
+	if (fine_strokes > 0.0) {
+		paint_layer(pix, a_pix, px, res, ppm_ref, sm * 0.55, weight, seed + vec2(37.0, 191.0), vec2(0.0),
+				1.0, fine_strokes * 0.25, fine_strokes, 1.0, local, t, top_c, top_ph, sec_c, sec_ph);
+	}
+}
+
 void fragment() {
 	vec2 px = SCREEN_PIXEL_SIZE;
 	vec2 res = 1.0 / px;
-	float unit = res.y; // Pixels in one screen height.
 	vec2 pix = SCREEN_UV * res; // This pixel, in pixels.
 	vec3 original = textureLod(screen_tex, SCREEN_UV, 0.0).rgb;
 
-	float w = max(brush_size * unit, 2.0); // Large stroke width in pixels.
 	float t = TIME * swirl_speed;
 	float boil = boil_fps > 0.0 ? mod(floor(TIME * boil_fps), 61.0) : 0.0;
 	vec2 seed = vec2(boil * 7.31, boil * 3.17);
 
+	// --- Anchor space and the two octaves ---
+	float depth_p;
+	vec2 a_pix = pix_to_anchor(pix, res, depth_p);
+	float ppm_pix = ppm_at(depth_p, res);
+	float ppm_ref = cam_valid ? ppm_at(ref_depth(), res) : res.y / FALLBACK_SCREEN_M;
+	// The stroke width (metres) that gives brush_size on screen at the centre.
+	float s_want = brush_size * res.y / ppm_ref;
+	float level = log2(s_want);
+	float s_a = exp2(floor(level));
+	float s_b = s_a * 2.0;
+	float weight_b = smoothstep(0.35, 0.65, fract(level));
+	if (!cam_valid) {
+		// No zoom in screen space: one octave with the exact size.
+		s_a = s_want;
+		weight_b = 0.0;
+	}
+	float weight_a = 1.0 - weight_b;
+
+	float w = max(s_want * ppm_pix, 2.0); // Large stroke width here, in pixels.
 	// A blur of about 2 px at 1080p, the same part of the screen at all resolutions.
-	float lod_fine = log2(max(unit / 540.0, 1.0));
+	float lod_fine = log2(max(res.y / 540.0, 1.0));
 
 	// --- Direction and edges at this pixel ---
 	float lod_c = log2(max(w * 0.5, 1.0));
@@ -354,31 +489,33 @@ void fragment() {
 	vec3 gx = screen_at(pix + vec2(sp, 0.0), px, lod_c) - screen_at(pix - vec2(sp, 0.0), px, lod_c);
 	vec3 gy = screen_at(pix + vec2(0.0, sp), px, lod_c) - screen_at(pix - vec2(0.0, sp), px, lod_c);
 	float edge_mag = length(gx) + length(gy);
-	vec2 dir_p = stroke_dir(pix, unit, gx * 0.5, gy * 0.5, t);
+	vec2 dir_p = stroke_dir(a_pix, gx * 0.5, gy * 0.5, t);
 	// Small detail: the sharp colour is far from the blurred colour.
 	float small_detail = smoothstep(0.08, 0.25, color_diff(local, screen_at(pix, px, lod_c)));
 	float coarse_alpha = 1.0 - detail_keep * small_detail;
 
 	// --- 1. Underpainting: smear along the stroke direction ---
 	// Colour weights fall off with the colour difference, so the smear
-	// does not cross edges.
-	float lod_u = lod_fine;
-	vec3 c_mid = local;
-	vec3 under = c_mid;
+	// does not cross edges. The streak lines are in anchor space.
+	vec3 under = local;
 	float wsum = 1.0;
 	float len_u = w * stroke_length * 0.5 * underpaint_smear;
-	float streak = vnoise2(pix / (w * 0.3));
+	vec2 sa = vec2(1.0 / (s_a * 0.3));
+	vec2 sb = vec2(1.0 / (s_b * 0.3));
+	float streak = mix(vnoise2(a_pix * sa), vnoise2(a_pix * sb), weight_b);
 	for (int k = 1; k <= 3; k++) {
 		float o = float(k) / 3.0 * len_u;
 		float kw = 1.0 - float(k) * 0.2;
 		vec2 off = dir_p * o;
-		vec3 ca = screen_at(pix + off, px, lod_u);
-		vec3 cb = screen_at(pix - off, px, lod_u);
-		float wa = kw * exp(-dot(ca - c_mid, ca - c_mid) * 12.0);
-		float wb = kw * exp(-dot(cb - c_mid, cb - c_mid) * 12.0);
+		vec3 ca = screen_at(pix + off, px, lod_fine);
+		vec3 cb = screen_at(pix - off, px, lod_fine);
+		float wa = kw * exp(-dot(ca - local, ca - local) * 12.0);
+		float wb = kw * exp(-dot(cb - local, cb - local) * 12.0);
 		under += ca * wa + cb * wb;
 		wsum += wa + wb;
-		streak += vnoise2((pix + off) / (w * 0.3)) + vnoise2((pix - off) / (w * 0.3));
+		vec2 off_a = vec2(off.x, -off.y) / ppm_pix;
+		streak += mix(vnoise2((a_pix + off_a) * sa) + vnoise2((a_pix - off_a) * sa),
+				vnoise2((a_pix + off_a) * sb) + vnoise2((a_pix - off_a) * sb), weight_b);
 	}
 	under /= wsum;
 	streak = clamp((streak / 7.0 - 0.5) * 2.5 + 0.5, 0.0, 1.0); // Lines along the smear.
@@ -389,13 +526,13 @@ void fragment() {
 	vec2 top_ph = vec2(-1.0, 0.0);
 	vec4 sec_c = vec4(0.0);
 	vec2 sec_ph = vec2(-1.0, 0.0);
-	paint_layer(pix, px, unit, w, seed + vec2(0.0, 0.0), vec2(0.0),
-			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
-	paint_layer(pix, px, unit, w, seed + vec2(113.0, 71.0), vec2(0.5 * w * stroke_length, 0.37 * w * stroke_length),
-			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
-	if (fine_strokes > 0.0) {
-		paint_layer(pix, px, unit, w * 0.55, seed + vec2(37.0, 191.0), vec2(0.0),
-				1.0, fine_strokes * 0.25, fine_strokes, 1.0, local, t, top_c, top_ph, sec_c, sec_ph);
+	if (weight_a > 0.0) {
+		paint_octave(pix, a_pix, px, res, ppm_ref, s_a, weight_a, seed, coarse_alpha, local, t,
+				top_c, top_ph, sec_c, sec_ph);
+	}
+	if (weight_b > 0.0) {
+		paint_octave(pix, a_pix, px, res, ppm_ref, s_b, weight_b, seed + vec2(503.0, 307.0), coarse_alpha,
+				local, t, top_c, top_ph, sec_c, sec_ph);
 	}
 
 	vec3 col = mix(under, sec_c.rgb, sec_c.a);
@@ -423,10 +560,9 @@ void fragment() {
 	vec3 tone = mix(shadow_color, light_color, smoothstep(0.15, 0.75, l));
 	col = mix(col, soft_light(col, tone), complement);
 
-	// --- Light on the paint relief, and the canvas ---
-	float grain_px = max(unit * 0.0028, 1.0);
-	vec2 gp = pix / grain_px;
-	height += canvas_grain * 0.04 * (sin(gp.x * PI) * sin(gp.y * PI) + vnoise2(gp * 1.4) - 0.5);
+	// --- Light on the paint relief, and the canvas (on the world too) ---
+	float grain = mix(canvas_at(a_pix, s_a * 0.25), canvas_at(a_pix, s_b * 0.25), weight_b);
+	height += canvas_grain * 0.04 * grain;
 	// Height change over half a stroke width, so the relief has the same
 	// look at all resolutions.
 	vec2 slope = vec2(dFdx(height), dFdy(height)) * w * 0.5;
@@ -441,7 +577,7 @@ void fragment() {
 	float spec = pow(max(dot(reflect(-ldir, n), vec3(0.0, 0.0, 1.0)), 0.0), 20.0);
 	col = col * diffuse + vec3(spec * 0.12 * impasto);
 	// Canvas colour: a little lighter and darker in the weave.
-	col *= 1.0 + canvas_grain * 0.08 * (vnoise2(gp * 0.7) - 0.5);
+	col *= 1.0 + canvas_grain * 0.08 * (mix(vnoise2(a_pix / (s_a * 0.36)), vnoise2(a_pix / (s_b * 0.36)), weight_b) - 0.5);
 
 	COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), COLOR.a);
 }

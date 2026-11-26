@@ -7,6 +7,7 @@
 [ext_resource type="Shader" uid="uid://dnyoexc03vvvc" path="res://art/shaders/test_shaders_bright.tres" id="5_6fgq6"]
 [ext_resource type="Shader" uid="uid://c56nchjeoddpt" path="res://art/shaders/test_shaders_storm.gdshader" id="6_4pfvy"]
 [ext_resource type="Shader" uid="uid://538dqm61egs" path="res://art/shaders/painterly.gdshader" id="7_paint"]
+[ext_resource type="Script" uid="uid://bd7n1jtjaxx2e" path="res://art/shaders/painterly_camera.gd" id="8_paintcam"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mqki2"]
 shader = ExtResource("2_knxiq")
@@ -247,3 +248,7 @@ offset_right = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="PainterlyCamera" type="Node" parent="." unique_id=1784512903]
+script = ExtResource("8_paintcam")
+materials = Array[ShaderMaterial]([SubResource("ShaderMaterial_rqjvi"), SubResource("ShaderMaterial_xm1cc"), SubResource("ShaderMaterial_3skvw")])
