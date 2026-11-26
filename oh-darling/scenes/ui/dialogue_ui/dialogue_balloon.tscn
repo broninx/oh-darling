@@ -1,0 +1,143 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/dialogue_ui/dialogue_balloon.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.04, 0.04, 0.05, 0, 0.04, 0.04, 0.05, 0.93)
+
+[sub_resource type="GradientTexture2D" id="Tex_fade"]
+gradient = SubResource("Gradient_fade")
+width = 256
+height = 4
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.04, 0.04, 0.05, 0.93)
+
+[sub_resource type="StyleBoxEmpty" id="Style_empty"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="Style_continue"]
+bg_color = Color(0.55, 0.18, 0.1, 1)
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="Style_continue_hover"]
+bg_color = Color(0.72, 0.26, 0.14, 1)
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+
+[sub_resource type="Theme" id="Theme_dialogue"]
+default_font_size = 24
+Button/colors/font_color = Color(0.88, 0.45, 0.25, 1)
+Button/colors/font_hover_color = Color(1, 0.72, 0.45, 1)
+Button/colors/font_pressed_color = Color(1, 0.72, 0.45, 1)
+Button/colors/font_focus_color = Color(0.88, 0.45, 0.25, 1)
+Button/colors/font_disabled_color = Color(0.38, 0.38, 0.38, 1)
+Button/font_sizes/font_size = 24
+Button/styles/disabled = SubResource("Style_empty")
+Button/styles/focus = SubResource("Style_empty")
+Button/styles/hover = SubResource("Style_empty")
+Button/styles/normal = SubResource("Style_empty")
+Button/styles/pressed = SubResource("Style_empty")
+RichTextLabel/colors/default_color = Color(0.86, 0.84, 0.78, 1)
+RichTextLabel/font_sizes/bold_font_size = 24
+RichTextLabel/font_sizes/normal_font_size = 24
+
+[node name="DialogueBalloon" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_script")
+speaker_colors = Dictionary[String, Color]({
+"The Fog": Color(0.62, 0.72, 0.82, 1),
+"The Storm": Color(0.85, 0.35, 0.55, 1)
+})
+speaker_styles = Dictionary[String, String]({
+"The Fog": "[font=res://art/fonts/voice_fog.tres][color=#b4c0cc][wave amp=6 freq=1.2 connected=1]",
+"The Storm": "[font=res://art/fonts/voice_storm.tres][color=#f0d0dc][shake rate=12 level=3 connected=1]"
+})
+
+[node name="Blocker" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Fade" type="TextureRect" parent="."]
+layout_mode = 3
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.64
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("Tex_fade")
+expand_mode = 1
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 3
+unique_name_in_owner = true
+anchors_preset = -1
+anchor_left = 0.64
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource("Theme_dialogue")
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 56
+theme_override_constants/margin_right = 56
+theme_override_constants/margin_bottom = 48
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="Panel/Margin/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+mouse_filter = 2
+theme_override_constants/separation = 28
+
+[node name="Log" type="VBoxContainer" parent="Panel/Margin/VBox/Scroll/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="Responses" type="VBoxContainer" parent="Panel/Margin/VBox/Scroll/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="ContinueButton" type="Button" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.95, 0.92, 0.88, 1)
+theme_override_styles/normal = SubResource("Style_continue")
+theme_override_styles/hover = SubResource("Style_continue_hover")
+theme_override_styles/pressed = SubResource("Style_continue_hover")
+theme_override_styles/focus = SubResource("Style_continue")
+focus_mode = 0
+text = "CONTINUE"

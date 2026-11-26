@@ -26,6 +26,10 @@ GameManager="*uid://cm1lh358sadr1"
 UiManager="*uid://72l6l5ataasr"
 DebugPanel="*uid://bh841bkut3ve0"
 
+[dialogue_manager]
+
+runtime/balloon_path="res://scenes/ui/dialogue_ui/dialogue_balloon.tscn"
+
 [display]
 
 window/size/viewport_width=1920
