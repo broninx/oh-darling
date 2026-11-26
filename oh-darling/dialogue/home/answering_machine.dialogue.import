@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://bsd2fw35btfwu"
+path="res://.godot/imported/answering_machine.dialogue-cfc6a36aa70dfc3d41d6c223d4b3b228.tres"
+
+[deps]
+
+source_file="res://dialogue/home/answering_machine.dialogue"
+dest_files=["res://.godot/imported/answering_machine.dialogue-cfc6a36aa70dfc3d41d6c223d4b3b228.tres"]
+
+[params]
+
+defaults=true

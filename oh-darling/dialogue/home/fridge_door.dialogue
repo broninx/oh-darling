@@ -1,0 +1,120 @@
+# Home observation: the fridge door (kitchen). Day 1 morning.
+# Base text is for every mood. Mood remarks show only in their mood.
+# Options are open in every mood, except a few locks for extreme moods.
+# "Pumpernickel" is a placeholder for the pig's name.
+# Text effects: the MC's notes use the handwriting font, the Town Hall letter
+# the typewriter font, the strange note the marker font.
+
+~ start
+The fridge door is a small notice board. Each magnet is in its own place, with the same distance between them. You measured it with a ruler on the first evening.
+if EmotionManager.get_mood() == "fog"
+	The Fog: A ruler. For magnets. [fade start=0 length=30]And still nothing feels in place.[/fade]
+elif EmotionManager.get_mood() == "overcast"
+	It's tidy. That's something.
+elif EmotionManager.get_mood() == "clear"
+	It's a system. Systems help. You know that about yourself.
+elif EmotionManager.get_mood() == "bright"
+	It's beautiful, honestly. Like a little [wave amp=8 freq=2]map of a well-run life.[/wave]
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Same distance between each magnet. So you'll know at once [glitch chance=0.3]if one moves.[/glitch]
+- Read your routine.
+	=> routine
+- Read the letter from the Town Hall.
+	=> letter
+- Look at the flyer.
+	=> flyer
+- Leave.
+	=> END
+
+~ routine
+A sheet in your handwriting.
+[font=res://art/fonts/handwriting.tres]07:00 Pain au chocolat + cold bitter coffee. [u]NOT optional.[/u][/font]
+[font=res://art/fonts/handwriting.tres]09:00 Archive. Boxes 14 to 22 (zoning permits, 1990s).[/font]
+[font=res://art/fonts/handwriting.tres]12:00 Lunch. Outside if no pigeons.[/font]
+[font=res://art/fonts/handwriting.tres]17:00 Home. Water the plants (Mon, Thu). Curtains at sunset.[/font]
+At the bottom, in different ink\: [font=res://art/fonts/handwriting.tres][color=#c05050]Don't tell anyone about the gap in the records until you are [shake rate=10 level=2]SURE.[/shake][/color][/font]
+if EmotionManager.get_mood() == "fog"
+	The Fog: A list so the day can't surprise you. Look how well that worked before.
+elif EmotionManager.get_mood() == "overcast"
+	The list is a railing. You hold on to it, [speed=0.5]one hour at a time.[/speed]
+elif EmotionManager.get_mood() == "clear"
+	The gap is real, or it's a filing error. Boxes 14 to 22 will tell you which.
+elif EmotionManager.get_mood() == "bright"
+	A gap in the records! Your first [wave amp=10 freq=3]real mystery[/wave], in your first month.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Sure? You were sure the moment you saw it. The rest of them just [shake rate=25 level=5]haven't caught up.[/shake]
+- [font_size=26]Follow the list. Breakfast first, the gap later.[/font_size]
+	do EmotionManager.shift("dereism", -0.04)
+	=> start
+- [color=#e85a35][glitch rate=6 level=1 chance=0.03 tint=0.3]Cross out "until you are SURE". You are sure.[/glitch][/color]
+	[font=res://art/fonts/handwriting.tres][color=#c05050]Don't tell anyone about the gap in the records [s]until you are SURE.[/s][/color][/font]
+	[shake rate=30 level=2]The pen tears the paper a little.[/shake]
+	do EmotionManager.shift("paranoia", 0.05)
+	do EmotionManager.shift("self_perception", 0.04)
+	=> start
+- Back.
+	=> start
+
+~ letter
+Thick paper, the Town Hall seal pressed into it.
+[font=res://art/fonts/typewriter.tres]"Welcome to the town with [u]no chipped bricks[/u]! Lawns are cut on Saturdays. Bins go out at 07:30. Curtains facing the street stay open from 8 a.m. to 8 p.m., so our streets always look alive and welcoming."[/font]
+Signed by Chris MacLean, Mayor. P.S. [font=res://art/fonts/typewriter.tres]"We owe everything to [if EmotionManager.get_mood() == "bright"][rainbow freq=0.5 sat=0.5 val=1.0]Pumpernickel[/rainbow][else][u]Pumpernickel[/u][/if]!"[/font]
+if EmotionManager.get_mood() == "fog"
+	The Fog: Open curtains. So the whole street can watch you be tired.
+elif EmotionManager.get_mood() == "overcast"
+	Rules. Every town has rules. You'll open the curtains.[wait=0.6] Probably.
+elif EmotionManager.get_mood() == "clear"
+	Your curtains are closed. In one hour they will break a rule. Small, but real.
+elif EmotionManager.get_mood() == "bright"
+	What a lovely, caring letter. He signed it [wave amp=6 freq=2]by hand.[/wave]
+elif EmotionManager.get_mood() == "storm"
+	The Storm: "Look alive." For whom?[wait=0.5] [glitch chance=0.4 level=6]Who is looking?[/glitch]
+- "Who is Pumpernickel?"
+	Nobody you asked this month knew. They all just [wave amp=4 freq=1]smiled[/wave], as if you were supposed to understand already.
+	# TODO flag: heard_of_pig_name = true
+	if EmotionManager.get_mood() == "fog"
+		The Fog: Another joke everybody gets except you. [fade start=0 length=12]Like school.[/fade]
+	elif EmotionManager.get_mood() == "clear"
+		A person, a pet, a bakery. You could ask at the archive.
+	elif EmotionManager.get_mood() == "storm"
+		The Storm: A name everybody repeats and nobody explains. That is not a joke.[wait=0.5] That is a [glitch chance=0.5 level=6]password.[/glitch]
+	=> letter
+- [glitch rate=6 level=1 chance=0.03 tint=0.3]Check the seal. Was it opened before it reached you?[/glitch]
+	The wax is a little crooked. Or it was pressed by a tired hand. [speed=0.6]You can't tell, and that is the problem.[/speed]
+	do EmotionManager.shift("paranoia", 0.05)
+	=> letter
+- Back.
+	=> start
+
+~ flyer
+A glossy flyer for the farmers' market. A cartoon pig in a straw hat holds a basket of truffles. [font=res://art/fonts/voice_storm.tres][color=#e8a040]"Fresh, local, PERFECT."[/color][/font]
+In the corner, half hidden by a magnet shaped like an [color=#f08a24]orange[/color], someone wrote in black pen\:[wait=0.5] [font=res://art/fonts/marker.tres][font_size=30][shake rate=6 level=1]ASK WHERE THE LAND CAME FROM.[/shake][/font_size][/font]
+It's not your handwriting. You don't remember the flyer.[wait=0.4] You hate oranges.
+if EmotionManager.get_mood() == "fog"
+	The Fog: Someone was in your kitchen. Or you did it and forgot. [fade start=0 length=40]You know which one is more likely.[/fade]
+elif EmotionManager.get_mood() == "overcast"
+	A prank. A neighbour. Whatever. Not before coffee.
+elif EmotionManager.get_mood() == "clear"
+	The flyers come with the post. The magnet could be from the welcome basket. There is a normal explanation.[wait=0.6] Probably.
+elif EmotionManager.get_mood() == "bright"
+	A [rainbow freq=0.5 sat=0.5 val=1.0]secret message![/rainbow] The town is more interesting than it looks.
+elif EmotionManager.get_mood() == "storm"
+	The Storm: Someone was in your kitchen. Someone wants you to find this. Someone [glitch rate=20 level=7 chance=0.5][font_size=30]CHOSE[/font_size][/glitch] you.
+- [font_size=26][glitch rate=6 level=1 chance=0.03 tint=0.3]Compare the pen with the note on your routine sheet.[/glitch][/font_size]
+	Different pen, different hand. The letters lean left. Yours lean right.[wait=0.5] [i]Not you, then.[/i]
+	do EmotionManager.shift("dereism", -0.03)
+	do EmotionManager.shift("paranoia", 0.04)
+	=> flyer
+- [wave amp=2 freq=9 connected=1][glitch rate=6 level=1 chance=0.03 tint=0.3]Take the flyer down and keep it.[/glitch][/wave]
+	You fold it into your pocket.
+	do EmotionManager.shift("energy", 0.03)
+	do EmotionManager.shift("paranoia", 0.03)
+	# TODO flag: has_market_flyer = true
+	=> END
+- [outline_size=5][outline_color=#ffffff4d][wave amp=6 freq=0.5 connected=1]Throw it away, and the orange magnet with it.[/wave][/outline_color][/outline_size]
+	The bin lid closes. The fridge door has one empty place now. [fade start=20 length=40]The gap bothers you more than the note did.[/fade]
+	do EmotionManager.shift("paranoia", -0.04)
+	do EmotionManager.shift("energy", -0.03)
+	=> END
+- Leave it where it is.
+	=> start
