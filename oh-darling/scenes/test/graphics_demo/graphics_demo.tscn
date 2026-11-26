@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/test/graphics_demo/graphics_demo.gd" id="1_demo"]
+[ext_resource type="PackedScene" uid="uid://hudp4tlrvvtl" path="res://scenes/world/town_hills.tscn" id="2_town"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_caption"]
+bg_color = Color(0.03, 0.04, 0.09, 0.78)
+border_width_left = 4
+border_color = Color(1, 0.78, 0.12, 1)
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+content_margin_left = 22.0
+content_margin_top = 14.0
+content_margin_right = 22.0
+content_margin_bottom = 14.0
+
+[node name="GraphicsDemo" type="Node3D"]
+script = ExtResource("1_demo")
+
+[node name="Town" parent="." instance=ExtResource("2_town")]
+
+[node name="Caption" type="CanvasLayer" parent="."]
+layer = 90
+
+[node name="Margin" type="MarginContainer" parent="Caption"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -220.0
+offset_right = 1100.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Panel" type="PanelContainer" parent="Caption/Margin"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_caption")
+
+[node name="VBox" type="VBoxContainer" parent="Caption/Margin/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Caption/Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
+theme_override_font_sizes/font_size = 30
+text = "Title"
+
+[node name="Text" type="Label" parent="Caption/Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.93, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Text"
+
+[node name="Status" type="Label" parent="Caption/Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.65, 0.78, 1)
+theme_override_font_sizes/font_size = 15
+text = "1 / 1"
