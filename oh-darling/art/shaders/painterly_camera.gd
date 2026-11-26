@@ -13,7 +13,17 @@
 #
 #  DATA IT SENDS (shader uniforms)
 #    cam_valid, cam_origin, cam_right, cam_up, cam_back, cam_tan_half_fov,
-#    plane_height (the height of the player, or 0 without a player).
+#    plane_height (the height of the player, or 0 without a player),
+#    quality (0 = low, 1 = medium, 2 = high).
+#
+#  QUALITY
+#    "Quality" is the highest quality. With "Auto Quality" on, the quality
+#    goes down one step when the game runs below "Min Fps" for 2 seconds
+#    (after 3 seconds of warm-up). It never goes up again (no flicker
+#    between two qualities). The change is printed in the Output.
+#      high:   2 layers of large strokes, small strokes, long octave fade.
+#      medium: the same, with a shorter smear and a short octave fade.
+#      low:    1 layer of large strokes, no small strokes, no octave fade.
 #
 #  RULES
 #    - It only reads the camera and the player. It changes nothing in the world.
@@ -28,14 +38,61 @@
 extends Node
 ## Sends the active camera to the painterly shader, so the strokes stay on the world.
 
+enum Quality { LOW, MEDIUM, HIGH }
+
+const WARMUP_TIME: float = 3.0
+const MEASURE_TIME: float = 2.0
+
 ## The ShaderMaterials that use painterly.gdshader.
 @export var materials: Array[ShaderMaterial] = []
+## The highest quality of the painterly filter.
+@export var quality: Quality = Quality.HIGH:
+	set(value):
+		quality = value
+		_current_quality = value
+		_send_quality()
+## Lower the quality when the game is slow.
+@export var auto_quality: bool = true
+## Below this frame rate, auto quality goes down one step.
+@export_range(20, 144) var min_fps: int = 50
 
 var _player: Node3D
+var _current_quality: Quality = Quality.HIGH
+var _warmup: float = WARMUP_TIME
+var _time: float = 0.0
+var _frames: int = 0
 
 
 func _ready() -> void:
+	_current_quality = quality
+	_send_quality()
 	RenderingServer.frame_pre_draw.connect(_send_camera)
+
+
+# Auto quality: measures the frame rate over MEASURE_TIME seconds.
+func _process(delta: float) -> void:
+	if not auto_quality or _current_quality == Quality.LOW:
+		return
+	if _warmup > 0.0:
+		_warmup -= delta
+		return
+	_time += delta
+	_frames += 1
+	if _time < MEASURE_TIME:
+		return
+	var fps: float = _frames / _time
+	_time = 0.0
+	_frames = 0
+	if fps < min_fps:
+		_current_quality = (_current_quality - 1) as Quality
+		_send_quality()
+		print("PainterlyCamera: %.0f FPS, painterly quality is now %s." % [fps, Quality.keys()[_current_quality]])
+
+
+func _send_quality() -> void:
+	for material: ShaderMaterial in materials:
+		if material != null:
+			material.set_shader_parameter("quality", int(_current_quality))
 
 
 func _exit_tree() -> void:

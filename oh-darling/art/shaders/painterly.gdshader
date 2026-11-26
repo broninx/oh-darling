@@ -44,10 +44,22 @@
 //    the strokes do not flicker. Tested in town_hills at zoom 0.45, 1.0 and
 //    1.4, at 720p and 1080p.
 //
+//  QUALITY (uniform "quality", set by painterly_camera.gd, auto by FPS)
+//    GPU time of the filter at 1080p on an RTX 5060 Ti (zoom 1.0 / during
+//    the octave fade). A GTX 750 Ti is about 20x slower.
+//      2 high:   2.6 / 3.3 ms. Each stroke finds its own direction.
+//      1 medium: 2.1 / 2.7 ms. All strokes take the flow of the pixel
+//                ("fast" mode: they bend along the flow), short fade.
+//      0 low:    1.2 / 1.2 ms. Fast mode, 1 layer of large strokes, no small
+//                strokes, no ragged edges, no fade (instant octave switch).
+//    The base (screen copy + mipmaps, underpainting, relief) is ~0.5 ms.
+//
 //  RULES
 //    - It ends with COLOR = vec4(..., COLOR.a), so the mood fade works.
 //    - The loops have a fixed size. Strokes that cannot touch the pixel are
 //      skipped before any texture read.
+//    - Compute the second octave only when weight_b > 0 (it is 0 most of
+//      the time): mix(a, b, 0.0) still pays for b.
 // ==============================================================================
 shader_type canvas_item;
 render_mode unshaded;
@@ -143,6 +155,8 @@ uniform vec3 cam_back = vec3(0.0, 0.0, 1.0);
 uniform float cam_tan_half_fov = 0.2;
 // The height (world y) of the ground plane where the pattern lives.
 uniform float plane_height = 0.0;
+// 0 = low, 1 = medium, 2 = high. See QUALITY in the banner.
+uniform int quality = 2;
 group_uniforms;
 
 // A stroke moves at most this part of its grid cell from the cell centre.
@@ -284,10 +298,21 @@ vec2 swirl_dir(vec2 a, float t) {
 	return d / max(length(d), 1e-5);
 }
 
-// The stroke direction on screen. gx and gy are the colour changes along
-// screen x and y. The directions are mixed as "doubled angles", because a
-// stroke that goes left is the same as a stroke that goes right.
-vec2 stroke_dir(vec2 a, vec3 gx, vec3 gy, float t) {
+// The direction of the swirl and the hatching at the anchor point a, as a
+// "doubled angle" (a stroke that goes left is the same as a stroke that goes
+// right). It changes over metres, so the shader computes it once for each
+// pixel, not once for each stroke (a large saving).
+vec2 flow2_at(vec2 a, float t) {
+	vec2 s = swirl_dir(a, t);
+	vec2 swirl2 = vec2(s.x * s.x - s.y * s.y, 2.0 * s.x * s.y);
+	float h = radians(hatch_angle) * 2.0;
+	return mix(vec2(cos(h), sin(h)), swirl2, swirl);
+}
+
+// The stroke direction on screen. flow2 comes from flow2_at(). gx and gy
+// are the colour changes along screen x and y: the stroke turns along the
+// edges of the image.
+vec2 stroke_dir(vec2 flow2, vec3 gx, vec3 gy) {
 	float e = dot(gx, gx);
 	float f = dot(gx, gy);
 	float g = dot(gy, gy);
@@ -295,14 +320,7 @@ vec2 stroke_dir(vec2 a, vec3 gx, vec3 gy, float t) {
 	vec2 edge2 = vec2(g - e, -2.0 * f);
 	float edge_len = length(edge2);
 	float edge_w = follow_edges * smoothstep(0.0004, 0.006, edge_len);
-
-	vec2 s = swirl_dir(a, t);
-	vec2 swirl2 = vec2(s.x * s.x - s.y * s.y, 2.0 * s.x * s.y);
-	float h = radians(hatch_angle) * 2.0;
-	vec2 hatch2 = vec2(cos(h), sin(h));
-
-	vec2 d2 = mix(hatch2, swirl2, swirl);
-	d2 = mix(d2, edge2 / max(edge_len, 1e-6), edge_w);
+	vec2 d2 = mix(flow2, edge2 / max(edge_len, 1e-6), edge_w);
 	float ang = 0.5 * atan(d2.y, d2.x + 1e-6);
 	return vec2(cos(ang), sin(ang));
 }
@@ -319,9 +337,16 @@ float canvas_at(vec2 a, float cell) {
 // weight: 1 = all strokes of the layer, 0 = none (octave fade).
 // It keeps the two strokes with the highest priority that touch this
 // pixel: top_* and sec_* (colour + alpha, and priority + paint height).
+// fast = false (high quality): each stroke reads the image at its centre to
+//   find its own direction (3 texture reads for each nearby stroke).
+// fast = true (medium, low): each stroke uses the direction of the flow at
+//   this pixel (dir_pix), and the projection is linear near the pixel (jac,
+//   pix0). Only strokes that touch the pixel read the image (1 read). The
+//   strokes bend along the flow.
 void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float sm,
 		float weight, vec2 seed, vec2 shift, float prio_add, float density_flat,
-		float density_detail, float layer_alpha, vec3 local, float t,
+		float density_detail, float layer_alpha, vec3 local, vec2 flow2,
+		bool fast, vec2 dir_pix, mat2 jac, vec2 pix0, float ppm_pix, float pix_detail,
 		inout vec4 top_c, inout vec2 top_ph, inout vec4 sec_c, inout vec2 sec_ph) {
 	// The farthest that any stroke can reach from its centre (half length +
 	// ragged edge + antialiasing), with a margin for the perspective.
@@ -343,9 +368,16 @@ void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float s
 				continue;
 			}
 			vec2 center_a = (id + 0.5 + (r1.xy - 0.5) * 2.0 * CELL_JITTER * stroke_jitter) * cell - shift;
-			float depth_c;
-			vec2 center = anchor_to_pix(center_a, res, depth_c);
-			float w = sm * ppm_at(depth_c, res); // Stroke width on screen (pixels).
+			vec2 center;
+			float w; // Stroke width on screen (pixels).
+			if (fast) {
+				center = pix0 + jac * (center_a - a_pix);
+				w = sm * ppm_pix;
+			} else {
+				float depth_c;
+				center = anchor_to_pix(center_a, res, depth_c);
+				w = sm * ppm_at(depth_c, res);
+			}
 			float len = w * stroke_length;
 			// Skip strokes that cannot touch this pixel, before any texture read.
 			if (distance(pix, center) > 0.5 * len * (1.0 + 0.2 * stroke_jitter) + 0.125 * w + 1.0) {
@@ -354,21 +386,38 @@ void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float s
 			vec4 r2 = hash42(id + seed + vec2(19.19, 7.31));
 			vec4 r3 = hash42(id + seed + vec2(3.71, 41.3));
 
-			// The direction comes from a blurred image (stable), the colour
-			// from a nearly sharp one (clean colours, thin things keep theirs).
-			float lod = log2(max(w * 0.5, 1.0));
-			float step_px = w * 0.6;
-			vec3 c0 = screen_at(center, px, lod);
-			vec3 gx = screen_at(center + vec2(step_px, 0.0), px, lod) - c0;
-			vec3 gy = screen_at(center + vec2(0.0, step_px), px, lod) - c0;
-
-			// Small strokes: few in flat areas, many where there is detail.
-			float detail = smoothstep(0.05, 0.22, length(gx) + length(gy));
-			if (r1.z >= mix(density_flat, density_detail, detail)) {
-				continue;
+			vec2 dir;
+			float detail;
+			if (fast) {
+				dir = dir_pix;
+				detail = pix_detail;
+			} else {
+				// The direction comes from a blurred image (stable).
+				float lod = log2(max(w * 0.5, 1.0));
+				float step_px = w * 0.6;
+				vec3 c0 = screen_at(center, px, lod);
+				vec3 gx = screen_at(center + vec2(step_px, 0.0), px, lod) - c0;
+				vec3 gy = screen_at(center + vec2(0.0, step_px), px, lod) - c0;
+				detail = smoothstep(0.05, 0.22, length(gx) + length(gy));
+				dir = stroke_dir(flow2, gx, gy);
 			}
 
-			vec2 dir = stroke_dir(center_a, gx, gy, t);
+			// Small strokes: few in flat areas, many where there is detail.
+			// In fast mode "detail" is the detail at this pixel, so the
+			// stroke fades softly (a hard test would cut the stroke).
+			float density = mix(density_flat, density_detail, detail);
+			float density_alpha = 1.0;
+			if (density < 1.0) {
+				if (fast) {
+					density_alpha = smoothstep(-0.08, 0.08, density - r1.z);
+					if (density_alpha <= 0.0) {
+						continue;
+					}
+				} else if (r1.z >= density) {
+					continue;
+				}
+			}
+
 			float ang = (r1.w - 0.5) * 2.0 * angle_jitter;
 			dir = vec2(dir.x * cos(ang) - dir.y * sin(ang), dir.x * sin(ang) + dir.y * cos(ang));
 			if (r2.x < 0.5) {
@@ -383,7 +432,8 @@ void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float s
 			float half_w = 0.5 * w * (1.0 + (r2.z - 0.5) * 0.4 * stroke_jitter);
 			float t01 = clamp(u / half_len * 0.5 + 0.5, 0.0, 1.0); // 0 = start, 1 = end
 			float hw = half_w * mix(1.0, 0.7, t01 * t01); // The stroke gets thinner at the end.
-			float rag = (vnoise1(u / w * 2.5 + r2.w * 31.0) - 0.5) * 0.25 * w; // Ragged edge.
+			// Ragged edge (not in low quality).
+			float rag = quality > 0 ? (vnoise1(u / w * 2.5 + r2.w * 31.0) - 0.5) * 0.25 * w : 0.0;
 			float core = max(half_len - hw, 0.0);
 			float dist = length(vec2(max(abs(u) - core, 0.0), v)) - hw - rag;
 			float a = 1.0 - smoothstep(-0.75, 0.75, dist); // About 1.5 px of antialiasing.
@@ -399,10 +449,11 @@ void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float s
 			if (weight < 0.999) {
 				a *= smoothstep(0.0, 0.08, weight - r_fade);
 			}
-			// The colour of the stroke. Read only for strokes that touch the pixel.
+			// The colour of the stroke (from a nearly sharp image: clean colours,
+			// thin things keep theirs). Read only for strokes that touch the pixel.
 			vec3 c_stroke = screen_at(center, px, log2(max(w * 0.2, 1.0)));
 			// The stroke does not paint over a very different colour.
-			a *= layer_alpha * (1.0 - smoothstep(clip * 0.5, clip, color_diff(c_stroke, local)));
+			a *= layer_alpha * density_alpha * (1.0 - smoothstep(clip * 0.5, clip, color_diff(c_stroke, local)));
 			if (a <= 0.002) {
 				continue;
 			}
@@ -433,18 +484,24 @@ void paint_layer(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float s
 	}
 }
 
-// Paints one octave: 2 layers of large strokes and 1 layer of small ones.
+// Paints one octave: 1 or 2 layers of large strokes (quality), and a layer
+// of small ones with the alpha fine_alpha (skipped when it is 0).
 void paint_octave(vec2 pix, vec2 a_pix, vec2 px, vec2 res, float ppm_ref, float sm,
-		float weight, vec2 seed, float coarse_alpha, vec3 local, float t,
+		float weight, vec2 seed, float coarse_alpha, float fine_alpha, vec3 local, vec2 flow2,
+		bool fast, vec2 dir_pix, mat2 jac, vec2 pix0, float ppm_pix, float pix_detail,
 		inout vec4 top_c, inout vec2 top_ph, inout vec4 sec_c, inout vec2 sec_ph) {
 	paint_layer(pix, a_pix, px, res, ppm_ref, sm, weight, seed, vec2(0.0),
-			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
-	paint_layer(pix, a_pix, px, res, ppm_ref, sm, weight, seed + vec2(113.0, 71.0),
-			vec2(0.5, 0.37) * sm * stroke_length,
-			0.0, 1.0, 1.0, coarse_alpha, local, t, top_c, top_ph, sec_c, sec_ph);
-	if (fine_strokes > 0.0) {
+			0.0, 1.0, 1.0, coarse_alpha, local, flow2,
+			fast, dir_pix, jac, pix0, ppm_pix, pix_detail, top_c, top_ph, sec_c, sec_ph);
+	if (quality > 0) {
+		paint_layer(pix, a_pix, px, res, ppm_ref, sm, weight, seed + vec2(113.0, 71.0),
+				vec2(0.5, 0.37) * sm * stroke_length, 0.0, 1.0, 1.0, coarse_alpha, local, flow2,
+				fast, dir_pix, jac, pix0, ppm_pix, pix_detail, top_c, top_ph, sec_c, sec_ph);
+	}
+	if (fine_alpha > 0.0) {
 		paint_layer(pix, a_pix, px, res, ppm_ref, sm * 0.55, weight, seed + vec2(37.0, 191.0), vec2(0.0),
-				1.0, fine_strokes * 0.25, fine_strokes, 1.0, local, t, top_c, top_ph, sec_c, sec_ph);
+				1.0, fine_strokes * 0.25, fine_strokes, fine_alpha, local, flow2,
+				fast, dir_pix, jac, pix0, ppm_pix, pix_detail, top_c, top_ph, sec_c, sec_ph);
 	}
 }
 
@@ -468,7 +525,12 @@ void fragment() {
 	float level = log2(s_want);
 	float s_a = exp2(floor(level));
 	float s_b = s_a * 2.0;
-	float weight_b = smoothstep(0.35, 0.65, fract(level));
+	// The octave fade: during the fade, both octaves are painted (2x work).
+	// Lower quality: a shorter fade (low: an instant switch).
+	float fade_half = quality == 2 ? 0.15 : (quality == 1 ? 0.05 : 0.0);
+	float weight_b = fade_half > 0.0
+			? smoothstep(0.5 - fade_half, 0.5 + fade_half, fract(level))
+			: step(0.5, fract(level));
 	if (!cam_valid) {
 		// No zoom in screen space: one octave with the exact size.
 		s_a = s_want;
@@ -489,10 +551,27 @@ void fragment() {
 	vec3 gx = screen_at(pix + vec2(sp, 0.0), px, lod_c) - screen_at(pix - vec2(sp, 0.0), px, lod_c);
 	vec3 gy = screen_at(pix + vec2(0.0, sp), px, lod_c) - screen_at(pix - vec2(0.0, sp), px, lod_c);
 	float edge_mag = length(gx) + length(gy);
-	vec2 dir_p = stroke_dir(a_pix, gx * 0.5, gy * 0.5, t);
+	vec2 flow2 = flow2_at(a_pix, t);
+	vec2 dir_p = stroke_dir(flow2, gx * 0.5, gy * 0.5);
 	// Small detail: the sharp colour is far from the blurred colour.
 	float small_detail = smoothstep(0.08, 0.25, color_diff(local, screen_at(pix, px, lod_c)));
 	float coarse_alpha = 1.0 - detail_keep * small_detail;
+	// Small strokes only near detail or edges (not on flat ground), and not
+	// in low quality. They fade out softly toward flat ground.
+	float fine_alpha = (fine_strokes > 0.0 && quality > 0)
+			? max(smoothstep(0.02, 0.06, edge_mag), small_detail) : 0.0;
+	// Fast mode (medium, low): the direction of all strokes comes from this
+	// pixel, and the projection is linear near this pixel.
+	bool fast = quality < 2;
+	float pix_detail = max(smoothstep(0.1, 0.44, edge_mag), small_detail);
+	mat2 jac = mat2(1.0);
+	vec2 pix0 = pix;
+	if (fast) {
+		float dd;
+		pix0 = anchor_to_pix(a_pix, res, dd);
+		jac = mat2((anchor_to_pix(a_pix + vec2(0.05, 0.0), res, dd) - pix0) / 0.05,
+				(anchor_to_pix(a_pix + vec2(0.0, 0.05), res, dd) - pix0) / 0.05);
+	}
 
 	// --- 1. Underpainting: smear along the stroke direction ---
 	// Colour weights fall off with the colour difference, so the smear
@@ -502,10 +581,14 @@ void fragment() {
 	float len_u = w * stroke_length * 0.5 * underpaint_smear;
 	vec2 sa = vec2(1.0 / (s_a * 0.3));
 	vec2 sb = vec2(1.0 / (s_b * 0.3));
-	float streak = mix(vnoise2(a_pix * sa), vnoise2(a_pix * sb), weight_b);
-	for (int k = 1; k <= 3; k++) {
-		float o = float(k) / 3.0 * len_u;
-		float kw = 1.0 - float(k) * 0.2;
+	// The second octave only when it is visible (it is 0 most of the time).
+	bool two = weight_b > 0.0;
+	float streak = two ? mix(vnoise2(a_pix * sa), vnoise2(a_pix * sb), weight_b) : vnoise2(a_pix * sa);
+	// Samples on each side: high 3, medium 2, low 1.
+	int steps = quality + 1;
+	for (int k = 1; k <= steps; k++) {
+		float o = float(k) / float(steps) * len_u;
+		float kw = 1.0 - float(k) / float(steps) * 0.6;
 		vec2 off = dir_p * o;
 		vec3 ca = screen_at(pix + off, px, lod_fine);
 		vec3 cb = screen_at(pix - off, px, lod_fine);
@@ -514,11 +597,15 @@ void fragment() {
 		under += ca * wa + cb * wb;
 		wsum += wa + wb;
 		vec2 off_a = vec2(off.x, -off.y) / ppm_pix;
-		streak += mix(vnoise2((a_pix + off_a) * sa) + vnoise2((a_pix - off_a) * sa),
+		float s_oct_a = vnoise2((a_pix + off_a) * sa) + vnoise2((a_pix - off_a) * sa);
+		streak += !two ? s_oct_a : mix(s_oct_a,
 				vnoise2((a_pix + off_a) * sb) + vnoise2((a_pix - off_a) * sb), weight_b);
 	}
 	under /= wsum;
-	streak = clamp((streak / 7.0 - 0.5) * 2.5 + 0.5, 0.0, 1.0); // Lines along the smear.
+	// Lines along the smear. The average of fewer samples has more contrast,
+	// so the gain goes with sqrt(samples): the same look as 7 samples.
+	float n_streak = float(1 + 2 * steps);
+	streak = clamp((streak / n_streak - 0.5) * 2.5 * sqrt(n_streak / 7.0) + 0.5, 0.0, 1.0);
 	float under_h = 0.25 + 0.35 * streak;
 
 	// --- 2. Strokes ---
@@ -527,12 +614,13 @@ void fragment() {
 	vec4 sec_c = vec4(0.0);
 	vec2 sec_ph = vec2(-1.0, 0.0);
 	if (weight_a > 0.0) {
-		paint_octave(pix, a_pix, px, res, ppm_ref, s_a, weight_a, seed, coarse_alpha, local, t,
-				top_c, top_ph, sec_c, sec_ph);
+		paint_octave(pix, a_pix, px, res, ppm_ref, s_a, weight_a, seed, coarse_alpha, fine_alpha,
+				local, flow2, fast, dir_p, jac, pix0, ppm_pix, pix_detail, top_c, top_ph, sec_c, sec_ph);
 	}
 	if (weight_b > 0.0) {
 		paint_octave(pix, a_pix, px, res, ppm_ref, s_b, weight_b, seed + vec2(503.0, 307.0), coarse_alpha,
-				local, t, top_c, top_ph, sec_c, sec_ph);
+				fine_alpha, local, flow2, fast, dir_p, jac, pix0, ppm_pix, pix_detail,
+				top_c, top_ph, sec_c, sec_ph);
 	}
 
 	vec3 col = mix(under, sec_c.rgb, sec_c.a);
@@ -561,7 +649,10 @@ void fragment() {
 	col = mix(col, soft_light(col, tone), complement);
 
 	// --- Light on the paint relief, and the canvas (on the world too) ---
-	float grain = mix(canvas_at(a_pix, s_a * 0.25), canvas_at(a_pix, s_b * 0.25), weight_b);
+	float grain = canvas_at(a_pix, s_a * 0.25);
+	if (two) {
+		grain = mix(grain, canvas_at(a_pix, s_b * 0.25), weight_b);
+	}
 	height += canvas_grain * 0.04 * grain;
 	// Height change over half a stroke width, so the relief has the same
 	// look at all resolutions.
@@ -577,7 +668,13 @@ void fragment() {
 	float spec = pow(max(dot(reflect(-ldir, n), vec3(0.0, 0.0, 1.0)), 0.0), 20.0);
 	col = col * diffuse + vec3(spec * 0.12 * impasto);
 	// Canvas colour: a little lighter and darker in the weave.
-	col *= 1.0 + canvas_grain * 0.08 * (mix(vnoise2(a_pix / (s_a * 0.36)), vnoise2(a_pix / (s_b * 0.36)), weight_b) - 0.5);
+	if (quality > 0) {
+		float tint = vnoise2(a_pix / (s_a * 0.36));
+		if (two) {
+			tint = mix(tint, vnoise2(a_pix / (s_b * 0.36)), weight_b);
+		}
+		col *= 1.0 + canvas_grain * 0.08 * (tint - 0.5);
+	}
 
 	COLOR = vec4(mix(original, clamp(col, 0.0, 1.0), intensity), COLOR.a);
 }
