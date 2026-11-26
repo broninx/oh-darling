@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://bxthmjkncwl2q" path="res://art/shaders/test_shaders_Overcast.tres" id="4_0obqr"]
 [ext_resource type="Shader" uid="uid://dnyoexc03vvvc" path="res://art/shaders/test_shaders_bright.tres" id="5_6fgq6"]
 [ext_resource type="Shader" uid="uid://c56nchjeoddpt" path="res://art/shaders/test_shaders_storm.gdshader" id="6_4pfvy"]
+[ext_resource type="Shader" uid="uid://538dqm61egs" path="res://art/shaders/painterly.gdshader" id="7_paint"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mqki2"]
 shader = ExtResource("2_knxiq")
@@ -33,9 +34,16 @@ shader_parameter/fade = 0.06
 shader_parameter/edge_canvas = 0.062
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rqjvi"]
-shader = ExtResource("3_8wlhm")
-shader_parameter/radius = 5
-shader_parameter/offset = Vector3(0, 0, 0)
+shader = ExtResource("7_paint")
+shader_parameter/brush_size = 0.013
+shader_parameter/stroke_length = 3.0
+shader_parameter/swirl = 0.3
+shader_parameter/fine_strokes = 0.45
+shader_parameter/impasto = 0.45
+shader_parameter/saturation = 0.95
+shader_parameter/color_jitter = 0.05
+shader_parameter/complement = 0.25
+shader_parameter/outline = 0.25
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_423ci"]
 shader = ExtResource("4_0obqr")
@@ -49,14 +57,16 @@ shader_parameter/shadow_amount = 0.1
 shader_parameter/flatten = 0.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xm1cc"]
-shader = ExtResource("3_8wlhm")
-shader_parameter/radius = 9
-shader_parameter/offset = Vector3(0, 0, 0)
+shader = ExtResource("7_paint")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3skvw"]
-shader = ExtResource("3_8wlhm")
-shader_parameter/radius = 5
-shader_parameter/offset = Vector3(0, 0, 0)
+shader = ExtResource("7_paint")
+shader_parameter/brush_size = 0.01
+shader_parameter/swirl = 0.65
+shader_parameter/impasto = 0.6
+shader_parameter/saturation = 1.2
+shader_parameter/complement = 0.45
+shader_parameter/color_jitter = 0.09
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cagyc"]
 shader = ExtResource("5_6fgq6")
@@ -145,10 +155,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -10.0
-offset_top = -10.0
-offset_right = -10.0
-offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -204,10 +210,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -10.0
-offset_top = -10.0
-offset_right = -10.0
-offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
