@@ -20,6 +20,12 @@ If the README and the code disagree, tell the user. Do not choose one by yoursel
 - Use a code block for each command and each path.
 - Use a table or a diagram when it makes the text easier to understand.
 
+## Time estimate
+
+- ALWAYS estimate how long a task takes.
+- If the estimate is more than 2 minutes, tell the user the estimated time FIRST, before you do anything else (before tool calls and before questions).
+- If the task has more than one step (for example a skill, or a plan with steps), give the total time for all the steps. You can also give the time for each step.
+
 ## Work rules
 
 1. **Ask before you change a shared file.** Shared files are `project.godot`, any autoload in `core/`, and any `.tscn` file in a folder that the user does not own. Only the lead changes autoloads, signals and `project.godot`.
