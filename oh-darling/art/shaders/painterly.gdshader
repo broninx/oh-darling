@@ -539,8 +539,10 @@ void fragment() {
 	float weight_a = 1.0 - weight_b;
 
 	float w = max(s_want * ppm_pix, 2.0); // Large stroke width here, in pixels.
-	// A blur of about 2 px at 1080p, the same part of the screen at all resolutions.
-	float lod_fine = log2(max(res.y / 540.0, 1.0));
+	// The "nearly sharp" mip level: 0 at 1080p, 1 at 4K (the same part of the
+	// screen). Not more: Godot blurs the 2D screen mipmaps with a Gaussian, so
+	// level 1 at 1080p already mixes a bright outline into a thin dark body.
+	float lod_fine = log2(max(res.y / 1080.0, 1.0));
 
 	// --- Direction and edges at this pixel ---
 	float lod_c = log2(max(w * 0.5, 1.0));

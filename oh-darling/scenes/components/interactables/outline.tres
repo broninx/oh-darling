@@ -1,8 +1,16 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://6cbferlgvne0"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://6cbferlgvne0"]
+
+[ext_resource type="Shader" uid="uid://cjpbk0li0ssmj" path="res://scenes/components/interactables/outline.gdshader" id="1_outline"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_radial"]
+shader = ExtResource("1_outline")
+shader_parameter/width = 0.006
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/radial = true
 
 [resource]
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(1, 1, 0, 1)
-grow = true
-grow_amount = 0.05
+next_pass = SubResource("ShaderMaterial_radial")
+shader = ExtResource("1_outline")
+shader_parameter/width = 0.006
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/radial = false
