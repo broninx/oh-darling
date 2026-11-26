@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://art/shaders/environment_controller.gd" id="1_script"]
+
+[sub_resource type="ParticleProcessMaterial" id="Rain_process"]
+emission_shape = 3
+emission_box_extents = Vector3(30, 0.5, 30)
+direction = Vector3(0.08, -1, 0.05)
+spread = 2.0
+initial_velocity_min = 16.0
+initial_velocity_max = 20.0
+
+[sub_resource type="StandardMaterial3D" id="Rain_material"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.75, 0.8, 0.9, 0.35)
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="Rain_drop"]
+material = SubResource("Rain_material")
+size = Vector2(0.03, 0.8)
+
+[node name="EnvironmentController" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Rain" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 6000
+lifetime = 1.1
+visibility_aabb = AABB(-32, -30, -32, 64, 32, 64)
+process_material = SubResource("Rain_process")
+draw_pass_1 = SubResource("Rain_drop")
+
+[node name="Lightning" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.496732, 0.286788, 0, 0.5, 0.866025, -0.573576, -0.709406, 0.409576, 0, 30, 0)
+visible = false
+light_color = Color(0.78, 0.85, 1, 1)
+light_energy = 0.0
+shadow_enabled = true
+
+[node name="LightningTimer" type="Timer" parent="."]
+one_shot = true

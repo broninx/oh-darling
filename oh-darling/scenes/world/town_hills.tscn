@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://c02y0oyu4jul8" path="res://art/models/town/oh_darling_town.glb" id="2_model"]
 [ext_resource type="PackedScene" uid="uid://c7oxem4w2prf" path="res://art/shaders/mood_filter.tscn" id="3_mood_filter"]
 [ext_resource type="PackedScene" uid="uid://cffcjmc2iqk0w" path="res://art/shaders/distortion_filter.tscn" id="4_distortion_filter"]
+[ext_resource type="PackedScene" path="res://scenes/components/door/door.tscn" id="5_door"]
+[ext_resource type="PackedScene" path="res://art/shaders/environment_controller.tscn" id="6_env_controller"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_material"]
 
@@ -17,10 +19,24 @@ tonemap_mode = 3
 tonemap_exposure = 0.6
 tonemap_white = 3.19
 
+[sub_resource type="StandardMaterial3D" id="Mat_door_hidden"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="BoxMesh" id="Mesh_town_hall_door"]
+material = SubResource("Mat_door_hidden")
+size = Vector3(2.44, 2.9, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_pub_door"]
+material = SubResource("Mat_door_hidden")
+size = Vector3(0.2, 2.5, 2)
+
 [node name="TownHills" type="Node3D" unique_id=2118347805]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=715008970]
 transform = Transform3D(-0.042612165, -0.4535782, 0.8901973, 1.3505038e-08, 0.89100665, 0.45399058, -0.9990918, 0.019345552, -0.03796774, 0, 0, 0)
+visible = false
 shadow_enabled = true
 shadow_normal_bias = 1.0
 shadow_blur = 0.3
@@ -30,10 +46,545 @@ directional_shadow_max_distance = 1000.0
 environment = SubResource("Environment_town")
 
 [node name="TownModel" parent="." unique_id=301960678 instance=ExtResource("2_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.021347046, 0.035503387, -0.014728069)
 
 [node name="Player" parent="." unique_id=930050308 instance=ExtResource("1_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.3, 14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.111565, 0.3, -1.258069)
 
 [node name="MoodFilter" parent="." unique_id=1212608313 instance=ExtResource("3_mood_filter")]
 
 [node name="DistortionFilter" parent="." unique_id=60245277 instance=ExtResource("4_distortion_filter")]
+
+[node name="EnvironmentController" parent="." unique_id=1700000300 instance=ExtResource("6_env_controller")]
+
+[node name="LampLights" type="Node3D" parent="." unique_id=1700000000]
+
+[node name="Archive" type="Node3D" parent="LampLights" unique_id=1700000001]
+
+[node name="DeskLamp" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 159.25, 1.28, 25.6)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.6
+omni_range = 3.0
+
+[node name="HangLamp01" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 155.5, 3.42, 18.95)
+light_color = Color(1, 0.651, 0.169, 1)
+
+[node name="HangLamp02" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 163.5, 3.42, 18.95)
+light_color = Color(1, 0.651, 0.169, 1)
+
+[node name="HangLamp03" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 155.5, 3.42, 22)
+light_color = Color(1, 0.651, 0.169, 1)
+
+[node name="HangLamp04" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 163.8, 3.42, 22)
+light_color = Color(1, 0.651, 0.169, 1)
+
+[node name="HangLamp05" type="OmniLight3D" parent="LampLights/Archive" unique_id=1700000007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 2.52, 25.9)
+light_color = Color(1, 0.651, 0.169, 1)
+
+[node name="Home" type="Node3D" parent="LampLights" unique_id=1700000008]
+
+[node name="Chandelier" type="OmniLight3D" parent="LampLights/Home" unique_id=1700000009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.8, 3.15, -0.9)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 1.5
+omni_range = 7.0
+
+[node name="DeskLamp" type="OmniLight3D" parent="LampLights/Home" unique_id=1700000010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 152.92, 1.17, 1.15)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.6
+omni_range = 3.0
+
+[node name="NightstandLamp" type="OmniLight3D" parent="LampLights/Home" unique_id=1700000011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 161.1, 0.94, -2.6)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 0.6
+omni_range = 3.5
+
+[node name="Fireplace" type="OmniLight3D" parent="LampLights/Home" unique_id=1700000114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.8, 0.49, -3.46)
+light_color = Color(1, 0.478, 0.122, 1)
+light_energy = 1.5
+
+[node name="Street" type="Node3D" parent="LampLights" unique_id=1700000012]
+
+[node name="StreetLamp01" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 4.106, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp02" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.089, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp03" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 4.087, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp04" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 4.054, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp05" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44, 4.16, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp06" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000018]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 4.065, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp07" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 4.04, 12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp08" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 4.082, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp09" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000021]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 4.083, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp10" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 4.096, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp11" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 4.07, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp12" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 4.078, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp13" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 4.063, 20)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp14" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000026]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 3.89, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp15" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 3.817, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp16" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000028]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 3.846, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp17" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 3.822, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp18" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.792, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp19" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 3.847, 35.7)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp20" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7, 4.004, -17)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp21" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7, 4.007, -17)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp22" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7, 4.006, -3.5)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp23" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7, 4.013, -3.5)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp24" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2, 4.009, -12)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp25" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2, 4.01, -32)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp26" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2, 4.476, -46)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp27" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.2, 4.066, 30)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp28" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2, 4.032, 30)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp29" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000041]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5, 3.985, -15.8)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp30" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, 3.47, -33)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="StreetLamp31" type="OmniLight3D" parent="LampLights/Street" unique_id=1700000043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 4.58, -40)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 2.0
+omni_range = 9.0
+
+[node name="Pub" type="Node3D" parent="LampLights" unique_id=1700000044]
+
+[node name="GlassLamp01" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153, 2.55, -20.6)
+light_color = Color(1, 0.313, 0.215, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp02" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 154.2, 2.72, -20.7)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp03" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 155.4, 2.48, -20.6)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp04" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.6, 2.7, -20.7)
+light_color = Color(0.242, 1, 0.929, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp05" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 157.8, 2.52, -20.6)
+light_color = Color(1, 0.313, 0.215, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp06" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153, 2.38, -17.4)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp07" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153, 2.4, -14.4)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp08" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000052]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.8, 2.57, -16.6)
+light_color = Color(0.242, 1, 0.929, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp09" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160.4, 2.48, -17.6)
+light_color = Color(1, 0.313, 0.215, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp10" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 162.9, 2.4, -15.2)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp11" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 159.2, 2.62, -14.5)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="GlassLamp12" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 161.6, 2.73, -21.4)
+light_color = Color(0.242, 1, 0.929, 1)
+light_energy = 0.8
+omni_range = 4.5
+
+[node name="TableCandle01" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153.088, 1.002, -17.455)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle02" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153.088, 1.002, -14.455)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle03" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 161.688, 1.002, -21.455)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle04" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.888, 1.002, -16.655)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle05" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160.488, 1.002, -17.655)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle06" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 162.988, 1.002, -15.255)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="TableCandle07" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000106]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 159.288, 1.002, -14.555)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="BackBar1" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153.858, 2.172, -22.843)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.7
+omni_range = 3.5
+
+[node name="BackBar2" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 157.058, 2.172, -22.843)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.7
+omni_range = 3.5
+
+[node name="Mandala1" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 161.6, 2.35, -22.98)
+light_color = Color(1, 0.247, 0.643, 1)
+light_energy = 0.8
+omni_range = 3.5
+
+[node name="Mandala2" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000110]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 151.52, 2.4, -17.4)
+light_color = Color(1, 0.247, 0.643, 1)
+light_energy = 0.8
+omni_range = 3.5
+
+[node name="Mandala3" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 151.52, 2.4, -14.4)
+light_color = Color(1, 0.247, 0.643, 1)
+light_energy = 0.8
+omni_range = 3.5
+
+[node name="ChakraChart" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 159.55, 2.03, -22.98)
+light_color = Color(1, 0.784, 0.239, 1)
+light_energy = 0.3
+omni_range = 1.5
+
+[node name="MixologyLight" type="OmniLight3D" parent="LampLights/Pub" unique_id=1700000113]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156.23, 1.29, -20.75)
+light_color = Color(1, 0.313, 0.215, 1)
+light_energy = 0.3
+omni_range = 1.5
+
+[node name="Shelter" type="Node3D" parent="LampLights" unique_id=1700000057]
+
+[node name="Lantern" type="OmniLight3D" parent="LampLights/Shelter" unique_id=1700000058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.424, 0.02, -42.556)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.8
+omni_range = 4.0
+
+[node name="FireBarrel" type="OmniLight3D" parent="LampLights/Shelter" unique_id=1700000115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.89, 0.995, -37.93)
+light_color = Color(1, 0.478, 0.122, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="NeonPadma" type="Node3D" parent="LampLights" unique_id=1700000116]
+
+[node name="Window1" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000117]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.835, 1.729, -4.3)
+light_color = Color(1, 0.651, 0.169, 1)
+omni_range = 4.0
+
+[node name="Window2" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000118]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.835, 1.729, -1)
+light_color = Color(1, 0.651, 0.169, 1)
+omni_range = 4.0
+
+[node name="Window3" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.835, 1.729, 2.3)
+light_color = Color(1, 0.651, 0.169, 1)
+omni_range = 4.0
+
+[node name="NeonTop1" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.34, 5.929, -3.5)
+light_color = Color(1, 0.247, 0.643, 1)
+light_energy = 1.2
+
+[node name="NeonTop2" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000121]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.34, 5.929, 1.5)
+light_color = Color(1, 0.247, 0.643, 1)
+light_energy = 1.2
+
+[node name="Sign" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.27, 4.283, -1.007)
+light_color = Color(1, 0.247, 0.643, 1)
+omni_range = 4.0
+
+[node name="RedLights" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.75, 2.559, -3)
+light_color = Color(1, 0.313, 0.215, 1)
+light_energy = 0.6
+omni_range = 3.5
+
+[node name="GreenLights" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.75, 2.559, 1)
+light_color = Color(0.424, 1, 0.645, 1)
+light_energy = 0.6
+omni_range = 3.5
+
+[node name="BistroCandle01" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.02, 0.978, 2.15)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="BistroCandle02" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000126]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.02, 0.977, 1.15)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="BistroCandle03" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.02, 0.976, -3.45)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="BistroCandle04" type="OmniLight3D" parent="LampLights/NeonPadma" unique_id=1700000128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.02, 0.975, -4.45)
+light_color = Color(1, 0.651, 0.169, 1)
+light_energy = 0.4
+omni_range = 2.0
+
+[node name="Windows" type="Node3D" parent="LampLights" unique_id=1700000129]
+
+[node name="Bakery" type="OmniLight3D" parent="LampLights/Windows" unique_id=1700000130]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.29, 1.629, 9)
+light_color = Color(1, 0.714, 0.361, 1)
+omni_range = 4.0
+
+[node name="Coffee" type="OmniLight3D" parent="LampLights/Windows" unique_id=1700000131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.29, 1.629, -10)
+light_color = Color(1, 0.714, 0.361, 1)
+omni_range = 4.0
+
+[node name="Home" type="OmniLight3D" parent="LampLights/Windows" unique_id=1700000132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18, 3.141, 31.645)
+light_color = Color(1, 0.714, 0.361, 1)
+light_energy = 0.8
+omni_range = 4.0
+
+[node name="Doors" type="Node3D" parent="." unique_id=1700000200]
+
+[node name="TownHallDoor" parent="Doors" unique_id=1700000201 instance=ExtResource("5_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -25.25)
+destination = Vector3(160, 0.1, 27.5)
+
+[node name="MeshInstance3D" parent="Doors/TownHallDoor" index="0" unique_id=338424483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_town_hall_door")
+
+[node name="TownHallExit" parent="Doors" unique_id=1700000202 instance=ExtResource("5_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 0, 28.9)
+destination = Vector3(0, 0.3, -20)
+
+[node name="PubDoor" parent="Doors" unique_id=1700000203 instance=ExtResource("5_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.9, 0, -1)
+destination = Vector3(163.6, 0.1, -18.5)
+
+[node name="MeshInstance3D" parent="Doors/PubDoor" index="0" unique_id=338424483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_pub_door")
+
+[node name="PubExit" parent="Doors" unique_id=1700000204 instance=ExtResource("5_door")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 164.9, 0, -18.5)
+destination = Vector3(-19.3, 0.3, -1)
+
+[editable path="Doors/TownHallDoor"]
+[editable path="Doors/PubDoor"]

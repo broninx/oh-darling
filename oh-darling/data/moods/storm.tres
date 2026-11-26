@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="MoodPreset" format=3]
+
+[ext_resource type="Script" path="res://data/moods/mood_preset.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+mood = "storm"
+rain_amount = 1.0
+lightning_enabled = true
+lightning_interval_min = 4.0
+lightning_interval_max = 12.0
+lightning_energy = 4.0
