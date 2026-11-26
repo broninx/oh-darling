@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://cyu7opcwl2vow"]
 
 [ext_resource type="Script" uid="uid://bypumrxaeccdx" path="res://scenes/characters/player/player.gd" id="1_7uws0"]
+[ext_resource type="Script" uid="uid://dh1m2q5v8jkrr" path="res://scenes/components/character_model/character_model.gd" id="2_model"]
+[ext_resource type="PackedScene" uid="uid://csnfqxl8x64q3" path="res://art/models/characters/ual/UAL1_Standard.glb" id="3_character"]
+[ext_resource type="AnimationNodeBlendSpace1D" path="res://scenes/components/character_model/locomotion.tres" id="4_locomotion"]
+[ext_resource type="Script" path="res://scenes/camera/player_camera.gd" id="5_camera"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rq2rp"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8uh7m"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_rq2rp"]
 
 [node name="Player" type="CharacterBody3D" unique_id=1543590871 groups=["player"]]
 script = ExtResource("1_7uws0")
@@ -15,14 +15,23 @@ script = ExtResource("1_7uws0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_rq2rp")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1693166555]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("StandardMaterial3D_8uh7m")
-gi_mode = 2
-mesh = SubResource("CapsuleMesh_rq2rp")
+[node name="Model" type="Node3D" parent="." node_paths=PackedStringArray("animation_tree")]
+script = ExtResource("2_model")
+animation_tree = NodePath("AnimationTree")
+
+[node name="Character" parent="Model" instance=ExtResource("3_character")]
+transform = Transform3D(0.984, 0, 0, 0, 0.984, 0, 0, 0, 0.984, 0, 0, 0)
+
+[node name="AnimationTree" type="AnimationTree" parent="Model"]
+root_node = NodePath("../Character")
+tree_root = ExtResource("4_locomotion")
+anim_player = NodePath("../Character/AnimationPlayer")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=109166117]
+script = ExtResource("5_camera")
 transform = Transform3D(0.7071068, -0.45451948, 0.54167527, 0, 0.7660445, 0.64278764, -0.7071068, -0.45451948, 0.54167527, 20, 23.372677, 20.113)
 fov = 20.9
 size = 15.894
 near = 0.059
+
+[editable path="Model/Character"]
