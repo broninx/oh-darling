@@ -1,0 +1,4 @@
+[gd_resource type="SystemFont" format=3]
+
+[resource]
+font_names = PackedStringArray("Segoe Print", "Ink Free", "Bradley Hand", "Comic Sans MS", "cursive")
