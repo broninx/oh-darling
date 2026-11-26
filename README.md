@@ -128,6 +128,9 @@ The roof and the upper walls block the sun, so the room is dark. Light comes in 
 
 ### Player
 
+The game runs at 1920 x 1080 (`project.godot`, display settings).
+
+
 `player.tscn` is a `CharacterBody3D`. It moves with **WASD**, relative to the camera, and stops outside `EXPLORATION`. The camera is a child of the player.
 
 ### Input Map
@@ -138,6 +141,7 @@ The roof and the upper walls block the sun, so the room is dark. Light comes in 
 | `pause` | Escape |
 | `debug_toggle` | F1 |
 | `highlight_interactables` | Alt, or right mouse button |
+| `jog` | Shift (hold) |
 
 ---
 
@@ -153,9 +157,43 @@ The roof and the upper walls block the sun, so the room is dark. Light comes in 
 ### Add an NPC
 
 1. Do not edit `npc.tscn`. Choose *Scene → New Inherited Scene* from `scenes/components/interactables/npc.tscn`.
-2. Set the mesh on `MeshInstance3D`. Set `target_mesh` (the `MeshInstance3D`), `dialogue_resource` and `dialogue_title` on `InteractionComponent`.
-3. Save it in `scenes/characters/npcs/` (see `scenes/characters/test_npc/test_npc.tscn` for an example).
-4. Put the dialogue files in the folder of the character in `dialogue/`.
+2. On `InteractionComponent`, set `dialogue_resource` and `dialogue_title`. `target_mesh` and the click shape (a capsule) are already set.
+3. For a colour, set `surface_material_override/0` on `Model/Character/Armature/GeneralSkeleton/Mannequin`. For a real model, see "Add a character model".
+4. Save it in `scenes/characters/npcs/` (see `scenes/characters/npcs/mayor.tscn` for an example).
+5. Put the dialogue files in the folder of the character in `dialogue/`.
+
+### Add a character model
+
+The player and every NPC have the same model setup:
+
+```
+Player / Npc
+├── Model                  CharacterModel: turns toward the walk direction, sends the speed
+│   ├── Character          the model (now: the UAL mannequin, art/models/characters/ual/)
+│   └── AnimationTree      blends the animations by speed (locomotion.tres)
+└── ...
+```
+
+- The mannequin and its 43 animations come from the **Universal Animation Library** by Quaternius (CC0). It is imported with a humanoid `BoneMap` (`SkeletonProfileHumanoid`), so the bones have the standard humanoid names.
+- `scenes/components/character_model/locomotion.tres` is a `BlendSpace1D` on speed (m/s): `Idle` at 0, `Walk` at 1.35, `Jog_Fwd` at 4.0. `Walk` plays 1.4x faster than in the file (custom timeline 0.95 s), `Jog_Fwd` 0.76x slower (custom timeline 1.23 s). Open it in the AnimationTree editor to change it.
+- The player walks (`SPEED` in `player.gd`, 1.35 m/s) and jogs while Shift is held (`JOG_SPEED`, 4.0 m/s). No sprint. Each speed is the real speed of its animation. If you change one, change the other, or the feet slide.
+- The mannequin is scaled to 1.80 m (0.984; the file is 1.83 m). The scale is on the `Character` node.
+- Only `Model` turns. The player body does not turn, because the camera is its child.
+- Other useful animations in the file: `Idle_Talking`, `Sitting_Idle`, `Sitting_Talking`, `Interact`, `PickUp_Table`, `Walk_Formal`.
+
+**Import settings of a character `.glb`** (Advanced Import Settings, select `Skeleton3D`):
+
+1. Retarget → Bone Map: New BoneMap. Then Profile: New SkeletonProfileHumanoid. Check that all bones are mapped.
+2. Retarget → Remove Tracks: leave **"Except Bone Transform" off**. In Godot 4.7.2 it deletes almost all animation tracks (errors "Index p_track is out of bounds").
+3. Reimport.
+
+**To put in a new model:**
+
+1. Export it as glTF (`.glb`), facing +Z. Import it with the settings above.
+2. In the character scene, delete `Character` and add the new model as a child of `Model`. Name it `Character`.
+3. On `AnimationTree`, set `Anim Player` to the AnimationPlayer of the model, and `Root Node` to the model.
+4. If the model has no animations, it can use the animations of the mannequin, because the bone names are the same. Copy the mannequin's AnimationPlayer, or save its animations as an Animation Library.
+5. On an NPC, set `target_mesh` of `InteractionComponent` to the `MeshInstance3D` of the model.
 
 ### Add a new kind of object
 
@@ -351,9 +389,9 @@ The column "Prototype" shows what the prototype needs:
 
 **T02 Dialogue balloon.** A custom balloon for the Dialogue Manager plugin, in the style of Disco Elysium: a scrolling log, inner voices, numbered choices, locked choices, a theme that follows the mood. It opens only through `GameManager.start_dialogue()`. If the plugin does not send `dialogue_ended`, the balloon calls `GameManager.end_dialogue()` when it closes. It may call `GameManager.on_choice_made()` after each choice (autosave). It must stop its own input, so a click on it does not reach the world.
 
-**T03 Player and movement.** WASD movement in `EXPLORATION` only. Contract: group `player`. Open: sprint.
+**T03 Player and movement.** WASD movement in `EXPLORATION` only. The player walks (1.35 m/s) and jogs with Shift (4.0 m/s). No sprint. Contract: group `player`.
 
-**T04 Camera rig.** A fixed-angle isometric camera that follows a target. It reacts to `mood_changed`: in Storm it sways a little, in Fog it moves back. Now the camera is a child of the player. If the rig becomes separate, the player movement code (which reads the camera direction) must change too.
+**T04 Camera rig.** A fixed-angle isometric camera that follows a target. It reacts to `mood_changed`: in Storm it sways a little, in Fog it moves back. Now the camera is a child of the player, with `scenes/camera/player_camera.gd` (Disco Elysium style): the mouse wheel zooms, and the camera moves a little toward the mouse when the mouse leaves the screen centre. Both only in `EXPLORATION`. The script only moves the camera, it never turns it. If the rig becomes separate, the player movement code (which reads the camera direction) must change too.
 
 **T05 Shader and mood presets.** The five painted looks with **one** shader. A `MoodPreset` Resource with five `.tres` files. An `EnvironmentController` listens to `mood_changed` and tweens the values in 1 to 2 seconds. `MoodPreset` fields: `mood`, `hue_shift`, `saturation`, `value`, `palette`, `brush_size`, `light_color`, `light_energy`, `fog_density`, `camera_sway`, `camera_distance`, `ui_theme`. The game must stay at 60 FPS on a normal laptop.
 

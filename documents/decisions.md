@@ -42,6 +42,10 @@ Sources: the design chats of 2026-11-06 to 2026-11-09, the README, the code snap
 **Status:** In code
 README and code banners use short sentences and simple words (mostly ASD-STE100). Each autoload starts with a banner comment: task, data, signals, public functions, and a "MUST NOT" list. Read it before you change the script.
 
+### D32. Resolution 1920 x 1080
+**Status:** In code (2026-11-26)
+`project.godot` sets the viewport to 1920 x 1080. The stretch mode stays `canvas_items` with aspect `expand`. On a 1080p screen with a taskbar, the window can be larger than the free space. Then use full screen or maximize the window.
+
 ---
 
 ## 2. Architecture
@@ -141,6 +145,7 @@ Only the debug panel shows them. The player reads the world.
 ### D27. Greybox town
 **Status:** In code (2026-11-25)
 - `scenes/world/town.tscn` holds `Streets` and the 4 places under `Places`. Each place has its own file in `scenes/world/places/<place>/`. Repeated props are in `scenes/world/props/`.
+- The town is 60 x 60 m (it was 100 x 100 until 2026-11-26; made smaller because the player only walks, at 1.35 m/s). Home to Town Hall takes about 27 s. The square is in the centre, home north-west, Town Hall north-east, Neon Padma south-west, the park and Roger's shelter south-east.
 - Everything is CSG (`CSGBox3D`, `CSGCylinder3D`) with `use_collision`. Reason: it is fast to change. Artists replace it later, place by place.
 - The camera looks from the south-east. So the north and west walls are 3 m high, and the south and east walls are 1 m high (cutaway).
 - Test NPCs: `scenes/characters/npcs/` (mayor, pr_agent, neha, roger), inherited from `npc.tscn`. Test items use the files in `dialogue/test_characters/`.
@@ -158,6 +163,16 @@ Only the debug panel shows them. The player reads the world.
 - An instant switch, not a fade. Reason: a fade needs transparent materials, and CSG with transparency sorts badly. A fade needs a dither shader. That can come later.
 - **Rule:** a big `Area3D` must have `input_ray_pickable` off. The first version did not, and it caught every mouse click inside the building.
 - Known issue: outside, a building can hide the player when the player walks behind it (north or west of it). The fix (fade the building between the camera and the player) is not done.
+
+### D30. Character model slot, UAL mannequin and AnimationTree
+**Status:** In code (2026-11-26)
+- The player and `npc.tscn` have a `Model` node (`CharacterModel`) with the model (`Character`) and an `AnimationTree`. `Model` turns toward the walk direction and sends the speed to the tree. Only `Model` turns, because the camera is a child of the player body.
+- Model and animations: the **Universal Animation Library** (Quaternius, CC0), `art/models/characters/ual/UAL1_Standard.glb`, without root motion (the code moves the body). It is imported with a humanoid `BoneMap`, so any humanoid model retargeted the same way can use its 43 animations.
+- `locomotion.tres` is a `BlendSpace1D` on speed: `Idle` at 0, `Walk` at 1.35 m/s and `Jog_Fwd` at 4.0 m/s. Reason: the standard Godot way, and the designer can edit it in the AnimationTree editor.
+- The character walks with the normal `Walk` (`Walk_Formal` was tried and looked too elegant). Holding Shift (the Input Map action `jog`) makes it jog with `Jog_Fwd` at 4.0 m/s: 4.92 m per cycle at 1.80 m, slowed to 0.76x (custom timeline 1.23 s; first 5.29 m/s, too fast) (decided on 2026-11-26). No sprint. The walk plays 1.4x faster than in the file (custom timeline 0.95 s, `stretch_time_scale`). The model is scaled to 1.80 m (0.984). So one cycle is 1.28 m in 0.95 s, and the player speed is 1.35 m/s. The distance was measured from the root-motion version of the file. If the speed, the scale or the timeline changes, the other values must change too, or the feet slide.
+- First version (replaced the same day): a generated box rig with hand-made bone animations. It was removed, because a real imported model tests the real pipeline.
+- The NPC click shape is a capsule (`fit_collision_to_mesh` off), because the mesh is in a T-pose and 1.9 m wide. The NPC colour is `surface_material_override/0` on the mannequin.
+- Import bug: "Remove Tracks → Except Bone Transform" deletes almost all tracks in Godot 4.7.2. Keep it off.
 
 ---
 
@@ -191,6 +206,12 @@ Only the debug panel shows them. The player reads the world.
 **Status:** Planned (T04)
 - The camera is a child of the player now. If the camera becomes a separate rig, the player movement code must change, because it reads the camera direction.
 - GDD: the camera changes only in extreme moods (Storm: it sways. Fog: it moves back).
+
+### D31. Camera controls in the style of Disco Elysium
+**Status:** In code (2026-11-26). T04 has no owner yet. Tell the T04 owner.
+- `scenes/camera/player_camera.gd` on the player camera. The mouse wheel zooms (0.45x to 1.4x of the default distance). When the mouse leaves the screen centre (dead zone 20%), the camera moves up to 3.5 m toward it, on the ground plane. Both are smooth.
+- It only changes the camera position, never the rotation. Reason: the player movement reads the camera direction (D17).
+- It works only in `EXPLORATION` (D07). In other states the view stays where it is.
 
 ---
 
@@ -284,7 +305,7 @@ Proposed in the group chat on 2026-11-25. The team has not answered yet. When th
 | Q3 | Mood visuals: screen filters or `MoodPreset` Resources? (D16) | T05, T10 |
 | Q4 | The GDD says exploration uses "point-and-click mouse and keyboard". The player uses WASD only. Change the GDD or the player. | GDD, T03 |
 | Q5 | Above mental state 0.75, nothing new happens (the "Echo zone"). What should happen? | T11 |
-| Q6 | Sprint: `SPRINT_SPEED` exists in `player.gd` but nothing uses it. | T03 |
+| Q6 | Answered on 2026-11-26: no sprint. The player walks, and jogs while Shift is held (D30). `SPRINT_SPEED` was replaced by `JOG_SPEED`. | T03 |
 | Q7 | The GDD sections "Technical specification" and "Design History" are empty. Fill them from D15 and this file. | GDD |
 | Q8 | Answered on 2026-11-25: open map, no doors (D24). | T08 |
 | Q9 | Does the prototype need these tasks, and how much of them: T04, T05, T10, T11, T12, T13, T15, T17? They are "Ask" in the README. | Prototype |
