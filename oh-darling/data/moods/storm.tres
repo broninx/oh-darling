@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 mood = "storm"
-rain_amount = 1.0
+rain_amount = 0.0
 lightning_enabled = true
 lightning_interval_min = 4.0
 lightning_interval_max = 12.0

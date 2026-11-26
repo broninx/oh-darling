@@ -5,7 +5,6 @@
 [ext_resource type="Shader" uid="uid://b7lyefgfqtk2" path="res://art/shaders/kuwahara_clear.gdshader" id="3_8wlhm"]
 [ext_resource type="Shader" uid="uid://bxthmjkncwl2q" path="res://art/shaders/test_shaders_Overcast.tres" id="4_0obqr"]
 [ext_resource type="Shader" uid="uid://dnyoexc03vvvc" path="res://art/shaders/test_shaders_bright.tres" id="5_6fgq6"]
-[ext_resource type="Shader" uid="uid://c56nchjeoddpt" path="res://art/shaders/test_shaders_storm.gdshader" id="6_4pfvy"]
 [ext_resource type="Shader" uid="uid://538dqm61egs" path="res://art/shaders/painterly.gdshader" id="7_paint"]
 [ext_resource type="Script" uid="uid://bd7n1jtjaxx2e" path="res://art/shaders/painterly_camera.gd" id="8_paintcam"]
 
@@ -80,44 +79,24 @@ shader_parameter/shadow_tint = Color(0.549, 0.502, 0.851, 1)
 shader_parameter/shadow_amount = 0.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tm38c"]
-shader = ExtResource("6_4pfvy")
-shader_parameter/intensity = 1.0
-shader_parameter/wave_strength = 1.143
-shader_parameter/wave_size = 6.0
-shader_parameter/sway = 2.0
-shader_parameter/swirl_strength = 4.0
-shader_parameter/swirl_scale = 4.0
-shader_parameter/swirl_speed = 0.15
-shader_parameter/follow_forms = 0.6
-shader_parameter/stroke_length = 6.0
-shader_parameter/stroke_samples = 6
-shader_parameter/impasto = 0.45
-shader_parameter/stroke_width = 4.0
-shader_parameter/outline_strength = 0.58
-shader_parameter/outline_thickness = 2.212
-shader_parameter/outline_threshold = 0.15
+shader = ExtResource("7_paint")
+shader_parameter/brush_size = 0.012
+shader_parameter/stroke_length = 4.5
+shader_parameter/angle_jitter = 0.3
+shader_parameter/swirl = 0.85
+shader_parameter/swirl_size = 3.0
+shader_parameter/swirl_speed = 0.03
+shader_parameter/follow_edges = 0.75
+shader_parameter/impasto = 0.7
+shader_parameter/bristles = 0.6
+shader_parameter/saturation = 1.9
+shader_parameter/color_jitter = 0.14
+shader_parameter/shadow_color = Color(0.18, 0.26, 0.72, 1)
+shader_parameter/light_color = Color(1, 0.79, 0.11, 1)
+shader_parameter/complement = 0.7
+shader_parameter/outline = 0.45
 shader_parameter/outline_color = Color(0.04, 0.05, 0.12, 1)
-shader_parameter/halo_strength = 0.966
-shader_parameter/halo_threshold = 0.427
-shader_parameter/halo_radius = 60.0
-shader_parameter/lamp_brightness = 0.228
-shader_parameter/ring_count = 7.919
-shader_parameter/ring_speed = 2.566
-shader_parameter/halo_tint = Color(1, 0.69, 0, 1)
-shader_parameter/saturation = 3.0
-shader_parameter/contrast = 0.854
-shader_parameter/brightness = 1.275
-shader_parameter/gamma = 0.7
-shader_parameter/shadow_lift = 0.7
-shader_parameter/ultramarine = Color(0.18, 0.26, 0.72, 1)
-shader_parameter/deep_blue = Color(0.025, 0.025, 0.12, 1)
-shader_parameter/orange = Color(1, 0.49, 0.12, 1)
-shader_parameter/chrome_yellow = Color(1, 0.79, 0.11, 1)
-shader_parameter/tint_amount = 1.47
-shader_parameter/yellow_strength = 1.0
-shader_parameter/yellow_threshold = 0.708
-shader_parameter/pulse = 0.082
-shader_parameter/pulse_speed = 1.011
+shader_parameter/boil_fps = 3.0
 
 [node name="MoodFilter" type="CanvasLayer" unique_id=164119760]
 script = ExtResource("1_5w4m5")
@@ -243,12 +222,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 3.0
-offset_right = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
 [node name="PainterlyCamera" type="Node" parent="." unique_id=1784512903]
 script = ExtResource("8_paintcam")
-materials = Array[ShaderMaterial]([SubResource("ShaderMaterial_rqjvi"), SubResource("ShaderMaterial_xm1cc"), SubResource("ShaderMaterial_3skvw")])
+materials = Array[ShaderMaterial]([SubResource("ShaderMaterial_rqjvi"), SubResource("ShaderMaterial_xm1cc"), SubResource("ShaderMaterial_3skvw"), SubResource("ShaderMaterial_tm38c")])
