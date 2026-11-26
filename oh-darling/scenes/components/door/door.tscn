@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://dytegas5fvgrk" path="res://scenes/components/interactables/item.tscn" id="1_item"]
+[ext_resource type="Script" path="res://scenes/components/door/door.gd" id="2_door"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_door"]
+albedo_color = Color(0.45, 0.3, 0.18, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_door"]
+material = SubResource("Mat_door")
+size = Vector3(1, 2.1, 0.1)
+
+[node name="Door" instance=ExtResource("1_item")]
+script = ExtResource("2_door")
+
+[node name="MeshInstance3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+mesh = SubResource("Mesh_door")
+
+[node name="InteractionComponent" parent="." index="1"]
+interaction_range = 5.0
