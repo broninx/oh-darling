@@ -1,4 +1,4 @@
-[gd_resource type="AnimationNodeBlendSpace1D" format=3]
+[gd_resource type="AnimationNodeBlendSpace1D" format=3 uid="uid://cstmpjeof25h4"]
 
 [sub_resource type="AnimationNodeAnimation" id="Anim_idle"]
 animation = &"Idle"
@@ -8,6 +8,7 @@ animation = &"Walk"
 use_custom_timeline = true
 timeline_length = 0.95
 stretch_time_scale = true
+start_offset = 0.0
 loop_mode = 1
 
 [sub_resource type="AnimationNodeAnimation" id="Anim_jog"]
@@ -15,15 +16,19 @@ animation = &"Jog_Fwd"
 use_custom_timeline = true
 timeline_length = 1.23
 stretch_time_scale = true
+start_offset = 0.0
 loop_mode = 1
 
 [resource]
-blend_point_0/node = SubResource("Anim_idle")
-blend_point_0/pos = 0.0
-blend_point_1/node = SubResource("Anim_walk")
-blend_point_1/pos = 1.35
-blend_point_2/node = SubResource("Anim_jog")
-blend_point_2/pos = 4.0
 min_space = 0.0
 max_space = 4.5
 value_label = "speed (m/s)"
+blend_point_0/node = SubResource("Anim_idle")
+blend_point_0/pos = 0.0
+blend_point_0/name = &"0"
+blend_point_1/node = SubResource("Anim_walk")
+blend_point_1/pos = 1.35
+blend_point_1/name = &"1"
+blend_point_2/node = SubResource("Anim_jog")
+blend_point_2/pos = 4.0
+blend_point_2/name = &"2"
