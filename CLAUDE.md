@@ -34,6 +34,7 @@ If the README and the code disagree, tell the user. Do not choose one by yoursel
    - Keep node names stable.
 5. **Do not edit the same `.tscn` file as another person.** Ask the user if somebody else has the scene.
 6. **Do not guess the Godot API.** If you are not sure, say so. Godot 4.7 can differ from your memory.
+7. **Prefer Godot's built-in solutions.** Use the nodes, resources, import options, project settings and Input Map that Godot already has (for example `AnimationTree` and `BlendSpace1D` for animation blending, import settings for models). Write custom code or generate assets only when no built-in fits, and tell the user why.
 
 ## Code rules (short version, see README section 3 and 7)
 
